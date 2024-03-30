@@ -5,7 +5,7 @@ from wtforms_sqlalchemy.fields import QuerySelectField
 from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import DataRequired, Length, Email
 from wtforms.validators import Regexp, EqualTo, ValidationError
-from website.models import User, Course
+from website.models import User, Course, Category
 from flask_login import current_user
 from flask_ckeditor import CKEditorField
 
@@ -69,7 +69,12 @@ class NewLessonForm(FlaskForm):
 
 
 
+
+def choice_query2():
+  return Category.query  
+
 class NewCourseForm(FlaskForm):
+  category = QuerySelectField("Category", query_factory=choice_query2, get_label="name")
   title=StringField('Title', validators=[DataRequired(),Length(max= 100)] )
   description=CKEditorField("Description", validators=[DataRequired()], render_kw={"rows" : "30"} )
   price=StringField('Price',validators=[DataRequired(),Length(max= 10),Regexp('^\d+$') ] )

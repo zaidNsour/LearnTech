@@ -1,7 +1,7 @@
 import secrets
 from PIL import Image
 import os
-from website.models import User, Lesson, Course
+from website.models import User, Lesson, Course, Category
 from flask import render_template, url_for, flash, redirect, request,Blueprint
 from website.forms import RegistrationForm, LoginForm, UpdateProfileForm
 from website.forms import NewLessonForm, NewCourseForm
@@ -210,12 +210,15 @@ def new_course():
      if new_course_form.icon_image.data:
         icon_file=save_picture(new_course_form.icon_image.data,
                                path="static/images/course_pics")
+        
+     category=new_course_form.category.data
 
      course=Course(title=new_course_form.title.data,
                   description=new_course_form.description.data,
                   icon=icon_file,
                   author=current_user,
-                  price=int(new_course_form.price.data)
+                  price=int(new_course_form.price.data),
+                  category_name=category
                   )
      
      db.session.add(course)
@@ -224,12 +227,14 @@ def new_course():
      flash("The course has been created",category="success")
      return redirect(url_for("routes.new_course"))
 
+  categories=Category.query.all()
   flash_messages = get_flashed_messages()
 
   return render_template("new_course.html",
                         title="New Course",
                         new_course_form=new_course_form,
                         active_tab="new_course",
+                        categories=categories,
                         flash_messages=flash_messages
                         )
 
@@ -242,10 +247,12 @@ def course(course_title):
     course = Course.query.filter_by(title=course_title).first()
     course_id = course.id if course else None
     course = Course.query.get_or_404(course_id)
+    related_courses=Course.query.filter_by(category_name=course.category_name)
     return render_template(
         "course.html",
         title=course.title,
         course=course,
+        related_courses=related_courses
     )
 
 

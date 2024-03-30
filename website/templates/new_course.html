@@ -12,21 +12,25 @@
 		<legend class="border-bottom my-3">New Course</legend>
 		
 
-    <!--
-
+   
 
 		<div class="mb-3">
-			<label for="categories" class="form-label">Category</label>
-			<select class="form-select">
-				<option selected>Choose a Category</option>
-				<option value="1">One</option>
-				<option value="2">Two</option>
-				<option value="3">Three</option>
-			</select>
-		</div>		
+			{{ new_course_form.category.label(class="form-control-label") }}
+
+			{% if new_course_form.category.errors %}
+				{{ new_course_form.category(class="form-control is-invalid") }}
+				<div class="invalid-feedback">
+					{% for error in new_course_form.category.errors %}
+						<span class="error">{{ error }}</span>
+					{% endfor %}
+				</div>
+			{% else %}
+				{{ new_course_form.category(class="form-select") }}
+			{%endif%}
+		</div>
 
 
-		-->
+		
 
 		
 
