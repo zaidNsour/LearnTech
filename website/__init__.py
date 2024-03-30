@@ -5,6 +5,7 @@ from os import path
 from flask_bcrypt import Bcrypt 
 from flask_login import LoginManager
 from flask_migrate import Migrate
+from flask_ckeditor import CKEditor
 
 def create_database(app):
  if not path.exists("website/" + DB_NAME):
@@ -18,11 +19,13 @@ DB_NAME="database.db"
 app=Flask(__name__)
 app.config["SECRET_KEY"]="aaa123456789"
 app.config["SQLALCHEMY_DATABASE_URI"]=f"sqlite:///{DB_NAME}"
+app.app_context().push()
 
 db.init_app(app)
 create_database(app) 
 bcrypt=Bcrypt(app)
 migrate=Migrate(app, db)
+ckeditor=CKEditor(app)
 
 
 loginManager=LoginManager(app)

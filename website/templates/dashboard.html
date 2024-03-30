@@ -18,14 +18,17 @@
 {%extends "layout.html"%}
 
 
+
+
+
 {% block content%}
 
-	{% for message in flash_messages %}
-    <div class="alert alert-success" role="alert">
-        {{ message }}
-    </div>
-	{% endfor %}
 
+{% for message in flash_messages %}
+  <div class="alert alert-success" role="alert">
+      {{ message }}
+  </div>
+{% endfor %}
 	
 
 <!-- Tabs -->
@@ -37,7 +40,8 @@
 			<a class="link" href="/dashboard/profile" class="link">
 				<button class="{{'nav-link active' if active_tab == 'profile' else 'nav-link'}}" 
 				id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile"
-					type="button" role="tab" aria-controls="nav-profile" aria-selected="true">
+					type="button" role="tab" aria-controls="nav-profile"
+				  aria-selected="true">
 				Profile
 				</button>
 			</a>
@@ -47,27 +51,25 @@
 			<a class="link" href="/dashboard/new_lesson" class="link">	
 				<button class="{{'nav-link active' if active_tab == 'new_lesson' else 'nav-link'}}"  
 				id="nav-newLesson-tab" data-bs-toggle="tab" data-bs-target="#nav-newLesson"
-					type="button" role="tab" aria-controls="nav-newLesson" aria-selected="true">New Lesson
+					type="button" role="tab" aria-controls="nav-newLesson"
+				  aria-selected="true">New Lesson
 				</button>
 			</a>
 
 
 
 			<a class="link" href="/dashboard/new_course" class="link">	
-				<button class="{{'nav-link active' if active_tab == 'new_coures' else 'nav-link'}}"  
+				<button class="{{'nav-link active' if active_tab == 'new_coure' else 'nav-link'}}"  
 				id="nav-newCourse-tab" data-bs-toggle="tab" data-bs-target="#nav-newCourse"
-					type="button" role="tab" aria-controls="nav-newCoures" aria-selected="true">New Course
+					type="button" role="tab" aria-controls="nav-newCoures" 
+					aria-selected="true">New Course
 				</button>
 			</a>
 
 
-
-
-
-
-
 		</div>
 	</nav>
+	
 	<!-- Tab contents here -->
 	<div class="tab-content" id="nav-tabContent">
 
@@ -78,10 +80,9 @@
 		{% block new_lesson %}  {% endblock new_lesson %}
 
 			<!-- ******** new_Course ********-->
-		{% block new_course %}  {% endblock new_course %}
-
-
-		
+		{% block new_course %}  {% endblock new_course %}	
 	</div>
+
+
 </div>
 {% endblock content %}

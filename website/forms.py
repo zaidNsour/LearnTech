@@ -1,11 +1,13 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField,SubmitField, BooleanField, TextAreaField
 from wtforms import FileField
+from wtforms_sqlalchemy.fields import QuerySelectField
 from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import DataRequired, Length, Email
 from wtforms.validators import Regexp, EqualTo, ValidationError
-from website.models import User
+from website.models import User, Course
 from flask_login import current_user
+from flask_ckeditor import CKEditorField
 
 class RegistrationForm(FlaskForm):
 
@@ -23,6 +25,8 @@ class RegistrationForm(FlaskForm):
     )
   confirm_password=PasswordField("Confirm Password", validators=[DataRequired(), EqualTo("password")] )
   submit=SubmitField("Sign Up")
+
+
 
   def validate_email(self, email):
     user=User.query.filter_by(email= email.data).first()
@@ -49,20 +53,38 @@ class  UpdateProfileForm(FlaskForm):
     )
   submit=SubmitField("Update")
 
-  def validate_email(self, email):
-    if email.data != current_user.email:
-      user=User.query.filter_by(email= email.data).first()
-      if user:
-        raise ValidationError("Email is already exist")
+
       
 
+
+def choice_query():
+  return Course.query    
+
 class NewLessonForm(FlaskForm):
+  course = QuerySelectField("Course", query_factory=choice_query, get_label="title")
+  title=StringField('Title', validators=[DataRequired(),Length(max= 100)] )
+  details=CKEditorField("Details", validators=[DataRequired()], render_kw={"rows" : "30"})
+  video_url=StringField("Video URL", validators=[DataRequired()])
   submit=SubmitField('Add')
 
 
 
 class NewCourseForm(FlaskForm):
+  title=StringField('Title', validators=[DataRequired(),Length(max= 100)] )
+  description=CKEditorField("Description", validators=[DataRequired()], render_kw={"rows" : "30"} )
+  price=StringField('Price',validators=[DataRequired(),Length(max= 10),Regexp('^\d+$') ] )
+  icon_image = FileField(
+      "Upload Course icon", validators=[FileAllowed(["jpg", "png"]) ]
+    )
   submit=SubmitField('Add')
+
+  def validate_title(self, title):
+    course=Course.query.filter_by(title= title.data).first()
+    if course:
+      raise ValidationError("Course Title is already exist")
+    
+ 
+
 
 
   

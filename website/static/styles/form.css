@@ -15,7 +15,8 @@
 }
 
 span.error{
-  font-weight: bold;
+  
+  color:red;
 }
 
 .user-img{

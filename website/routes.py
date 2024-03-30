@@ -20,24 +20,30 @@ routes=Blueprint("routes",__name__)
 
 
 #----------------------methods----------------------------
-def save_picture(form_picture):
-   random_hex=secrets.token_hex(8)
-   #return the extension of an Image and ignore the name of it
-   _, picture_ext = os.path.splitext(form_picture.filename) 
-   picture_name= random_hex + picture_ext
-   picture_path= os.path.join(app.root_path, 'static/images/user_pics', picture_name)
-   output_size=(300,300)
-   i=Image.open(form_picture)
-   i.thumbnail(output_size)
-   i.save(picture_path)
-   return picture_name
+def save_picture( form_picture, path, output_size=None ):
+	random_hex=secrets.token_hex(8)
+	#return the extension of an Image and ignore the name of it
+	_, picture_ext = os.path.splitext(form_picture.filename) 
+	picture_name= random_hex + picture_ext
+	picture_path= os.path.join(app.root_path, path, picture_name)
+	i=Image.open(form_picture)
+	if output_size:
+		output_size=output_size
+		i.thumbnail(output_size)
+	i.save(picture_path)
+	return picture_name
+
+
+#----------------------methods----------------------------
+
    
 
    
 
 @routes.route("/", methods=["GET", "POST"] )
 def home():
-  return render_template("home.html")
+  courses=Course.query.all()
+  return render_template("home.html",  courses=courses)
 
 
 
@@ -116,6 +122,9 @@ def dashboard():
                          flash_messages=flash_messages, active_tab="profile")
 
 
+
+
+
 @routes.route("/dashboard/profile", methods=["GET","POST"])
 @login_required
 def profile(): 
@@ -123,7 +132,10 @@ def profile():
   if profile_form.validate_on_submit():
      
      if profile_form.picture.data:
-        picture_file=save_picture(profile_form.picture.data)
+        picture_file=save_picture(profile_form.picture.data,
+                                  path="static/images/user_pics",
+                                  output_size=(200,200) 
+                                )
         current_user.img_file=picture_file
 
 
@@ -141,8 +153,14 @@ def profile():
 
   img_file = url_for("static", filename=f"images/user_pics/{current_user.img_file}")
 
-  return render_template("profile.html", title="Profile", profile_form=profile_form
-                        ,img_file=img_file, active_tab="profile")
+  flash_messages = get_flashed_messages()
+
+  return render_template("profile.html",
+                          title="Profile",
+                          profile_form=profile_form,
+                          img_file=img_file, active_tab="profile",
+                          flash_messages=flash_messages
+                        )
    
 
 
@@ -150,18 +168,92 @@ def profile():
 @routes.route("/dashboard/new_lesson", methods=["GET","POST"])
 @login_required
 def new_lesson():
-   new_lesson_form=NewLessonForm()
-   return render_template("new_lesson.html", title="New Lesson",
-                          new_lesson_form=new_lesson_form,  active_tab="new_lesson")
+  new_lesson_form=NewLessonForm()
+
+  if new_lesson_form.validate_on_submit():
+     
+     course=new_lesson_form.course.data
+
+     lesson=Lesson(title=new_lesson_form.title.data,
+                  details=new_lesson_form.details.data,
+                  video_url=new_lesson_form.video_url.data,
+                  course_name=course
+                  )
+     
+     db.session.add(lesson)
+     db.session.commit()
+
+     flash("Your lesson has been created!", "success")
+     return redirect(url_for("routes.new_lesson"))
+  
+  flash_messages = get_flashed_messages()
+  
+  return render_template(
+        "new_lesson.html",
+        title="New Lesson",
+        new_lesson_form=new_lesson_form,
+        active_tab="new_lesson",
+        flash_messages=flash_messages
+    )
+
+
+
 
 
 
 @routes.route("/dashboard/new_course", methods=["GET","POST"])
 @login_required
 def new_course():
-   new_course_form=NewCourseForm()
-   return render_template("new_course.html", title="New Course",
-                          new_course_form= new_course_form,  active_tab="new_course")
+  new_course_form=NewCourseForm()
+  if new_course_form.validate_on_submit(): 
+     
+     if new_course_form.icon_image.data:
+        icon_file=save_picture(new_course_form.icon_image.data,
+                               path="static/images/course_pics")
+
+     course=Course(title=new_course_form.title.data,
+                  description=new_course_form.description.data,
+                  icon=icon_file,
+                  author=current_user,
+                  price=int(new_course_form.price.data)
+                  )
+     
+     db.session.add(course)
+     db.session.commit()
+
+     flash("The course has been created",category="success")
+     return redirect(url_for("routes.new_course"))
+
+  flash_messages = get_flashed_messages()
+
+  return render_template("new_course.html",
+                        title="New Course",
+                        new_course_form=new_course_form,
+                        active_tab="new_course",
+                        flash_messages=flash_messages
+                        )
+
+
+
+
+
+@app.route("/<string:course_title>")
+def course(course_title):
+    course = Course.query.filter_by(title=course_title).first()
+    course_id = course.id if course else None
+    course = Course.query.get_or_404(course_id)
+    return render_template(
+        "course.html",
+        title=course.title,
+        course=course,
+    )
+
+
+    
+
+
+
+
 
 
 

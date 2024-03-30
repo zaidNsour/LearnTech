@@ -1,55 +1,111 @@
-
 {% extends "dashboard.html" %}
 
 
-{%block new_course%}
+{% block new_course %}
 
 <div class="{{'tab-pane show active fade p-3' if active_tab=='new_course' else 'tab-pane fade p-3'}}" id="nav-newCourse"
-    role="tabpanel" aria-labelledby="nav-newCourse-tab">
+	role="tabpanel" aria-labelledby="nav-newCourse-tab">
 
-    
-    
-      <div class="modal-body">
-          <form action="" method="">
-            <legend class="border-bottom my-3">New Course</legend>
+	<form action="/dashboard/new_course" method="POST" enctype="multipart/form-data">
+		{{ new_course_form.hidden_tag() }}
+		
+		<legend class="border-bottom my-3">New Course</legend>
+		
+
+    <!--
 
 
-            <div class="mb-3">
-              <label for="categories" class="form-label">Category</label>
-                <select class="form-select">
-                    <option selected>Choose a Category</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                </select>
-          </div>
+		<div class="mb-3">
+			<label for="categories" class="form-label">Category</label>
+			<select class="form-select">
+				<option selected>Choose a Category</option>
+				<option value="1">One</option>
+				<option value="2">Two</option>
+				<option value="3">Three</option>
+			</select>
+		</div>		
 
-          
-              <div class="mb-3">
-                  <label for="CourseName" class="form-label">Course Name</label>
-                  <input type="text" class="form-control" id="CourseName" placeholder="Course Name">
-              </div>
-              <div class="mb-3">
-                  <label for="CourseDescription" class="form-label">Description</label>
-                  <textarea class="form-control" id="CourseDescription" rows="3"></textarea>
-              </div>
 
-              <div class="mb-3">
-                  <label for="CourseImg" class="form-label">Course Image</label>
-                  <input type="file" class="form-control" id="CourseImg">
-              </div>
+		-->
 
-              <div class="form-group">
-                <div class="col-12">
-                    <button class="btn-submit" type="submit">Create</button>
-                </div>
-              </div>
-          </form>
-      </div>
-      
-  
-    
+		
+
+
+		<div class="mb-3">
+			{{ new_course_form.title.label(class='form-control-label') }}
+			{% if new_course_form.title.errors %}
+			{{ new_course_form.title(class='form-control is-invalid') }}
+			<div class="invalid-feedback">
+				{% for error in new_course_form.title.errors %}
+				<span class="error">{{error}}</span>
+				{% endfor %}
+			</div>
+
+			{% else %}
+			{{ new_course_form.title(class='form-control') }}
+
+			{% endif %}
+		</div>
+
+
+		<div class="mb-3">
+			{{ new_course_form.description.label(class='form-control-label') }}
+			{% if new_course_form.description.errors %}
+			{{ new_course_form.description(class='form-control is-invalid' )}}
+			<div class="invalid-feedback">
+				{% for error in new_course_form.description.errors %}
+				<span class="error">{{error}}</span>
+				{% endfor %}
+			</div>
+
+			{% else %}
+			{{ new_course_form.description(class='form-control') }}
+
+			{% endif %}
+		</div>
+
+
+		<div class="mb-3">
+			{{ new_course_form.price.label(class='form-control-label') }}
+			{% if new_course_form.price.errors %}
+			{{ new_course_form.price(class='form-control is-invalid' )}}
+			<div class="invalid-feedback">
+				{% for error in new_course_form.price.errors %}
+				<span class="error">{{error}}</span>
+				{% endfor %}
+			</div>
+
+			{% else %}
+			{{ new_course_form.price(class='form-control') }}
+
+			{% endif %}
+		</div>
+
+
+
+		<div class="form-group mb-3">
+			{{ new_course_form.icon_image.label}}
+			{{ new_course_form.icon_image(class='form-control-file')}}
+			{% if new_course_form.icon_image.errors %}
+			{% for error in new_course_form.icon_image.errors %}
+			<span class="text-danger">{{ error }}</span>
+			{% endfor %}
+			{% endif %}
+	</div>
+
+
+
+		<div class="form-group">
+			<div class="col-12">
+				<button class="btn-submit" type="submit">Create</button>
+			</div>
+		</div>
+
+	</form>
+
+	{{ ckeditor.load() }}
+	{{ ckeditor.config(name="content") }}
 
 </div>
 
-{%endblock new_course%}
+{% endblock new_course %}
