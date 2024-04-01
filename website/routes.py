@@ -43,7 +43,8 @@ def save_picture( form_picture, path, output_size=None ):
 @routes.route("/", methods=["GET", "POST"] )
 def home():
   courses=Course.query.all()
-  return render_template("home.html",  courses=courses)
+  categories=Category.query.all()
+  return render_template("home.html",  courses=courses, categories= categories)
 
 
 
@@ -248,12 +249,47 @@ def course(course_title):
     course_id = course.id if course else None
     course = Course.query.get_or_404(course_id)
     related_courses=Course.query.filter_by(category_name=course.category_name)
+
     return render_template(
         "course.html",
         title=course.title,
         course=course,
         related_courses=related_courses
     )
+
+
+
+
+
+@app.route("/<int:category_id>")
+def category(category_id):
+    
+    category = Category.query.filter_by(id=category_id).first()
+    category_id = category.id if category else None
+    category = Category.query.get_or_404(category_id)
+    category_courses=Course.query.filter_by(category_id=category.id)
+    
+
+    return render_template(
+        "category.html",
+        name=category.name,
+        category=category,
+        category_courses=category_courses
+
+    )
+
+
+
+
+
+@routes.route("/course_content")
+def course_content():
+  return render_template("course_content.html", title="Course content")
+
+
+
+
+
 
 
     
