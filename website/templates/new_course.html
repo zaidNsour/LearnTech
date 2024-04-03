@@ -11,9 +11,6 @@
 		
 		<legend class="border-bottom my-3">New Course</legend>
 		
-
-   
-
 		<div class="mb-3">
 			{{ new_course_form.category.label(class="form-control-label") }}
 
@@ -29,22 +26,17 @@
 			{%endif%}
 		</div>
 
-
-		
-
-		
-
-
 		<div class="mb-3">
 			{{ new_course_form.title.label(class='form-control-label') }}
 			{% if new_course_form.title.errors %}
 			{{ new_course_form.title(class='form-control is-invalid') }}
 			<div class="invalid-feedback">
+
 				{% for error in new_course_form.title.errors %}
 				<span class="error">{{error}}</span>
 				{% endfor %}
-			</div>
 
+			</div>
 			{% else %}
 			{{ new_course_form.title(class='form-control') }}
 
@@ -57,11 +49,12 @@
 			{% if new_course_form.description.errors %}
 			{{ new_course_form.description(class='form-control is-invalid' )}}
 			<div class="invalid-feedback">
+
 				{% for error in new_course_form.description.errors %}
 				<span class="error">{{error}}</span>
 				{% endfor %}
-			</div>
 
+			</div>
 			{% else %}
 			{{ new_course_form.description(class='form-control') }}
 
@@ -74,9 +67,11 @@
 			{% if new_course_form.price.errors %}
 			{{ new_course_form.price(class='form-control is-invalid' )}}
 			<div class="invalid-feedback">
+
 				{% for error in new_course_form.price.errors %}
 				<span class="error">{{error}}</span>
 				{% endfor %}
+
 			</div>
 
 			{% else %}
@@ -91,9 +86,11 @@
 			{{ new_course_form.icon_image.label}}
 			{{ new_course_form.icon_image(class='form-control-file')}}
 			{% if new_course_form.icon_image.errors %}
+
 			{% for error in new_course_form.icon_image.errors %}
 			<span class="text-danger">{{ error }}</span>
 			{% endfor %}
+			
 			{% endif %}
 	</div>
 

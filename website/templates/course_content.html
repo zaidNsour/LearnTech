@@ -20,11 +20,12 @@
 
 <!-- from lesson-single-v1 and  lesson-single-v2  -->
 
+
 <!-- PAGE TITLE
     ================================================== -->
     <header class="py-8 py-md-11" style="background-image: none;">
       <div class="container text-center py-xl-2">
-          <h1 class="display-4 fw-semi-bold mb-0">Course content</h1>
+          <h1 class="display-4 fw-semi-bold mb-0">{{ course.title }}</h1>
           <nav aria-label="breadcrumb">
               <ol class="breadcrumb breadcrumb-scroll justify-content-center">
                   <li class="breadcrumb-item">
@@ -33,7 +34,7 @@
                       </a>
                   </li>
                   <li class="breadcrumb-item text-gray-800 active" aria-current="page">
-                      Course content
+                    {{ course.title }}
                   </li>
               </ol>
           </nav>
@@ -48,53 +49,44 @@
     ================================================== -->
 <div class="container container-wd">
   <div class="row pt-8 pb-10">
+
+ 
+    <!--Start lesson Content-->
+
     <div class="col-lg-8">
-      <a href="https://www.youtube.com/watch?v=9I-Y6VQ6tyI" class="d-block sk-thumbnail rounded mb-8" data-fancybox>
+    
+    
+    
+    
+      <a href="{{lesson.video_url}}" class="d-block sk-thumbnail rounded mb-8" data-fancybox>
         <div
           class="h-90p w-90p rounded-circle bg-white size-30-all d-inline-flex align-items-center justify-content-center position-absolute center z-index-1">
-          <!-- Icon -->
+    
           <svg width="14" height="16" viewBox="0 0 14 16" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M12.8704 6.15374L3.42038 0.328572C2.73669 -0.0923355 1.9101 -0.109836 1.20919 0.281759C0.508282 0.673291 0.0898438 1.38645 0.0898438 2.18929V13.7866C0.0898438 15.0005 1.06797 15.9934 2.27016 16C2.27344 16 2.27672 16 2.27994 16C2.65563 16 3.04713 15.8822 3.41279 15.6591C3.70694 15.4796 3.79991 15.0957 3.62044 14.8016C3.44098 14.5074 3.05697 14.4144 2.76291 14.5939C2.59188 14.6982 2.42485 14.7522 2.27688 14.7522C1.82328 14.7497 1.33763 14.3611 1.33763 13.7866V2.18933C1.33763 1.84492 1.51713 1.53907 1.81775 1.3711C2.11841 1.20314 2.47294 1.21064 2.76585 1.39098L12.2159 7.21615C12.4999 7.39102 12.6625 7.68262 12.6618 8.01618C12.6611 8.34971 12.4974 8.64065 12.2118 8.81493L5.37935 12.9983C5.08548 13.1783 4.9931 13.5623 5.17304 13.8562C5.35295 14.1501 5.73704 14.2424 6.03092 14.0625L12.8625 9.87962C13.5166 9.48059 13.9081 8.78496 13.9096 8.01868C13.9112 7.25249 13.5226 6.55524 12.8704 6.15374Z"
               fill="currentColor" />
           </svg>
-         
+    
         </div>
-        <img class="rounded shadow-light-lg" src="../static/assets/img/products/product-2.jpg" alt="...">
+        <img class="rounded shadow-light-lg"
+          src="https://i.ytimg.com/vi/6QAELgirvjs/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLB71VfOf_O51PTUfMbVumH-o8fhtg"
+          alt="...">
       </a>
-
+    
+    
       <h3 class="text-black">Course Description</h3>
-
-      <p class="mb-6 line-height-md">Do you want to become a UI/UX designer but you don't know where to start? This
-        course will allow you to develop your user interface design skills and you can add UI designer to your CV and
-        start getting clients for your skills.</p>
-      <p class="mb-6 line-height-md">Hi everyone. I'm Arash and I'm a UI/UX designer. In this course, I will help you
-        learn and master Figma app comprehensively from scratch. Figma is an innovative and brilliant tool for User
-        Interface design. It's used by everyone from entrepreneurs and start-ups to Apple, Airbnb, Facebook, etc.</p>
-      <p class="collapse mb-6 line-height-md" id="readcollapseExample">Anim pariatur cliche reprehenderit, enim eiusmod
-        high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson
-        cred nesciunt sapiente I will help you learn and master Figma app comprehensively from scratch. Figma is an
-        innovative and brilliant tool for User Interface design. It's used by everyone from entrepreneurs ea proident.
+    
+    
+      <p class="collapse mb-6 line-height-md" id="readcollapseExample">
+        {{lesson.details | safe}}
+    
       </p>
-      <a class="text-teal read-more h6 d-inline-block mb-8" data-bs-toggle="collapse" href="#readcollapseExample"
-        role="button" aria-expanded="false" aria-controls="readcollapseExample">
-        <span class="d-inline-flex align-items-center more">
-          Read More
-          <span class="d-flex align-items-center justify-content-center bg-teal rounded-circle ms-2 p-2 w-26p">
-            <i class="fas fa-plus font-size-10 "></i>
-          </span>
-        </span>
-        <span class="d-inline-flex align-items-center less">
-          Read Less
-          <span class="d-flex align-items-center justify-content-center bg-teal rounded-circle ms-2 p-2 w-26p">
-            <i class="fas fa-minus font-size-10 "></i>
-          </span>
-        </span>
-      </a>
-
+    
+    
       <h3 class=" mb-6">Comment</h3>
       <ul class="list-unstyled pt-2">
-
+    
         <li class="media d-flex">
           <div class="avatar avatar-xxl me-3 me-md-6 flex-shrink-0">
             <img src="../static/assets/img/avatars/avatar-1.jpg" alt="..." class="avatar-img rounded-circle">
@@ -115,7 +107,7 @@
               connections. Could you please let me take a look at the complete prototype?</p>
           </div>
         </li>
-
+    
         <li class="media d-flex">
           <div class="avatar avatar-xxl me-3 me-md-6 flex-shrink-0">
             <img src="../static/assets/img/avatars/avatar-2.jpg" alt="..." class="avatar-img rounded-circle">
@@ -137,7 +129,7 @@
           </div>
         </li>
       </ul>
-
+    
       <div class="border shadow rounded p-6 p-md-9">
         <h3 class="mb-2">Add Reviews & Rate</h3>
         <div class="">What is it like to Course?</div>
@@ -146,55 +138,53 @@
             <fieldset class="slect-rating mb-3">
               <input type="radio" id="star5" name="rating" value="5" />
               <label class="full" for="star5" title="Awesome - 5 stars"></label>
-
+    
               <input type="radio" id="star4half" name="rating" value="4 and a half" />
               <label class="half" for="star4half" title="Pretty good - 4.5 stars"></label>
-
+    
               <input type="radio" id="star4" name="rating" value="4" />
               <label class="full" for="star4" title="Pretty good - 4 stars"></label>
-
+    
               <input type="radio" id="star3half" name="rating" value="3 and a half" />
               <label class="half" for="star3half" title="Meh - 3.5 stars"></label>
-
+    
               <input type="radio" id="star3" name="rating" value="3" />
               <label class="full" for="star3" title="Meh - 3 stars"></label>
-
+    
               <input type="radio" id="star2half" name="rating" value="2 and a half" />
               <label class="half" for="star2half" title="Kinda bad - 2.5 stars"></label>
-
+    
               <input type="radio" id="star2" name="rating" value="2" />
               <label class="full" for="star2" title="Kinda bad - 2 stars"></label>
-
+    
               <input type="radio" id="star1half" name="rating" value="1 and a half" />
               <label class="half" for="star1half" title="Meh - 1.5 stars"></label>
-
+    
               <input type="radio" id="star1" name="rating" value="1" />
               <label class="full" for="star1" title="Sucks big time - 1 star"></label>
-
+    
               <input type="radio" id="starhalf" name="rating" value="half" />
               <label class="half" for="starhalf" title="Sucks big time - 0.5 stars"></label>
             </fieldset>
           </div>
-
+    
           <div class="form-group mb-6">
-            <label  for="exampleInputTitle1">Review Title</label>
-            <input type="text" class="form-control placeholder-1 " id="exampleInputTitle1"
-              placeholder="Courses">
+            <label for="exampleInputTitle1">Review Title</label>
+            <input type="text" class="form-control placeholder-1 " id="exampleInputTitle1" placeholder="Courses">
           </div>
-
+    
           <div class="form-group mb-6">
-            <label  for="exampleFormControlTextarea1">Review Content</label>
+            <label for="exampleFormControlTextarea1">Review Content</label>
             <textarea class="form-control placeholder-1" id="exampleFormControlTextarea1" rows="6"
               placeholder="Content"></textarea>
           </div>
-
+    
           <button type="submit" class="btn btn-orange btn-block mw-md-300p">SUBMIT REVIEW</button>
         </form>
       </div>
-
+    
       <div class="d-md-flex align-items-center justify-content-between">
-        <a href="#"
-          class="btn btn-blue d-flex align-items-center mb-5 mb-md-0 btn-block mw-md-280p justify-content-center">
+        <a href="#" class="btn btn-blue d-flex align-items-center mb-5 mb-md-0 btn-block mw-md-280p justify-content-center">
           <i class="fas fa-arrow-left font-size-xs"></i>
           <span class="ms-3">Introduction</span>
         </a>
@@ -204,30 +194,12 @@
         </a>
       </div>
     </div>
+    
+
+
 
     <div class="col-lg-4">
       <div class="p-5">
-        <!-- Search -->
-        <form class="mb-5">
-          <div class="input-group border rounded">
-            <div class="input-group-prepend">
-              <button class="btn btn-sm text-secondary" type="submit">
-                <!-- Icon -->
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M8.80758 0C3.95121 0 0 3.95121 0 8.80758C0 13.6642 3.95121 17.6152 8.80758 17.6152C13.6642 17.6152 17.6152 13.6642 17.6152 8.80758C17.6152 3.95121 13.6642 0 8.80758 0ZM8.80758 15.9892C4.8477 15.9892 1.62602 12.7675 1.62602 8.80762C1.62602 4.84773 4.8477 1.62602 8.80758 1.62602C12.7675 1.62602 15.9891 4.8477 15.9891 8.80758C15.9891 12.7675 12.7675 15.9892 8.80758 15.9892Z"
-                    fill="currentColor" />
-                  <path
-                    d="M19.762 18.6121L15.1007 13.9509C14.7831 13.6332 14.2687 13.6332 13.9511 13.9509C13.6335 14.2682 13.6335 14.7831 13.9511 15.1005L18.6124 19.7617C18.7712 19.9205 18.9791 19.9999 19.1872 19.9999C19.395 19.9999 19.6032 19.9205 19.762 19.7617C20.0796 19.4444 20.0796 18.9295 19.762 18.6121Z"
-                    fill="currentColor" />
-                </svg>
-
-              </button>
-            </div>
-            <input class="form-control form-control-sm border-0 ps-0" type="search" placeholder="Search item"
-              aria-label="Search">
-          </div>
-        </form>
 
         <div id="accordionCurriculum" class="">
           <div class="overflow-hidden  rounded mb-6">
@@ -287,7 +259,7 @@
 
                 <div class="d-flex align-items-center overflow-auto overflow-md-visible flex-shrink-all">
                   <div class="badge btn-blue-soft me-5 font-size-sm fw-normal py-2">30 min</div>
-                  <a href="#" class="text-secondary d-flex">
+                  <a href="course_content/Introduction to HTML" class="text-secondary d-flex">
                     <!-- Icon -->
                     <svg width="14" height="16" viewBox="0 0 14 16" xmlns="http://www.w3.org/2000/svg">
                       <path
@@ -1211,6 +1183,11 @@
         </div>
       </div>
     </div>
+
+
+
+
+
   </div>
 </div>
 

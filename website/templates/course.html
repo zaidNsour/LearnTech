@@ -36,7 +36,7 @@
         <h1 class="me-xl-14 text-white">
           {{course.title}}
         </h1>
-        <p class="me-xl-13 mb-5 text-white">{{course.description | safe}}</p>
+        <p  style="color:transparent">-------------------------</p>
 
         <a href="#"
           class="badge badge-lg badge-rounded-circle badge-secondary font-size-base badge-float badge-float-inside top-0 text-white">
@@ -1480,7 +1480,12 @@
           </div>
 
           <button class="btn btn-primary btn-block mb-3" type="button" name="button">BUY NOW</button>
-          <button class="btn btn-orange btn-block mb-6" type="button" name="button">ENROLL</button>
+          <a 
+          href="{{ url_for('course_content', course_title=course.title, lesson_title=current_lesson.title ) }}" 
+          class="btn btn-orange btn-block mb-6" 
+          type="button" name="button">
+          ENROLL
+          </a>
 
           <ul class="list-group list-group-flush">
 

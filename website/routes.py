@@ -1,10 +1,10 @@
 import secrets
 from PIL import Image
 import os
-from website.models import User, Lesson, Course, Category
+from website.models import User, Lesson, Course, Category, Unit
 from flask import render_template, url_for, flash, redirect, request,Blueprint
 from website.forms import RegistrationForm, LoginForm, UpdateProfileForm
-from website.forms import NewLessonForm, NewCourseForm
+from website.forms import NewLessonForm, NewCourseForm, NewUnitForm
 from website import app, bcrypt, db
 from flask_login import (
     login_required,
@@ -44,7 +44,12 @@ def save_picture( form_picture, path, output_size=None ):
 def home():
   courses=Course.query.all()
   categories=Category.query.all()
-  return render_template("home.html",  courses=courses, categories= categories)
+  flash_messages = get_flashed_messages()
+  return render_template("home.html",  
+                         courses= courses,
+                         categories= categories,
+                         flash_messages= flash_messages
+                         )
 
 
 
@@ -62,7 +67,12 @@ def register():
     db.session.commit()
     flash(message="Account created successfully",category="success")
     return redirect(url_for("routes.login"))
-  return render_template("register.html", title="Register", form=form)
+  flash_messages = get_flashed_messages()
+  return render_template("register.html",
+                         title="Register", 
+                         form=form,
+                         flash_messages= flash_messages
+                         )
 
 
 @routes.route("/login", methods=['GET', 'POST'])
@@ -124,8 +134,6 @@ def dashboard():
 
 
 
-
-
 @routes.route("/dashboard/profile", methods=["GET","POST"])
 @login_required
 def profile(): 
@@ -172,13 +180,13 @@ def new_lesson():
   new_lesson_form=NewLessonForm()
 
   if new_lesson_form.validate_on_submit():
-     
      course=new_lesson_form.course.data
-
+     unit=new_lesson_form.unit.data
      lesson=Lesson(title=new_lesson_form.title.data,
                   details=new_lesson_form.details.data,
                   video_url=new_lesson_form.video_url.data,
-                  course_name=course
+                  course_name=course,
+                  unit_name=unit
                   )
      
      db.session.add(lesson)
@@ -194,6 +202,34 @@ def new_lesson():
         title="New Lesson",
         new_lesson_form=new_lesson_form,
         active_tab="new_lesson",
+        flash_messages=flash_messages
+    )
+
+
+
+
+@routes.route("/dashboard/new_unit", methods=["GET","POST"])
+@login_required
+def new_unit():
+  new_unit_form=NewUnitForm()
+  course=new_unit_form.course.data
+  if new_unit_form.validate_on_submit():
+     unit=Unit(title= new_unit_form.title.data,
+               course_name=course
+                  )
+     db.session.add(unit)
+     db.session.commit()
+
+     flash("Unit has been created!", "success")
+     return redirect(url_for("routes.new_unit"))
+  
+  flash_messages = get_flashed_messages()
+  
+  return render_template(
+        "new_unit.html",
+        title="New Unit",
+        new_unit_form=new_unit_form,
+        active_tab="new_unit",
         flash_messages=flash_messages
     )
 
@@ -243,24 +279,6 @@ def new_course():
 
 
 
-@app.route("/<string:course_title>")
-def course(course_title):
-    course = Course.query.filter_by(title=course_title).first()
-    course_id = course.id if course else None
-    course = Course.query.get_or_404(course_id)
-    related_courses=Course.query.filter_by(category_name=course.category_name)
-
-    return render_template(
-        "course.html",
-        title=course.title,
-        course=course,
-        related_courses=related_courses
-    )
-
-
-
-
-
 @app.route("/<int:category_id>")
 def category(category_id):
     
@@ -279,12 +297,39 @@ def category(category_id):
     )
 
 
+@app.route("/<string:course_title>")
+def course(course_title):
+    course = Course.query.filter_by(title=course_title).first_or_404()
+    related_courses=Course.query.filter_by(category_name=course.category_name)
+    #lesson thats user arrive to it 
+    current_lesson=Lesson.query.filter_by(course_id= course.id).first()
+    
+
+    return render_template(
+        "course.html",
+        title=course.title,
+        course=course,
+        related_courses=related_courses,
+        current_lesson=current_lesson,
+       
+    )
 
 
 
-@routes.route("/course_content")
-def course_content():
-  return render_template("course_content.html", title="Course content")
+
+@app.route( "/<string:course_title>/<string:lesson_title>" )
+def course_content(course_title,lesson_title):
+  
+  course = Course.query.filter_by(title=course_title).first_or_404()
+  lesson = Lesson.query.filter_by(title=lesson_title, course_id=course.id).first_or_404()
+  lessons = Lesson.query.filter_by(course_id=course.id).all()
+ 
+  return render_template("lesson_content.html",
+                          title=lesson.title,
+                          lesson= lesson,
+                          lessons=lessons,
+                          course=course
+                          )
 
 
 

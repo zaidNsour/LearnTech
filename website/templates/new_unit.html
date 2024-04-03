@@ -1,0 +1,55 @@
+{% extends "dashboard.html" %}
+
+
+{%block new_unit%}
+
+<div class="{{'tab-pane show active fade p-3' if active_tab=='new_unit' else 'tab-pane fade p-3'}}" id="nav-newUnit"
+	role="tabpanel" aria-labelledby="nav-newUnit-tab">
+	<form action="/dashboard/new_unit" method="POST">
+		{{ new_unit_form.hidden_tag()}}
+		<legend class="border-bottom my-3">New unit</legend>
+
+		<div class="mb-3">
+			{{ new_unit_form.course.label(class="form-control-label") }}
+
+			{% if new_unit_form.course.errors %}
+				{{ new_unit_form.course(class="form-control is-invalid") }}
+				<div class="invalid-feedback">
+					{% for error in new_unit_form.course.errors %}
+						<span class="error">{{ error }}</span>
+					{% endfor %}
+				</div>
+			{% else %}
+				{{ new_unit_form.course(class="form-select") }}
+			{%endif%}
+		</div>
+
+		<div class="mb-3">
+			{{ new_unit_form.title.label(class='form-control-label') }}
+
+			{% if new_unit_form.title.errors %}
+			{{ new_unit_form.title(class='form-control is-invalid') }}
+			<div class="invalid-feedback">
+				{% for error in new_unit_form.title.errors %}
+					<span class="error">{{error}}</span>
+				{% endfor %}
+			</div>
+
+			{% else %}
+			{{ new_unit_form.title(class='form-control') }}
+
+			{% endif %}
+
+		</div>
+
+		<div class="form-group">
+			<div class="col-12">
+				<button class="btn-submit" type="submit">Add</button>
+			</div>
+		</div>
+
+	</form>
+
+</div>
+
+{%endblock new_unit%}

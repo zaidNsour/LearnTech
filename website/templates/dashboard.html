@@ -13,13 +13,7 @@
 </head>
 
 
-
-
 {%extends "layout.html"%}
-
-
-
-
 
 {% block content%}
 
@@ -46,8 +40,6 @@
 				</button>
 			</a>
 
-			
-
 			<a class="link" href="/dashboard/new_lesson" class="link">	
 				<button class="{{'nav-link active' if active_tab == 'new_lesson' else 'nav-link'}}"  
 				id="nav-newLesson-tab" data-bs-toggle="tab" data-bs-target="#nav-newLesson"
@@ -56,7 +48,13 @@
 				</button>
 			</a>
 
-
+			<a class="link" href="/dashboard/new_unit" class="link">	
+				<button class="{{'nav-link active' if active_tab == 'new_unit' else 'nav-link'}}"  
+				id="nav-newUnit-tab" data-bs-toggle="tab" data-bs-target="#nav-newUnit"
+					type="button" role="tab" aria-controls="nav-newUnit"
+				  aria-selected="true">New Unit
+				</button>
+			</a>
 
 			<a class="link" href="/dashboard/new_course" class="link">	
 				<button class="{{'nav-link active' if active_tab == 'new_coure' else 'nav-link'}}"  
@@ -65,7 +63,6 @@
 					aria-selected="true">New Course
 				</button>
 			</a>
-
 
 		</div>
 	</nav>
@@ -79,10 +76,16 @@
 			<!-- ******** new_lesson ********-->
 		{% block new_lesson %}  {% endblock new_lesson %}
 
+
+			<!-- ******** new_unit ********-->
+		{% block new_unit %}  {% endblock new_unit %}
+
+
+
 			<!-- ******** new_Course ********-->
 		{% block new_course %}  {% endblock new_course %}	
 	</div>
 
-
 </div>
+
 {% endblock content %}
