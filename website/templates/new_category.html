@@ -1,0 +1,56 @@
+{% extends "dashboard.html" %}
+
+
+{% block new_category %}
+
+<div class="{{'tab-pane show active fade p-3' if active_tab=='new_category' else 'tab-pane fade p-3'}}" id="nav-newCategory"
+	role="tabpanel" aria-labelledby="nav-newCategory-tab">
+
+	<form action="/dashboard/new_category" method="POST" enctype="multipart/form-data">
+		{{ new_category_form.hidden_tag() }}
+		
+		<legend class="border-bottom my-3">New Category</legend>
+		
+
+		<div class="mb-3">
+			{{ new_category_form.title.label(class='form-control-label') }}
+			{% if new_category_form.title.errors %}
+			{{ new_category_form.title(class='form-control is-invalid') }}
+			<div class="invalid-feedback">
+
+				{% for error in new_category_form.title.errors %}
+				  <span class="error">{{error}}</span>
+				{% endfor %}
+
+			</div>
+			{% else %}
+			{{ new_category_form.title(class='form-control') }}
+
+			{% endif %}
+		</div>
+
+
+
+		<div class="form-group mb-3">
+			{{ new_category_form.icon_image.label}}
+			{{ new_category_form.icon_image(class='form-control-file')}}
+			{% if new_category_form.icon_image.errors %}
+
+			{% for error in new_category_form.icon_image.errors %}
+			  <span class="text-danger">{{ error }}</span>
+			{% endfor %}
+			
+			{% endif %}
+	</div>
+
+		<div class="form-group">
+			<div class="col-12">
+				<button class="btn-submit" type="submit">Create</button>
+			</div>
+		</div>
+
+	</form>
+
+</div>
+
+{% endblock new_category %}

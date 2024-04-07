@@ -24,6 +24,23 @@
 			{%endif%}
 		</div>
 
+
+		<div class="mb-3">
+			{{ new_lesson_form.unit.label(class="form-control-label") }}
+
+			{% if new_lesson_form.unit.errors %}
+				{{ new_lesson_form.unit(class="form-control is-invalid") }}
+				<div class="invalid-feedback">
+					{% for error in new_lesson_form.unit.errors %}
+						<span class="error">{{ error }}</span>
+					{% endfor %}
+				</div>
+			{% else %}
+				{{ new_lesson_form.unit(class="form-select") }}
+			{%endif%}
+		</div>
+
+
 		<div class="mb-3">
 			{{ new_lesson_form.title.label(class='form-control-label') }}
 
@@ -91,5 +108,6 @@
 	{{ ckeditor.config(name="content") }}
 
 </div>
+
 
 {%endblock new_lesson%}

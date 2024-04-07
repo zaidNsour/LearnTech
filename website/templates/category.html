@@ -22,7 +22,7 @@
     ================================================== -->
 <header class="py-8 py-md-11" style="background-image: none;">
 	<div class="container text-center py-xl-2">
-		<h1 class="display-4 fw-semi-bold mb-0">{{ name }}</h1>
+		<h1 class="display-4 fw-semi-bold mb-0">{{ category.title }}</h1>
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb breadcrumb-scroll justify-content-center">
 				<li class="breadcrumb-item">
@@ -31,7 +31,7 @@
 					</a>
 				</li>
 				<li class="breadcrumb-item text-gray-800 active" aria-current="page">
-					{{ name}}
+					{{ category.title }}
 				</li>
 			</ol>
 		</nav>
@@ -45,7 +45,7 @@
   ================================================== -->
 <div class="container mb-6 mb-xl-8 z-index-2">
 	<div class="d-xl-flex align-items-center">
-		<p class="mb-xl-0">We found <span class="text-dark">834 courses</span> available for you</p>
+		<p class="mb-xl-0">We found <span class="text-dark">{{courses_count}} courses</span> available for you</p>
 		<div class="ms-xl-auto d-xl-flex flex-wrap">
 			<div class="mb-4 mb-xl-0 ms-xl-6">
 				<!-- Search -->
@@ -72,10 +72,16 @@
 			</div>
 
 			<div class="mb-4 mb-xl-0 ms-xl-6">
-				<select class="form-select form-select-sm text-dark shadow-none dropdown-menu-end" data-choices>
-					<option>All Categories</option>
-					<option>Another option</option>
-					<option>Something else here</option>
+			
+				<select class="form-select form-select-sm text-dark shadow-none dropdown-menu-end">
+					{% for ctg in  categories %}
+					<a href="{{ url_for( 'category', category_title=ctg.title ) }}">
+						<option {% if ctg.title == category.title %} selected {% endif %}>	
+							{{ctg.title}}	
+						</option>
+					</a>
+					{% endfor %}
+					
 				</select>
 			</div>
 
@@ -132,7 +138,7 @@
 					<!-- Category -->
 					<a href="course-single-v3.html">
 						<span class="mb-1 d-inline-block text-gray-800">
-						{{course.category_name.name}}
+						{{course.category_name.title}}
 						</span>
 					</a>
 

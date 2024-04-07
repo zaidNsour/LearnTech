@@ -3,8 +3,9 @@ from PIL import Image
 import os
 from website.models import User, Lesson, Course, Category, Unit
 from flask import render_template, url_for, flash, redirect, request,Blueprint
+from flask import jsonify
 from website.forms import RegistrationForm, LoginForm, UpdateProfileForm
-from website.forms import NewLessonForm, NewCourseForm, NewUnitForm
+from website.forms import NewLessonForm, NewCourseForm, NewUnitForm, NewCategoryForm
 from website import app, bcrypt, db
 from flask_login import (
     login_required,
@@ -32,6 +33,10 @@ def save_picture( form_picture, path, output_size=None ):
 		i.thumbnail(output_size)
 	i.save(picture_path)
 	return picture_name
+
+def CourseCountInCategory(category_id):
+   courses=Course.query.filter_by(category_id=category_id).all()
+   return len(courses)
 
 
 #----------------------methods----------------------------
@@ -170,7 +175,8 @@ def profile():
                           img_file=img_file, active_tab="profile",
                           flash_messages=flash_messages
                         )
-   
+
+
 
 
 
@@ -279,28 +285,60 @@ def new_course():
 
 
 
-@app.route("/<int:category_id>")
-def category(category_id):
-    
-    category = Category.query.filter_by(id=category_id).first()
-    category_id = category.id if category else None
-    category = Category.query.get_or_404(category_id)
-    category_courses=Course.query.filter_by(category_id=category.id)
-    
+@app.route("/dashboard/new_category", methods=["GET","POST"])
+@login_required
+def new_category():
+  new_category_form=NewCategoryForm()
 
-    return render_template(
-        "category.html",
-        name=category.name,
-        category=category,
-        category_courses=category_courses
+  if new_category_form.validate_on_submit():
+     if new_category_form.icon_image.data:
+        icon_file=save_picture(new_category_form.icon_image.data,
+                               path="static/images/category_pics")
+     category=Category(title= new_category_form.title.data,
+                      icon=icon_file
+                       )
+     db.session.add(category)
+     db.session.commit()
 
+     flash("Category has been created!", "success")
+     return redirect(url_for("new_category"))
+  
+  flash_messages = get_flashed_messages()
+  
+  return render_template(
+        "new_category.html",
+        title="New Category",
+        new_category_form=new_category_form,
+        active_tab="new_category",
+        flash_messages=flash_messages
     )
 
 
-@app.route("/<string:course_title>")
+
+
+
+
+@app.route("/<string:category_title>")
+def category(category_title):
+    
+    category = Category.query.filter_by(title=category_title).first_or_404()
+    category_courses=Course.query.filter_by(category_id=category.id)
+    categories=Category.query.all()
+    courses_count=CourseCountInCategory(category.id)
+    return render_template(
+        "category.html",
+        title=category.title,
+        category=category,
+        category_courses=category_courses,
+        categories=categories,
+        courses_count=courses_count
+      )
+
+
+@app.route("/course/<string:course_title>")
 def course(course_title):
-    course = Course.query.filter_by(title=course_title).first_or_404()
-    related_courses=Course.query.filter_by(category_name=course.category_name)
+    course = Course.query.filter_by(title=course_title).first_or_404() 
+    related_courses=Course.query.filter_by(category_name=course.category_name).all()
     #lesson thats user arrive to it 
     current_lesson=Lesson.query.filter_by(course_id= course.id).first()
     
@@ -310,26 +348,38 @@ def course(course_title):
         title=course.title,
         course=course,
         related_courses=related_courses,
-        current_lesson=current_lesson,
-       
+        current_lesson=current_lesson
     )
 
 
 
 
-@app.route( "/<string:course_title>/<string:lesson_title>" )
+@app.route( "/course/<string:course_title>/<string:lesson_title>" )
 def course_content(course_title,lesson_title):
   
   course = Course.query.filter_by(title=course_title).first_or_404()
-  lesson = Lesson.query.filter_by(title=lesson_title, course_id=course.id).first_or_404()
+  lesson = Lesson.query.filter_by(title=lesson_title, course_id=course.id).first()
   lessons = Lesson.query.filter_by(course_id=course.id).all()
+
+  
  
-  return render_template("lesson_content.html",
+  return render_template("course_content.html",
                           title=lesson.title,
                           lesson= lesson,
                           lessons=lessons,
                           course=course
                           )
+
+
+
+
+
+
+
+
+
+
+
 
 
 

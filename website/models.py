@@ -28,11 +28,11 @@ class User(db.Model, UserMixin):
 
 class Category(db.Model):
   id=db.Column(db.Integer, primary_key=True)
-  name=db.Column(db.String(50),unique=True, nullable=False)
+  title=db.Column(db.String(50),unique=True, nullable=False)
   icon=db.Column(db.String(20),nullable=False, default="default_icon.jpg")
   course=db.relationship("Course", backref="category_name", lazy=True)
   def __repr__(self):
-    return f"category({self.name}, )"
+    return f"category({self.title} )"
   
 
   
@@ -45,6 +45,7 @@ class Course(db.Model):
   icon=db.Column(db.String(20),nullable=False, default="default_icon.png")
   price=db.Column(db.Integer , nullable=False)
   unit=db.relationship("Unit", backref="course_name", lazy=True)
+  Lesson=db.relationship("Lesson", backref="course_name", lazy=True)
 
   def __repr__(self):
     return f"Course({self.title}, {self.price})"
@@ -64,7 +65,7 @@ class Unit(db.Model):
 
 
   def __repr__(self):
-    return f"category({self.title}  )"
+    return f"category( {self.title}  )"
   
   def __init__(self, *args, **kwargs):
     super(Unit, self).__init__(*args, **kwargs)

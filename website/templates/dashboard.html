@@ -64,6 +64,14 @@
 				</button>
 			</a>
 
+			<a class="link" href="/dashboard/new_category" class="link">	
+				<button class="{{'nav-link active' if active_tab == 'new_category' else 'nav-link'}}"  
+				id="nav-newCategory-tab" data-bs-toggle="tab" data-bs-target="#nav-newCategory"
+					type="button" role="tab" aria-controls="nav-newCategory" 
+					aria-selected="true">New Category
+				</button>
+			</a>
+
 		</div>
 	</nav>
 	
@@ -81,9 +89,12 @@
 		{% block new_unit %}  {% endblock new_unit %}
 
 
-
 			<!-- ******** new_Course ********-->
 		{% block new_course %}  {% endblock new_course %}	
+		
+
+		<!-- ******** new_Category ********-->
+		{% block new_category %}  {% endblock new_category %}	
 	</div>
 
 </div>
