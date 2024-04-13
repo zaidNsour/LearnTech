@@ -3,6 +3,7 @@ from website import db, loginManager
 from flask_login import UserMixin
 from sqlalchemy import func
 from sqlalchemy import UniqueConstraint
+from sqlalchemy.orm import validates
 
 @loginManager.user_loader
 def load_user(user_id):
@@ -20,7 +21,7 @@ class User(db.Model, UserMixin):
   bio=db.Column(db.Text, nullable=True)
   is_instructor=db.Column(db.Boolean, nullable=True)
   is_admin=db.Column(db.Boolean, nullable=True)
-  course=db.relationship("Course", backref="author", lazy=True)
+  courses=db.relationship("Course", backref="author", lazy=True)
   def __repr__(self):
     return f"User({self.fname}, {self.lname}, {self.email},{self.img_file} )"
   
@@ -30,7 +31,7 @@ class Category(db.Model):
   id=db.Column(db.Integer, primary_key=True)
   title=db.Column(db.String(50),unique=True, nullable=False)
   icon=db.Column(db.String(20),nullable=False, default="default_icon.jpg")
-  course=db.relationship("Course", backref="category_name", lazy=True)
+  courses=db.relationship("Course", backref="category", lazy=True)
   def __repr__(self):
     return f"category({self.title} )"
   
@@ -44,8 +45,8 @@ class Course(db.Model):
   description=db.Column(db.String(150),nullable=False)
   icon=db.Column(db.String(20),nullable=False, default="default_icon.png")
   price=db.Column(db.Integer , nullable=False)
-  unit=db.relationship("Unit", backref="course_name", lazy=True)
-  Lesson=db.relationship("Lesson", backref="course_name", lazy=True)
+  units=db.relationship("Unit", backref="course", lazy=True)
+  lessons=db.relationship("Lesson", backref="course", lazy=True)
 
   def __repr__(self):
     return f"Course({self.title}, {self.price})"
@@ -58,23 +59,16 @@ class Unit(db.Model):
   course_id=db.Column(db.Integer, db.ForeignKey("course.id"))
   title=db.Column(db.String(50),nullable=False)
   number=db.Column(db.Integer,nullable=False)
-  lesson=db.relationship("Lesson", backref="unit_name", lazy=True)
+  lessons = db.relationship("Lesson", backref="unit", lazy=True)
   __table_args__ = (
      UniqueConstraint('course_id', 'title', name='unique_unit_per_course_title'),
     )
 
 
   def __repr__(self):
-    return f"category( {self.title}  )"
+    return f"category( {self.title} )"
   
-  def __init__(self, *args, **kwargs):
-    super(Unit, self).__init__(*args, **kwargs)
-    if self.number is None:
-      # Get the maximum number for this course and add 1 to it
-      max_number = db.session.query(func.max(Unit.number)).filter_by(
-      course_id=self.course_id).scalar() or 0
-      self.number = max_number + 1
-
+  
 
 
 class Lesson(db.Model):
@@ -87,20 +81,14 @@ class Lesson(db.Model):
   video_url=db.Column(db.String(300),nullable=False)
   details=db.Column(db.String(150),nullable=False)
   date=db.Column(db.DateTime, nullable=False, default=datetime.now)
-  __table_args__ = (
-      UniqueConstraint('course_id', 'unit_id', 'number', name='unique_lesson_per_course_unit_number'),
-    )
+ 
 
   def __repr__(self):
     return f"Lesson({self.title}, {self.date})"
 
-  def __init__(self, *args, **kwargs):
-    super(Lesson, self).__init__(*args, **kwargs)
-    if self.number is None:
-      # Get the maximum number for this course and add 1 to it
-      max_number = db.session.query(func.max(Lesson.number)).filter_by(
-      course_id=self.course_id).scalar() or 0
-      self.number = max_number + 1
+  
+
+  
 
  
 

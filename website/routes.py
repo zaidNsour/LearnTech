@@ -15,6 +15,10 @@ from flask_login import (
     login_required,
 )
 from flask import get_flashed_messages
+from sqlalchemy import func
+
+
+
 
 
 routes=Blueprint("routes",__name__)
@@ -39,11 +43,32 @@ def CourseCountInCategory(category_id):
    return len(courses)
 
 
+def getMaxNumberInLesson(course_id):
+  return db.session.query(func.max(Lesson.number)).filter_by(course_id=course_id).scalar() or 0 
+   
+
+
+
+'''
+def get_previous_next_lesson(current_lesson):
+    course = current_lesson.course_name
+    lessons=Lesson.query.filter_by(course_id=course.id).all()
+    for lsn in lessons:
+        if lsn.title == current_lesson.title:
+            index = course.lessons.index(lsn)
+            previous_lesson = course.lessons[index - 1] if index > 0 else None
+            next_lesson = (
+                course.lessons[index + 1] if index < len(course.lessons) - 1 else None
+            )
+            break
+    return previous_lesson, next_lesson
+
+'''
+
+
+
 #----------------------methods----------------------------
 
-   
-
-   
 
 @routes.route("/", methods=["GET", "POST"] )
 def home():
@@ -129,6 +154,9 @@ def faq():
   return render_template("faq.html", title="FAQ")
 
 
+
+
+
 @routes.route("/dashboard", methods=['GET']) #GET for review POST for update
 @login_required
 def dashboard():
@@ -191,8 +219,9 @@ def new_lesson():
      lesson=Lesson(title=new_lesson_form.title.data,
                   details=new_lesson_form.details.data,
                   video_url=new_lesson_form.video_url.data,
-                  course_name=course,
-                  unit_name=unit
+                  course=course,
+                  unit=unit,
+                  number=getMaxNumberInLesson(course.id) + 1
                   )
      
      db.session.add(lesson)
@@ -221,7 +250,7 @@ def new_unit():
   course=new_unit_form.course.data
   if new_unit_form.validate_on_submit():
      unit=Unit(title= new_unit_form.title.data,
-               course_name=course
+               course=course
                   )
      db.session.add(unit)
      db.session.commit()
@@ -261,7 +290,7 @@ def new_course():
                   icon=icon_file,
                   author=current_user,
                   price=int(new_course_form.price.data),
-                  category_name=category
+                  category=category
                   )
      
      db.session.add(course)
@@ -318,8 +347,8 @@ def new_category():
 
 
 
-@app.route("/<string:category_title>")
-def category(category_title):
+@app.route("/category/<string:category_title>")
+def category_list(category_title):
     
     category = Category.query.filter_by(title=category_title).first_or_404()
     category_courses=Course.query.filter_by(category_id=category.id)
@@ -335,14 +364,13 @@ def category(category_title):
       )
 
 
-@app.route("/course/<string:course_title>")
+@app.route("/<string:course_title>")
 def course(course_title):
     course = Course.query.filter_by(title=course_title).first_or_404() 
-    related_courses=Course.query.filter_by(category_name=course.category_name).all()
+    related_courses=Course.query.filter_by(category=course.category).all()
     #lesson thats user arrive to it 
     current_lesson=Lesson.query.filter_by(course_id= course.id).first()
-    
-
+   
     return render_template(
         "course.html",
         title=course.title,
@@ -353,22 +381,47 @@ def course(course_title):
 
 
 
+@app.route("/<string:course_title>/<string:lesson_title>")
+@login_required
+def course_content(course_title, lesson_title):
+    
+    course = Course.query.filter_by(title=course_title).first_or_404()
+    current_lesson=Lesson.query.filter_by(title=lesson_title).first()
+    if current_lesson:
+     ''' previous_lesson, next_lesson = get_previous_next_lesson(current_lesson)'''
+    units=Unit.query.filter_by(course=course).all()
+    unit_lessons = {} # Dictionary to store lessons for each unit
+    there_lesson=False
 
-@app.route( "/course/<string:course_title>/<string:lesson_title>" )
-def course_content(course_title,lesson_title):
-  
-  course = Course.query.filter_by(title=course_title).first_or_404()
-  lesson = Lesson.query.filter_by(title=lesson_title, course_id=course.id).first()
-  lessons = Lesson.query.filter_by(course_id=course.id).all()
 
-  
- 
-  return render_template("course_content.html",
-                          title=lesson.title,
-                          lesson= lesson,
-                          lessons=lessons,
-                          course=course
-                          )
+    if lesson_title != 'null':    
+      for unit in units:
+        # Fetch lessons for the current unit
+        lessons = Lesson.query.filter_by(unit=unit).all()
+        unit_lessons[unit.id] = lessons  # Store lessons for the unit
+
+      there_lesson=True
+
+    flash_messages = get_flashed_messages()
+    return render_template(
+        "course_content.html",
+        title=course.title,
+        course=course,
+        units=units,
+        current_lesson=current_lesson,
+        unit_lessons=unit_lessons, 
+        there_lesson=there_lesson,
+        flash_messages=flash_messages
+        
+    )
+
+
+
+
+
+
+
+
 
 
 

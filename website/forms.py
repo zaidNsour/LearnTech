@@ -1,3 +1,4 @@
+from typing import Self
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField,SubmitField, BooleanField, TextAreaField
 from wtforms import FileField
@@ -9,6 +10,9 @@ from website.models import User, Course, Category, Unit, Lesson
 from flask_login import current_user
 from flask_ckeditor import CKEditorField
 from flask import request
+from functools import partial
+
+
 
 class RegistrationForm(FlaskForm):
   fname=StringField("First Name", validators=[DataRequired(), Length(min=2, max=25)])
@@ -72,17 +76,18 @@ class NewCategoryForm(FlaskForm):
 
 
 
-def choice_query():
+def choice_query_category():
   return Category.query 
 
 
-def choice_query2():
+def choice_query_course():
   return Course.query 
 
 
 
+
 class NewCourseForm(FlaskForm):
-  category = QuerySelectField("Category", query_factory=choice_query, get_label="title")
+  category = QuerySelectField("Category", query_factory=choice_query_category, get_label="title")
   title=StringField('Title', validators=[DataRequired(),Length(max= 100)] )
   description=CKEditorField("Description", validators=[DataRequired()], render_kw={"rows" : "30"} )
   price=StringField('Price',validators=[DataRequired(),Length(max= 10),Regexp('^\d+$') ] )
@@ -103,7 +108,7 @@ class NewCourseForm(FlaskForm):
 
 
 class NewUnitForm(FlaskForm):
-  course = QuerySelectField("Course", query_factory=choice_query2, get_label="title")
+  course = QuerySelectField("Course", query_factory=choice_query_course, get_label="title")
   title=StringField('Title', validators=[DataRequired(),Length(max= 100)] )
   submit=SubmitField('Add')
 
@@ -112,32 +117,30 @@ class NewUnitForm(FlaskForm):
     if existing_unit:
       raise ValidationError('A unit with this title already exists for the selected course.')
     
+ 
 
+def choice_query_test():
+      return Unit.query.filter_by(course_id=1)
 
-def choice_query_unit(course_id):
-    query = Unit.query.filter_by(course_id=course_id)  
-    return query
-
-
-def choice_query3():
-  return Unit.query.filter_by(course_id=2)  
-  
 
 class NewLessonForm(FlaskForm):
-  course = QuerySelectField("Course", query_factory=choice_query2, get_label="title")
-  unit = QuerySelectField("Unit", query_factory=choice_query3, get_label="title")
-  title=StringField('Title', validators=[DataRequired(),Length(max= 100)] )
-  details=CKEditorField("Details", validators=[DataRequired()], render_kw={"rows" : "30"})
-  video_url=StringField("Video URL", validators=[DataRequired()])
-  submit=SubmitField('Add')
+    course = QuerySelectField("Course", query_factory=choice_query_course, get_label="title")
 
+   
 
- 
-  def validate_title(self, field):
-     if self.course.data and self.course.data.id is not None:
-        existing_lesson = Lesson.query.filter_by(course_id=self.course.data.id, title=field.data).first()
-        if existing_lesson:
-          raise ValidationError('A lesson with this title already exists for the selected course.')
+    unit = QuerySelectField("Unit", query_factory=choice_query_test, get_label="title")
+    title = StringField('Title', validators=[DataRequired(), Length(max=100)])
+    details = CKEditorField("Details", validators=[DataRequired()], render_kw={"rows": "30"})
+    video_url = StringField("Video URL", validators=[DataRequired()])
+    submit = SubmitField('Add')
+
+    
+    def validate_title(self, field):
+        if self.course.data and self.course.data.id is not None:
+            existing_lesson = Lesson.query.filter_by(course_id=self.course.data.id, title=field.data).first()
+            if existing_lesson:
+                raise ValidationError('A lesson with this title already exists for the selected course.')
+
 
   
 

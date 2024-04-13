@@ -59,7 +59,7 @@
 
         <div class="mb-4 mb-md-0 me-md-8 me-lg-4 me-xl-8">
           <h6 class="mb-0 text-white">Categories</h6>
-          <a href="#" class="font-size-sm text-white"> {{course.category_name.title}} </a>
+          <a href="#" class="font-size-sm text-white"> {{course.category.title}} </a>
         </div>
 
         <div class="mb-4 mb-md-0 me-md-6 me-lg-4 me-xl-6">
@@ -1479,7 +1479,12 @@
 
           <button class="btn btn-primary btn-block mb-3" type="button" name="button">BUY NOW</button>
           <a 
-          href="{{ url_for('course_content', course_title=course.title, lesson_title=current_lesson.title ) }}" 
+          {% if current_lesson %}
+            href="{{ url_for('course_content', course_title=course.title, lesson_title=current_lesson.title) }}"
+          {% else %}
+            href="{{ url_for('course_content', course_title=course.title, lesson_title='null') }}"
+          {% endif %}
+
           class="btn btn-orange btn-block mb-6" 
           type="button" name="button">
           ENROLL
@@ -1720,7 +1725,7 @@
         <div class="card-footer px-2 pb-2 mb-1 pt-4 position-relative">
           <!-- Preheading -->
           <a href="course-single-v5.html"><span class="mb-1 d-inline-block text-gray-800">
-            {{related_course.category_name.title}}
+            {{related_course.category.title}}
           </span></a>
 
           <!-- Heading -->
