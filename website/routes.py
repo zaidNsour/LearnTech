@@ -17,8 +17,8 @@ from flask_login import (
 from flask import get_flashed_messages
 from sqlalchemy import func
 
-
-
+from googleapiclient.discovery import build
+from urllib.parse import urlparse, parse_qs
 
 
 routes=Blueprint("routes",__name__)
@@ -45,25 +45,73 @@ def CourseCountInCategory(category_id):
 
 def getMaxNumberInLesson(course_id):
   return db.session.query(func.max(Lesson.number)).filter_by(course_id=course_id).scalar() or 0 
+
+
+API_KEY = 'AIzaSyBHA-rIMchSMmjrnNRZoODQf9GD5KGTyDQ'
+
+# Initialize the YouTube Data API client
+youtube = build('youtube', 'v3', developerKey=API_KEY)
+
+# Function to fetch the thumbnail URL of a YouTube video
+def get_youtube_thumbnail(video_id):
+    response = youtube.videos().list(
+        part='snippet',
+        id=video_id
+    ).execute()
+    items = response.get('items', [])
+    if items:
+        return items[0]['snippet']['thumbnails']['default']['url']
+    else:
+        return None
+    
+def get_high_resolution_thumbnail(video_id):
+    response = youtube.videos().list(
+        part='snippet',
+        id=video_id
+    ).execute()
+    items = response.get('items', [])
+    if items:
+        return items[0]['snippet']['thumbnails']['maxres']['url']
+    else:
+        return None
+
+
+def get_video_id_from_url(video_url):
+    parsed_url = urlparse(video_url)
+    if parsed_url.hostname == 'www.youtube.com' or parsed_url.hostname == 'youtube.com':
+        if 'v' in parse_qs(parsed_url.query):
+            return parse_qs(parsed_url.query)['v'][0]
+    elif parsed_url.hostname == 'youtu.be':
+        return parsed_url.path[1:]
+    return None
+
+# Function to fetch the thumbnail URL of a YouTube video
+def get_youtube_thumbnail_from_url(video_url):
+    video_id = get_video_id_from_url(video_url)
+    if video_id:
+        return get_high_resolution_thumbnail(video_id)
+    else:
+        return None
    
 
 
 
-'''
-def get_previous_next_lesson(current_lesson):
-    course = current_lesson.course_name
-    lessons=Lesson.query.filter_by(course_id=course.id).all()
-    for lsn in lessons:
-        if lsn.title == current_lesson.title:
-            index = course.lessons.index(lsn)
-            previous_lesson = course.lessons[index - 1] if index > 0 else None
-            next_lesson = (
-                course.lessons[index + 1] if index < len(course.lessons) - 1 else None
-            )
-            break
+def get_previous_next_lesson(lesson):
+    course = lesson.course 
+    number=lesson.number
+
+    lesson_count = Lesson.query.filter_by(course=course).count()
+
+    # Calculate the previous and next lesson numbers
+    previous_number = number - 1 if number > 1 else None
+    next_number = number + 1 if number < lesson_count else None
+
+    # Query the previous and next lessons based on the calculated numbers
+    previous_lesson = Lesson.query.filter_by(course_id=course.id, number=previous_number).first() if previous_number else None
+    next_lesson = Lesson.query.filter_by(course_id=course.id, number=next_number).first() if next_number else None
+                       
     return previous_lesson, next_lesson
 
-'''
 
 
 
@@ -388,13 +436,15 @@ def course_content(course_title, lesson_title):
     course = Course.query.filter_by(title=course_title).first_or_404()
     current_lesson=Lesson.query.filter_by(title=lesson_title).first()
     if current_lesson:
-     ''' previous_lesson, next_lesson = get_previous_next_lesson(current_lesson)'''
+     previous_lesson, next_lesson = get_previous_next_lesson(current_lesson)
     units=Unit.query.filter_by(course=course).all()
     unit_lessons = {} # Dictionary to store lessons for each unit
     there_lesson=False
+    lesson_thumbnail= get_youtube_thumbnail_from_url(current_lesson.video_url)
 
+   
+    if lesson_title != 'null':     
 
-    if lesson_title != 'null':    
       for unit in units:
         # Fetch lessons for the current unit
         lessons = Lesson.query.filter_by(unit=unit).all()
@@ -410,9 +460,11 @@ def course_content(course_title, lesson_title):
         units=units,
         current_lesson=current_lesson,
         unit_lessons=unit_lessons, 
+        lesson_thumbnail=lesson_thumbnail,
         there_lesson=there_lesson,
-        flash_messages=flash_messages
-        
+        flash_messages=flash_messages,
+        previous_lesson=previous_lesson,
+        next_lesson= next_lesson     
     )
 
 

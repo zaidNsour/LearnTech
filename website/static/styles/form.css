@@ -33,6 +33,14 @@ span.error{
   color:white;
 }
 
+.btn-submit2{
+  background-color: var(--secondary-color);
+  border-radius:3px;
+  width:150px;
+  height:50px;
+  color:white;
+}
+
 
 /* ***  */
 
@@ -84,6 +92,7 @@ span.error{
     border-radius: 3px;
     margin-bottom: 20px;
 }
+
 
 /* ***  */
 

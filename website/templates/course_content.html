@@ -21,13 +21,10 @@
 
 <!-- NAVBAR
     ================================================== -->
-<header class="bg-portgore py-3">
+<header class="bg-black py-3">
   <div class="px-5 px-lg-8 w-100">
     <div class="d-md-flex align-items-center">
-      <!-- Brand -->
-      <a class="navbar-brand mb-2 mb-md-0" href="main.html">
-        <img src="../static/assets/img/brand-white.svg" class="navbar-brand-img" alt="...">
-      </a>
+     
 
       <!-- Lesson Title -->
       <div class="mx-auto mb-5 mb-md-0">
@@ -39,8 +36,10 @@
       </div>
 
       <!-- Back to Course -->
-      <a href="{{ url_for('course', course_title=course.title) }}" class="btn btn-sm btn-orange ms-md-6 px-6 mb-3 mb-md-0 flex-shrink-0">Back
-        to Course</a>
+      <a href="{{ url_for('course', course_title=course.title) }}" class="btn btn-sm  ms-md-6 px-6 mb-3 mb-md-0 flex-shrink-0"
+      style="background-color:#15c8cc; color:white">
+        Back to Course
+      </a>
     </div>
   </div>
 </header>
@@ -51,7 +50,9 @@
 <div class="container container-wd">
   <div class="row pt-8 pb-10">
     <div class="col-lg-8">
+       <!--video-->
       <a href="{{current_lesson.video_url}}" class="d-block sk-thumbnail rounded mb-8" data-fancybox>
+
         <div
           class="h-90p w-90p rounded-circle bg-white size-30-all d-inline-flex align-items-center justify-content-center position-absolute center z-index-1">
           <!-- Icon -->
@@ -62,62 +63,57 @@
           </svg>
 
         </div>
-        <img class="rounded shadow-light-lg" src="https://i.ytimg.com/vi/6QAELgirvjs/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLCf_Az0D0kKIqg10xDDEkVYCXuFaQ" alt="...">
+        <!--thumbnail-->
+        <img class="rounded shadow-light-lg" src="{{ lesson_thumbnail }}" alt="...">
       </a>
 
       <h3 class="text-black">Lesson Description</h3>
 
       <p class="mb-6 line-height-md">
-       {{current_lesson.details}}
+       {{current_lesson.details | safe}}
       </p>
      
       
 
       <h3 class="text-black mb-6">Comment</h3>
+
+      <!--start Comments-->
+
       <ul class="list-unstyled pt-2">
+
         <li class="media d-flex">
           <div class="avatar avatar-xxl me-3 me-md-6 flex-shrink-0">
             <img src="../static/assets/img/avatars/avatar-1.jpg" alt="..." class="avatar-img rounded-circle">
           </div>
+
           <div class="media-body flex-grow-1">
+
             <div class="d-md-flex align-items-center mb-5">
               <div class="me-auto mb-4 mb-md-0">
-                <h5 class="text-white mb-0">Oscar Cafeo</h5>
-                <p class="font-size-sm font-italic">Beautiful courses</p>
+
+                <h5 class="text-black mb-0">Oscar Cafeo</h5>
+
               </div>
+
               <div class="star-rating">
                 <div class="rating" style="width:100%;"></div>
               </div>
+
             </div>
-            <p class="mb-6 line-height-md">This course was well organized and covered a lot more details
+
+            <p class="mb-6 line-height-md">
+              This course was well organized and covered a lot more details
               than any other Figma courses. I really enjoy it. One suggestion is that it can be much
               better if we could complete the prototype together. Since we created 24 frames, I really
               want to test it on Figma mirror to see all the connections. Could you please let me take a
-              look at the complete prototype?</p>
+              look at the complete prototype?
+            </p>
           </div>
-        </li>
-        <li class="media d-flex">
-          <div class="avatar avatar-xxl me-3 me-md-6 flex-shrink-0">
-            <img src="../static/assets/img/avatars/avatar-2.jpg" alt="..." class="avatar-img rounded-circle">
-          </div>
-          <div class="media-body flex-grow-1">
-            <div class="d-md-flex align-items-center mb-5">
-              <div class="me-auto mb-4 mb-md-0">
-                <h5 class="text-white mb-0">Alex Morgan</h5>
-                <p class="font-size-sm font-italic">Beautiful courses</p>
-              </div>
-              <div class="star-rating">
-                <div class="rating" style="width:100%;"></div>
-              </div>
-            </div>
-            <p class="mb-6 line-height-md">This course was well organized and covered a lot more details
-              than any other Figma courses. I really enjoy it. One suggestion is that it can be much
-              better if we could complete the prototype together. Since we created 24 frames, I really
-              want to test it on Figma mirror to see all the connections. Could you please let me take a
-              look at the complete prototype?</p>
-          </div>
-        </li>
+        </li>  
+
       </ul>
+
+      <!--end Comments-->
 
       <div class=" rounded p-6 p-md-9 mb-8">
         <h3 class="text-black mb-2">Add Reviews & Rate</h3>
@@ -158,31 +154,41 @@
           </div>
 
           <div class="form-group mb-6">
-            <label class="text-white" for="exampleInputTitle1">Review Title</label>
+            <label class="text-black" for="exampleInputTitle1">Review Title</label>
             <input type="text" class="form-control placeholder-1  border-0" id="exampleInputTitle1"
               placeholder="Courses">
           </div>
 
           <div class="form-group mb-6">
-            <label class="text-white" for="exampleFormControlTextarea1">Review Content</label>
+            <label class="text-black" for="exampleFormControlTextarea1">Review Content</label>
             <textarea class="form-control placeholder-1  border-0" id="exampleFormControlTextarea1" rows="6"
               placeholder="Content"></textarea>
           </div>
 
-          <button type="submit" class="btn btn-orange btn-block mw-md-300p">SUBMIT REVIEW</button>
+          <button type="submit" class="btn-submit2">SUBMIT REVIEW</button>
         </form>
       </div>
 
       <div class="d-md-flex align-items-center justify-content-between">
-        <a href="#"
-          class="btn btn-blue d-flex align-items-center mb-5 mb-md-0 btn-block mw-md-280p justify-content-center">
+
+        {% if previous_lesson %}  
+        <a href="{{ url_for('course_content', course_title=course.title, lesson_title=previous_lesson.title) }}"
+           class="btn btn-blue d-flex align-items-center mb-5 mb-md-0 btn-block mw-md-280p justify-content-center"
+           style="background-color:#744f98">
           <i class="fas fa-arrow-left font-size-xs"></i>
-          <span class="ms-3">Introduction</span>
+          <span class="ms-3">Previous</span>
         </a>
-        <a href="#" class="btn btn-blue d-flex align-items-center btn-block mw-md-280p justify-content-center mt-0">
-          <span class="me-3">Structure of the course</span>
+        {%endif%}
+
+        {% if next_lesson %}  
+
+        <a href="{{ url_for('course_content', course_title=course.title, lesson_title=next_lesson.title) }}" 
+           class="btn btn-blue d-flex align-items-center mb-5 mb-md-0 btn-block mw-md-280p justify-content-center"
+          style="background-color:#744f98">
+          <span class="me-3">Next</span>
           <i class="fas fa-arrow-right font-size-xs"></i>
         </a>
+        {%endif%}
       </div>
     </div>
 
@@ -258,9 +264,10 @@
                 </div>
 
                 <div class="d-flex align-items-center overflow-auto overflow-md-visible flex-shrink-all">
-                  <div class="badge btn-orange text-black-70 me-5 font-size-sm fw-normal py-2">30
-                    min</div>
-                  <a href=" {{url_for('course_content', course_title=course.title, lesson_title=lesson.title)}}"
+                  <div class="badge btn-orange text-black-70 me-5 font-size-sm fw-normal py-2"
+                   style="background-color:#744f98">
+                  30 min</div>
+                  <a href=" {{url_for('course_content', course_title=course.title, lesson_title=lesson.title)}} "
                    class="text-secondary">
                     <!-- Icon -->
                     <svg width="14" height="16" viewBox="0 0 14 16" xmlns="http://www.w3.org/2000/svg">
