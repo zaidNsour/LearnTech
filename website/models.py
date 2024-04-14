@@ -22,6 +22,7 @@ class User(db.Model, UserMixin):
   is_instructor=db.Column(db.Boolean, nullable=True)
   is_admin=db.Column(db.Boolean, nullable=True)
   courses=db.relationship("Course", backref="author", lazy=True)
+  lesson_comments=db.relationship("LessonComment", backref="user", lazy=True)
   def __repr__(self):
     return f"User({self.fname}, {self.lname}, {self.email},{self.img_file} )"
   
@@ -81,11 +82,18 @@ class Lesson(db.Model):
   video_url=db.Column(db.String(300),nullable=False)
   details=db.Column(db.String(150),nullable=False)
   date=db.Column(db.DateTime, nullable=False, default=datetime.now)
+  comments = db.relationship("LessonComment", backref="lesson", lazy=True)
  
 
   def __repr__(self):
     return f"Lesson({self.title}, {self.date})"
+  
 
+class LessonComment(db.Model):
+  id=db.Column(db.Integer, primary_key=True)
+  lesson_id=db.Column(db.Integer, db.ForeignKey("Lesson.id"))
+  user_id=db.Column(db.Integer, db.ForeignKey("user.id"))
+  details=db.Column(db.String(150),nullable=False)
   
 
   
