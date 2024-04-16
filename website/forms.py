@@ -1,12 +1,12 @@
 from typing import Self
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField,SubmitField, BooleanField, TextAreaField
+from wtforms import StringField, PasswordField,SubmitField, BooleanField, TextAreaField,RadioField
 from wtforms import FileField
 from wtforms_sqlalchemy.fields import QuerySelectField
 from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import DataRequired, Length, Email
 from wtforms.validators import Regexp, EqualTo, ValidationError
-from website.models import User, Course, Category, Unit, Lesson
+from website.models import User, Course, Category, Unit, Lesson, LessonComment
 from flask_login import current_user
 from flask_ckeditor import CKEditorField
 from flask import request
@@ -119,16 +119,12 @@ class NewUnitForm(FlaskForm):
     
  
 
-def choice_query_test():
-      return Unit.query.filter_by(course_id=1)
+
 
 
 class NewLessonForm(FlaskForm):
     course = QuerySelectField("Course", query_factory=choice_query_course, get_label="title")
-
-   
-
-    unit = QuerySelectField("Unit", query_factory=choice_query_test, get_label="title")
+    unit = QuerySelectField("Unit", get_label="title")
     title = StringField('Title', validators=[DataRequired(), Length(max=100)])
     details = CKEditorField("Details", validators=[DataRequired()], render_kw={"rows": "30"})
     video_url = StringField("Video URL", validators=[DataRequired()])
@@ -140,7 +136,24 @@ class NewLessonForm(FlaskForm):
             existing_lesson = Lesson.query.filter_by(course_id=self.course.data.id, title=field.data).first()
             if existing_lesson:
                 raise ValidationError('A lesson with this title already exists for the selected course.')
+            
 
+
+class NewLessonCommentForm(FlaskForm):
+  title = StringField('Title', validators=[DataRequired(), Length(max=100)])
+  details = TextAreaField('Details', validators=[DataRequired(), Length(max=150)])
+  rating = RadioField('Rating', choices=[('5', 'Awesome - 5 stars'),
+                                           
+                                           ('4', 'Pretty good - 4 stars'),
+                                          
+                                           ('3', 'Meh - 3 stars'),
+                                          
+                                           ('2', 'Kinda bad - 2 stars'),
+                                         
+                                           ('1', 'Sucks big time - 1 star'),
+                                        ],
+                        validators=[DataRequired()])
+  submit = SubmitField('Submit')
 
   
 

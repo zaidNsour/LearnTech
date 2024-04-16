@@ -94,7 +94,23 @@ span.error{
 }
 
 
-/* ***  */
+/*Stars*/
+.star1{
+  width:20%;
+}
+.star2{
+  width:40%;
+}
+.star3{
+  width:60%;
+}
+.star4{
+  width:80%;
+}
+.star5{
+  width:100%;
+}
+/*Stars*/
 
 
 

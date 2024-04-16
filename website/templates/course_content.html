@@ -24,7 +24,7 @@
 <header class="bg-black py-3">
   <div class="px-5 px-lg-8 w-100">
     <div class="d-md-flex align-items-center">
-     
+
 
       <!-- Lesson Title -->
       <div class="mx-auto mb-5 mb-md-0">
@@ -36,8 +36,8 @@
       </div>
 
       <!-- Back to Course -->
-      <a href="{{ url_for('course', course_title=course.title) }}" class="btn btn-sm  ms-md-6 px-6 mb-3 mb-md-0 flex-shrink-0"
-      style="background-color:#15c8cc; color:white">
+      <a href="{{ url_for('course', course_title=course.title) }}"
+        class="btn btn-sm  ms-md-6 px-6 mb-3 mb-md-0 flex-shrink-0" style="background-color:#15c8cc; color:white">
         Back to Course
       </a>
     </div>
@@ -50,7 +50,7 @@
 <div class="container container-wd">
   <div class="row pt-8 pb-10">
     <div class="col-lg-8">
-       <!--video-->
+      <!--video-->
       <a href="{{current_lesson.video_url}}" class="d-block sk-thumbnail rounded mb-8" data-fancybox>
 
         <div
@@ -70,10 +70,10 @@
       <h3 class="text-black">Lesson Description</h3>
 
       <p class="mb-6 line-height-md">
-       {{current_lesson.details | safe}}
+        {{current_lesson.details | safe}}
       </p>
-     
-      
+
+
 
       <h3 class="text-black mb-6">Comment</h3>
 
@@ -81,9 +81,11 @@
 
       <ul class="list-unstyled pt-2">
 
+        {% for comment in comments%}
+
         <li class="media d-flex">
           <div class="avatar avatar-xxl me-3 me-md-6 flex-shrink-0">
-            <img src="../static/assets/img/avatars/avatar-1.jpg" alt="..." class="avatar-img rounded-circle">
+            <img src="../static/images/user_pics/{{comment.user.img_file}}" alt="..." class="avatar-img rounded-circle">
           </div>
 
           <div class="media-body flex-grow-1">
@@ -91,25 +93,28 @@
             <div class="d-md-flex align-items-center mb-5">
               <div class="me-auto mb-4 mb-md-0">
 
-                <h5 class="text-black mb-0">Oscar Cafeo</h5>
-
+                <h5 class="text-black mb-0">{{comment.user.fname+" "+comment.user.lname}}</h5>
+                <p class="font-size-sm font-italic">{{comment.title}}</p>
               </div>
 
               <div class="star-rating">
-                <div class="rating" style="width:100%;"></div>
+                
+                <div class="rating star{{comment.rating}}"></div>
               </div>
+
+              
+              
+
 
             </div>
 
             <p class="mb-6 line-height-md">
-              This course was well organized and covered a lot more details
-              than any other Figma courses. I really enjoy it. One suggestion is that it can be much
-              better if we could complete the prototype together. Since we created 24 frames, I really
-              want to test it on Figma mirror to see all the connections. Could you please let me take a
-              look at the complete prototype?
+              {{comment.details}}
             </p>
           </div>
-        </li>  
+        </li>
+
+        {% endfor %}
 
       </ul>
 
@@ -118,51 +123,29 @@
       <div class=" rounded p-6 p-md-9 mb-8">
         <h3 class="text-black mb-2">Add Reviews & Rate</h3>
         <div class="">What is it like to Course?</div>
-        <form>
+
+        <form method="POST"
+          action="{{ url_for('course_content', course_title=course.title, lesson_title=current_lesson.title) }}">
+
+          {{ form.hidden_tag() }}
+
           <div class="clearfix">
             <fieldset class="slect-rating mb-3">
-              <input type="radio" id="star5" name="rating" value="5" />
-              <label class="full" for="star5" title="Awesome - 5 stars"></label>
-
-              <input type="radio" id="star4half" name="rating" value="4 and a half" />
-              <label class="half" for="star4half" title="Pretty good - 4.5 stars"></label>
-
-              <input type="radio" id="star4" name="rating" value="4" />
-              <label class="full" for="star4" title="Pretty good - 4 stars"></label>
-
-              <input type="radio" id="star3half" name="rating" value="3 and a half" />
-              <label class="half" for="star3half" title="Meh - 3.5 stars"></label>
-
-              <input type="radio" id="star3" name="rating" value="3" />
-              <label class="full" for="star3" title="Meh - 3 stars"></label>
-
-              <input type="radio" id="star2half" name="rating" value="2 and a half" />
-              <label class="half" for="star2half" title="Kinda bad - 2.5 stars"></label>
-
-              <input type="radio" id="star2" name="rating" value="2" />
-              <label class="full" for="star2" title="Kinda bad - 2 stars"></label>
-
-              <input type="radio" id="star1half" name="rating" value="1 and a half" />
-              <label class="half" for="star1half" title="Meh - 1.5 stars"></label>
-
-              <input type="radio" id="star1" name="rating" value="1" />
-              <label class="full" for="star1" title="Sucks big time - 1 star"></label>
-
-              <input type="radio" id="starhalf" name="rating" value="half" />
-              <label class="half" for="starhalf" title="Sucks big time - 0.5 stars"></label>
+              {% for choice in form.rating %}
+              <input type="radio" id="{{ choice.id }}" name="{{ form.rating.name }}" value="{{ choice.data }}">
+              <label class="full" for="{{ choice.id }}" title="{{ choice.label.text }}"></label>
+              {% endfor %}
             </fieldset>
           </div>
 
           <div class="form-group mb-6">
-            <label class="text-black" for="exampleInputTitle1">Review Title</label>
-            <input type="text" class="form-control placeholder-1  border-0" id="exampleInputTitle1"
-              placeholder="Courses">
+            {{ form.title.label(class="text-black") }}
+            {{ form.title(class="form-control placeholder-1 border-0") }}
           </div>
 
           <div class="form-group mb-6">
-            <label class="text-black" for="exampleFormControlTextarea1">Review Content</label>
-            <textarea class="form-control placeholder-1  border-0" id="exampleFormControlTextarea1" rows="6"
-              placeholder="Content"></textarea>
+            {{ form.details.label(class="text-black") }}
+            {{ form.details(class="form-control placeholder-1 border-0") }}
           </div>
 
           <button type="submit" class="btn-submit2">SUBMIT REVIEW</button>
@@ -171,19 +154,19 @@
 
       <div class="d-md-flex align-items-center justify-content-between">
 
-        {% if previous_lesson %}  
+        {% if previous_lesson %}
         <a href="{{ url_for('course_content', course_title=course.title, lesson_title=previous_lesson.title) }}"
-           class="btn btn-blue d-flex align-items-center mb-5 mb-md-0 btn-block mw-md-280p justify-content-center"
-           style="background-color:#744f98">
+          class="btn btn-blue d-flex align-items-center mb-5 mb-md-0 btn-block mw-md-280p justify-content-center"
+          style="background-color:#744f98">
           <i class="fas fa-arrow-left font-size-xs"></i>
           <span class="ms-3">Previous</span>
         </a>
         {%endif%}
 
-        {% if next_lesson %}  
+        {% if next_lesson %}
 
-        <a href="{{ url_for('course_content', course_title=course.title, lesson_title=next_lesson.title) }}" 
-           class="btn btn-blue d-flex align-items-center mb-5 mb-md-0 btn-block mw-md-280p justify-content-center"
+        <a href="{{ url_for('course_content', course_title=course.title, lesson_title=next_lesson.title) }}"
+          class="btn btn-blue d-flex align-items-center mb-5 mb-md-0 btn-block mw-md-280p justify-content-center"
           style="background-color:#744f98">
           <span class="me-3">Next</span>
           <i class="fas fa-arrow-right font-size-xs"></i>
@@ -192,15 +175,15 @@
       </div>
     </div>
 
- 
+
 
 
     <!-- *******************Course content ***************** -->
 
     <div class="col-lg-4">
       <div class=" rounded p-6">
-        
-        
+
+
 
         <!-- Units -->
 
@@ -218,8 +201,8 @@
               <h5 class="mb-0 w-100">
                 <button
                   class="d-flex align-items-center p-5 min-height-80 text-black fw-medium collapse-accordion-toggle line-height-one"
-                  type="button" data-bs-toggle="collapse" data-bs-target="#Curriculumcollapse{{unit.title}}" aria-expanded="true"
-                  aria-controls="CurriculumcollapseOne">
+                  type="button" data-bs-toggle="collapse" data-bs-target="#Curriculumcollapse{{unit.title}}"
+                  aria-expanded="true" aria-controls="CurriculumcollapseOne">
                   <span class="me-4 text-black d-flex">
                     <!-- Icon -->
                     <svg width="15" height="2" viewBox="0 0 15 2" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -265,10 +248,10 @@
 
                 <div class="d-flex align-items-center overflow-auto overflow-md-visible flex-shrink-all">
                   <div class="badge btn-orange text-black-70 me-5 font-size-sm fw-normal py-2"
-                   style="background-color:#744f98">
-                  30 min</div>
+                    style="background-color:#744f98">
+                    30 min</div>
                   <a href=" {{url_for('course_content', course_title=course.title, lesson_title=lesson.title)}} "
-                   class="text-secondary">
+                    class="text-secondary">
                     <!-- Icon -->
                     <svg width="14" height="16" viewBox="0 0 14 16" xmlns="http://www.w3.org/2000/svg">
                       <path

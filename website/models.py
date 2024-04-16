@@ -95,7 +95,7 @@ class LessonComment(db.Model):
   user_id=db.Column(db.Integer, db.ForeignKey("user.id"))
   title=db.Column(db.String(50),nullable=False)
   details=db.Column(db.String(150),nullable=False)
-  rating=db.Column(db.Float,nullable=False)
+  rating=db.Column(db.Integer,nullable=False)
   
 
   

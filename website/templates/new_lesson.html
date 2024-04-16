@@ -20,7 +20,7 @@
 					{% endfor %}
 				</div>
 			{% else %}
-				{{ new_lesson_form.course(class="form-select") }}
+			{{ new_lesson_form.course(class="form-select", id="courseSelect") }}
 			{%endif%}
 		</div>
 
@@ -36,9 +36,11 @@
 					{% endfor %}
 				</div>
 			{% else %}
-				{{ new_lesson_form.unit(class="form-select") }}
+			{{ new_lesson_form.unit(class="form-select", id="unitSelect") }}
 			{%endif%}
 		</div>
+
+		<script src="{{ url_for('static', filename='new_lesson.js') }}"></script>
 
 
 		<div class="mb-3">

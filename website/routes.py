@@ -1,11 +1,11 @@
 import secrets
 from PIL import Image
 import os
-from website.models import User, Lesson, Course, Category, Unit
+from website.models import User, Lesson, Course, Category, Unit, LessonComment
 from flask import render_template, url_for, flash, redirect, request,Blueprint
 from flask import jsonify
 from website.forms import RegistrationForm, LoginForm, UpdateProfileForm
-from website.forms import NewLessonForm, NewCourseForm, NewUnitForm, NewCategoryForm
+from website.forms import NewLessonForm, NewCourseForm, NewUnitForm, NewCategoryForm,NewLessonCommentForm
 from website import app, bcrypt, db
 from flask_login import (
     login_required,
@@ -45,6 +45,9 @@ def CourseCountInCategory(category_id):
 
 def getMaxNumberInLesson(course_id):
   return db.session.query(func.max(Lesson.number)).filter_by(course_id=course_id).scalar() or 0 
+
+def getMaxNumberInUnit(course_id):
+  return db.session.query(func.max(Unit.number)).filter_by(course_id=course_id).scalar() or 0 
 
 
 API_KEY = 'AIzaSyBHA-rIMchSMmjrnNRZoODQf9GD5KGTyDQ'
@@ -97,6 +100,8 @@ def get_youtube_thumbnail_from_url(video_url):
 
 
 def get_previous_next_lesson(lesson):
+  if lesson:
+    
     course = lesson.course 
     number=lesson.number
 
@@ -111,6 +116,8 @@ def get_previous_next_lesson(lesson):
     next_lesson = Lesson.query.filter_by(course_id=course.id, number=next_number).first() if next_number else None
                        
     return previous_lesson, next_lesson
+  else:
+     return None , None
 
 
 
@@ -170,7 +177,7 @@ def login():
         else:
             flash("Invalid email or password", "error")
             # Pass the form back to the template with errors
-            return render_template("login.html", title="Login", form=form)
+            return render_template("login.html", title="Login", form=form,flash_messages= flash_messages)
              
     flash_messages = get_flashed_messages()    
 
@@ -256,14 +263,60 @@ def profile():
 
 
 
+@app.route("/get_units", methods=["GET"])
+def get_units():
+  """
+  This route retrieves units based on the provided course ID in the query parameter.
+  """
+  course_id = request.args.get("course_id")  # Get the course ID from the query parameter
+  if not course_id:
+    return jsonify({"error": "Missing course ID"}), 400  # Handle missing course ID
+
+  # Filter units based on the course ID
+  units = Unit.query.filter_by(course_id=course_id).all()
+
+  # Convert units to a list of dictionaries (suitable for JSON response)
+  unit_data = []
+  for unit in units:
+    unit_data.append({
+      "id": unit.id,  # Assuming unit has an ID property
+      "title": unit.title,  # Assuming unit has a title property
+    })
+
+  return jsonify(unit_data)
+
+
+
+
+
+
+
+def choice_query_test(form):
+  """
+  This function dynamically filters units based on the selected course.
+  """
+  course = form.course.data  # Assuming 'course' field holds the ID
+  
+  if course:
+    return Unit.query.filter_by(course_id=course.id).all()
+  else:
+    return []  # Return an empty list if no course is selected
+
+
+
 @routes.route("/dashboard/new_lesson", methods=["GET","POST"])
 @login_required
 def new_lesson():
+
   new_lesson_form=NewLessonForm()
+  new_lesson_form.unit.query_factory = lambda: choice_query_test(new_lesson_form)
+
 
   if new_lesson_form.validate_on_submit():
      course=new_lesson_form.course.data
+
      unit=new_lesson_form.unit.data
+
      lesson=Lesson(title=new_lesson_form.title.data,
                   details=new_lesson_form.details.data,
                   video_url=new_lesson_form.video_url.data,
@@ -298,7 +351,8 @@ def new_unit():
   course=new_unit_form.course.data
   if new_unit_form.validate_on_submit():
      unit=Unit(title= new_unit_form.title.data,
-               course=course
+               course=course,
+               number=getMaxNumberInUnit(course.id) + 1
                   )
      db.session.add(unit)
      db.session.commit()
@@ -429,28 +483,44 @@ def course(course_title):
 
 
 
-@app.route("/<string:course_title>/<string:lesson_title>")
+@app.route("/<string:course_title>/<string:lesson_title>", methods=['GET', 'POST'])
 @login_required
 def course_content(course_title, lesson_title):
     
     course = Course.query.filter_by(title=course_title).first_or_404()
-    current_lesson=Lesson.query.filter_by(title=lesson_title).first()
-    if current_lesson:
-     previous_lesson, next_lesson = get_previous_next_lesson(current_lesson)
     units=Unit.query.filter_by(course=course).all()
-    unit_lessons = {} # Dictionary to store lessons for each unit
+    current_lesson=Lesson.query.filter_by(title=lesson_title).first()
     there_lesson=False
-    lesson_thumbnail= get_youtube_thumbnail_from_url(current_lesson.video_url)
-
+    lesson_thumbnail = None
+    unit_lessons = {} # Dictionary to store lessons for each unit
+    previous_lesson, next_lesson=None, None
+    comments = []
    
-    if lesson_title != 'null':     
 
+    if current_lesson:
+      previous_lesson, next_lesson = get_previous_next_lesson(current_lesson)
+      lesson_thumbnail= get_youtube_thumbnail_from_url(current_lesson.video_url)
+      comments=LessonComment.query.filter_by(lesson_id=current_lesson.id).all()
+      there_lesson=True   
       for unit in units:
         # Fetch lessons for the current unit
         lessons = Lesson.query.filter_by(unit=unit).all()
         unit_lessons[unit.id] = lessons  # Store lessons for the unit
 
-      there_lesson=True
+    form = NewLessonCommentForm()
+    if request.method == 'POST' and form.validate_on_submit():
+      new_comment = LessonComment(
+      lesson=current_lesson,
+      user=current_user,
+      title=form.title.data,
+      details=form.details.data,
+      rating=form.rating.data
+      ) 
+      db.session.add(new_comment)
+      db.session.commit() 
+        # Redirect to the same page to avoid form resubmission
+      return redirect(url_for('course_content', course_title=course_title, lesson_title=lesson_title))
+
 
     flash_messages = get_flashed_messages()
     return render_template(
@@ -464,8 +534,13 @@ def course_content(course_title, lesson_title):
         there_lesson=there_lesson,
         flash_messages=flash_messages,
         previous_lesson=previous_lesson,
-        next_lesson= next_lesson     
+        next_lesson= next_lesson,  
+        comments=comments, 
+        form=form  # Pass the form instance to the template  
     )
+
+
+
 
 
 
