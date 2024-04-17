@@ -202,7 +202,7 @@
         <ul class="navbar-nav ms-auto">
 
           <li class="nav-item dropdown">
-            <a class="nav-link  px-xl-4" id="navbarLandings" href="{{ url_for('routes.home') }}" aria-haspopup="true"
+            <a class="nav-link  px-xl-4" id="navbarLandings" href="{{ url_for('home') }}" aria-haspopup="true"
               aria-expanded="false">
               Home
             </a>
@@ -212,7 +212,7 @@
           <!-- nav-item border-0 px-0 -->
 
           <li class="nav-item dropdown">
-            <a class="nav-link   px-xl-4" id="navbarAbout" href="{{ url_for('routes.about') }}" aria-haspopup="true"
+            <a class="nav-link   px-xl-4" id="navbarAbout" href="{{ url_for('about') }}" aria-haspopup="true"
               aria-expanded="false">
               About
             </a>
@@ -223,7 +223,7 @@
 
 
           <li class="nav-item dropdown">
-            <a class="nav-link  px-xl-4" id="navbarLandings" href="{{ url_for('routes.contact') }}" aria-haspopup="true"
+            <a class="nav-link  px-xl-4" id="navbarLandings" href="{{ url_for('contact') }}" aria-haspopup="true"
               aria-expanded="false">
               contact us
             </a>
@@ -276,7 +276,7 @@
                   <div class="row gx-0">
                     <div class="col-12 col-lg-6">
                       <!-- List -->
-                      <a class="dropdown-item" href="{{ url_for('routes.faq') }}">
+                      <a class="dropdown-item" href="{{ url_for('faq') }}">
                         FAQ
                       </a>
                       <a class="dropdown-item" href="login.html">
@@ -343,7 +343,7 @@
                 </a>
               </li>
               <li class="dropdown-item">
-                <a class="dropdown-link" href="{{ url_for('routes.profile') }}">
+                <a class="dropdown-link" href="{{ url_for('profile') }}">
                   Dashboard
                 </a>
               </li>
@@ -353,7 +353,7 @@
                 </a>
               </li>
               <li class="dropdown-item">
-                <a class="dropdown-link" href="{{ url_for('routes.logout') }}">
+                <a class="dropdown-link" href="{{ url_for('logout') }}">
                   Log out
                 </a>
               </li>
@@ -368,7 +368,7 @@
           {% if not current_user.is_authenticated %}
 
           <li class="nav-item dropdown">
-            <a class="nav-link   px-xl-4" id="navbarAbout" href="{{ url_for('routes.login') }}" aria-haspopup="true"
+            <a class="nav-link   px-xl-4" id="navbarAbout" href="{{ url_for('login') }}" aria-haspopup="true"
               aria-expanded="false">
               Login
             </a>
@@ -376,7 +376,7 @@
           </li>
 
           <li class="nav-item dropdown">
-            <a class="nav-link   px-xl-4" id="navbarAbout" href="{{ url_for('routes.register') }}" aria-haspopup="true"
+            <a class="nav-link   px-xl-4" id="navbarAbout" href="{{ url_for('register') }}" aria-haspopup="true"
               aria-expanded="false">
               Sign up
             </a>

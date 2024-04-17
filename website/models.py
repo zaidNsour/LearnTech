@@ -64,8 +64,6 @@ class Unit(db.Model):
   __table_args__ = (
      UniqueConstraint('course_id', 'title', name='unique_unit_per_course_title'),
     )
-
-
   def __repr__(self):
     return f"category( {self.title} )"
   
@@ -83,7 +81,6 @@ class Lesson(db.Model):
   details=db.Column(db.String(150),nullable=False)
   date=db.Column(db.DateTime, nullable=False, default=datetime.now)
   comments = db.relationship("LessonComment", backref="lesson", lazy=True)
- 
 
   def __repr__(self):
     return f"Lesson({self.title}, {self.date})"

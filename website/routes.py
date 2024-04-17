@@ -74,7 +74,7 @@ def get_high_resolution_thumbnail(video_id):
     ).execute()
     items = response.get('items', [])
     if items:
-        return items[0]['snippet']['thumbnails']['maxres']['url']
+        return items[0]['snippet']['thumbnails'].get('maxres', {}).get('url')
     else:
         return None
 
@@ -97,8 +97,6 @@ def get_youtube_thumbnail_from_url(video_url):
         return None
    
 
-
-
 def get_previous_next_lesson(lesson):
   if lesson:
     
@@ -119,13 +117,10 @@ def get_previous_next_lesson(lesson):
   else:
      return None , None
 
-
-
-
 #----------------------methods----------------------------
 
 
-@routes.route("/", methods=["GET", "POST"] )
+@app.route("/", methods=["GET", "POST"] )
 def home():
   courses=Course.query.all()
   categories=Category.query.all()
@@ -138,12 +133,13 @@ def home():
 
 
 
-@routes.route("/register", methods=["POST","GET"])
+@app.route("/register", methods=["POST","GET"])
 def register():
   if current_user.is_authenticated:
-    return redirect(url_for(routes.home))
+    return redirect(url_for(home))
   #decode("utf-8") to convert password into string
   form=RegistrationForm()
+
   if form.validate_on_submit():
     hashed_password=bcrypt.generate_password_hash(form.password.data).decode("utf-8")
     user=User(fname=form.fname.data, lname=form.lname.data, email=form.email.data,
@@ -151,7 +147,8 @@ def register():
     db.session.add(user)
     db.session.commit()
     flash(message="Account created successfully",category="success")
-    return redirect(url_for("routes.login"))
+    return redirect( url_for("login") )
+  
   flash_messages = get_flashed_messages()
   return render_template("register.html",
                          title="Register", 
@@ -160,51 +157,52 @@ def register():
                          )
 
 
-@routes.route("/login", methods=['GET', 'POST'])
+@app.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('routes.home'))
+        return redirect(url_for('home'))
 
     form = LoginForm()
 
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-
+       
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
-            return redirect(url_for('routes.home'))
+            return redirect(url_for('home'))
 
         else:
             flash("Invalid email or password", "error")
             # Pass the form back to the template with errors
+            flash_messages = get_flashed_messages() 
             return render_template("login.html", title="Login", form=form,flash_messages= flash_messages)
              
-    flash_messages = get_flashed_messages()    
-
+    
+    flash_messages = get_flashed_messages() 
     return render_template("login.html", title="Login",
                            form= form, flash_messages= flash_messages)
 
 
-@routes.route("/logout")
+@app.route("/logout")
 def logout():
   logout_user()
-  return redirect(url_for("routes.home"))
+  return redirect(url_for("home"))
 
 
 
-@routes.route("/about")
+@app.route("/about")
 def about():
   return render_template("about.html", title="About Us")
 
 
 
-@routes.route("/contact")
+@app.route("/contact")
 def contact():
   return render_template("contact.html", title="Contact With Us")
 
 
 
-@routes.route("/faq")
+@app.route("/faq")
 def faq():
   return render_template("faq.html", title="FAQ")
 
@@ -212,7 +210,7 @@ def faq():
 
 
 
-@routes.route("/dashboard", methods=['GET']) #GET for review POST for update
+@app.route("/dashboard", methods=['GET']) #GET for review POST for update
 @login_required
 def dashboard():
   flash_messages = get_flashed_messages()
@@ -222,7 +220,7 @@ def dashboard():
 
 
 
-@routes.route("/dashboard/profile", methods=["GET","POST"])
+@app.route("/dashboard/profile", methods=["GET","POST"])
 @login_required
 def profile(): 
   profile_form=UpdateProfileForm()
@@ -242,7 +240,7 @@ def profile():
      current_user.bio=profile_form.bio.data
      db.session.commit()
      flash("your Profile has currently Updated",category="success")
-     return redirect(url_for("routes.profile"))
+     return redirect(url_for("profile"))
   
   elif request.method == 'GET':
     profile_form.bio.data=current_user.bio
@@ -264,6 +262,7 @@ def profile():
 
 
 @app.route("/get_units", methods=["GET"])
+@login_required
 def get_units():
   """
   This route retrieves units based on the provided course ID in the query parameter.
@@ -304,7 +303,7 @@ def choice_query_test(form):
 
 
 
-@routes.route("/dashboard/new_lesson", methods=["GET","POST"])
+@app.route("/dashboard/new_lesson", methods=["GET","POST"])
 @login_required
 def new_lesson():
 
@@ -329,7 +328,7 @@ def new_lesson():
      db.session.commit()
 
      flash("Your lesson has been created!", "success")
-     return redirect(url_for("routes.new_lesson"))
+     return redirect(url_for("new_lesson"))
   
   flash_messages = get_flashed_messages()
   
@@ -344,7 +343,7 @@ def new_lesson():
 
 
 
-@routes.route("/dashboard/new_unit", methods=["GET","POST"])
+@app.route("/dashboard/new_unit", methods=["GET","POST"])
 @login_required
 def new_unit():
   new_unit_form=NewUnitForm()
@@ -358,7 +357,7 @@ def new_unit():
      db.session.commit()
 
      flash("Unit has been created!", "success")
-     return redirect(url_for("routes.new_unit"))
+     return redirect(url_for("new_unit"))
   
   flash_messages = get_flashed_messages()
   
@@ -375,7 +374,7 @@ def new_unit():
 
 
 
-@routes.route("/dashboard/new_course", methods=["GET","POST"])
+@app.route("/dashboard/new_course", methods=["GET","POST"])
 @login_required
 def new_course():
   new_course_form=NewCourseForm()
@@ -399,7 +398,7 @@ def new_course():
      db.session.commit()
 
      flash("The course has been created",category="success")
-     return redirect(url_for("routes.new_course"))
+     return redirect(url_for("new_course"))
 
   categories=Category.query.all()
   flash_messages = get_flashed_messages()
@@ -411,7 +410,6 @@ def new_course():
                         categories=categories,
                         flash_messages=flash_messages
                         )
-
 
 
 
@@ -489,7 +487,7 @@ def course_content(course_title, lesson_title):
     
     course = Course.query.filter_by(title=course_title).first_or_404()
     units=Unit.query.filter_by(course=course).all()
-    current_lesson=Lesson.query.filter_by(title=lesson_title).first()
+    current_lesson=Lesson.query.filter_by(title=lesson_title, course=course).first()
     there_lesson=False
     lesson_thumbnail = None
     unit_lessons = {} # Dictionary to store lessons for each unit
