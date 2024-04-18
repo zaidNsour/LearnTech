@@ -1,7 +1,7 @@
 import secrets
 from PIL import Image
 import os
-from website.models import User, Lesson, Course, Category, Unit, LessonComment
+from website.models import User, Lesson, Course, Category, Unit, LessonComment, JoinedCourse
 from flask import render_template, url_for, flash, redirect, request,Blueprint
 from flask import jsonify
 from website.forms import RegistrationForm, LoginForm, UpdateProfileForm
@@ -464,7 +464,7 @@ def category_list(category_title):
       )
 
 
-@app.route("/<string:course_title>")
+@app.route("/<string:course_title>",  methods=['GET', 'POST'])
 def course(course_title):
     course = Course.query.filter_by(title=course_title).first_or_404() 
     related_courses=Course.query.filter_by(category=course.category).all()
@@ -478,7 +478,6 @@ def course(course_title):
         related_courses=related_courses,
         current_lesson=current_lesson
     )
-
 
 
 @app.route("/<string:course_title>/<string:lesson_title>", methods=['GET', 'POST'])
@@ -536,6 +535,49 @@ def course_content(course_title, lesson_title):
         comments=comments, 
         form=form  # Pass the form instance to the template  
     )
+    
+
+
+
+  
+
+
+@app.route("/<string:course_title>/enroll_user", methods=['POST'])
+@login_required
+def enroll_user(course_title):
+  if request.method == 'POST':
+    course = Course.query.filter_by(title=course_title).first_or_404()
+
+    new_enrollment = JoinedCourse(user_id=current_user.id,course_id=course.id)
+    db.session.add(new_enrollment)
+    db.session.commit()
+
+    flash_messages = get_flashed_messages()
+  
+    return render_template(
+        "enroll_done.html",
+        title="Enroll done",
+        flash_messages=flash_messages
+      )
+
+    
+
+
+
+@app.route("/my_learning", methods=['GET'])
+@login_required
+def my_learning():
+  my_courses = db.session.query(Course).join(JoinedCourse).filter(JoinedCourse.user_id == current_user.id).all()
+  flash_messages = get_flashed_messages()
+  return render_template(
+        "my_learning.html",
+        title="My Learning",
+          my_courses = my_courses,
+        flash_messages=flash_messages
+    )
+
+
+
 
 
 

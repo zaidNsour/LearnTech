@@ -1477,24 +1477,44 @@
             <span class="ms-2">2 days left at this price!</span>
           </div>
 
-          <button class="btn btn-primary btn-block mb-3" type="button" name="button">BUY NOW</button>
-          <a 
-          {% if current_lesson %}
-            href="{{ url_for('course_content', course_title=course.title, lesson_title=current_lesson.title) }}"
-          {% else %}
-            href="{{ url_for('course_content', course_title=course.title, lesson_title='null') }}"
-          {% endif %}
+          
 
-          class="btn btn-orange btn-block mb-6" 
-          type="button" name="button">
+
+          
+
+        <button class="btn btn-primary btn-block mb-3" type="button" name="button">BUY NOW</button>
+        <a class="btn btn-orange btn-block mb-6" href="#" onclick="enrollUser('{{ course.title }}');">
           ENROLL
-          </a>
+        </a>
+      
+      <script>
+          function enrollUser(courseTitle) {
+              var form = document.createElement('form');
+              form.method = 'POST';
+              form.action = courseTitle+'/enroll_user';  // Update this URL to match your Flask route
+
+              /*
+      
+              var courseTitleField = document.createElement('input');
+              courseTitleField.type = 'hidden';
+              courseTitleField.name = 'course_title';
+              courseTitleField.value = courseTitle;
+      
+              form.appendChild(courseTitleField);
+
+              */
+      
+              document.body.appendChild(form);
+              form.submit();
+          }
+      </script>
+
+       
+        
+
+
 
           <ul class="list-group list-group-flush">
-
-
-            
-
 
             <li class="list-group-item d-flex align-items-center py-3">
               <div class="text-secondary d-flex icon-uxs">

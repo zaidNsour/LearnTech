@@ -23,6 +23,11 @@ class User(db.Model, UserMixin):
   is_admin=db.Column(db.Boolean, nullable=True)
   courses=db.relationship("Course", backref="author", lazy=True)
   lesson_comments=db.relationship("LessonComment", backref="user", lazy=True)
+
+  joining_course=db.relationship("Course", secondary="joined_course",
+                                 backref="students", lazy=True)
+
+
   def __repr__(self):
     return f"User({self.fname}, {self.lname}, {self.email},{self.img_file} )"
   
@@ -48,10 +53,29 @@ class Course(db.Model):
   price=db.Column(db.Integer , nullable=False)
   units=db.relationship("Unit", backref="course", lazy=True)
   lessons=db.relationship("Lesson", backref="course", lazy=True)
+  enrolled_users = db.relationship('User', secondary="joined_course", backref='enrolled_courses')
 
   def __repr__(self):
     return f"Course({self.title}, {self.price})"
   
+
+
+class JoinedCourse(db.Model):
+    __tablename__ = 'joined_course'
+
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'), primary_key=True)
+    enroll_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    course_progress = db.Column(db.Integer, nullable=True)
+
+    user = db.relationship('User', backref='enrollments')
+    course = db.relationship('Course', backref='enrollments')
+
+    def __repr__(self):
+        return f"JoinedCourse(user_id={self.user_id}, course_id={self.course_id})"
+
+  
+
 
 
 
@@ -68,7 +92,6 @@ class Unit(db.Model):
     return f"category( {self.title} )"
   
   
-
 
 class Lesson(db.Model):
   id=db.Column(db.Integer, primary_key=True)
