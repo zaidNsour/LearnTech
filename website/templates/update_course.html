@@ -1,0 +1,133 @@
+
+<head>
+
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+
+	<!--main style-->
+	<link rel="stylesheet" type="text/css" href="../static/styles/form.css">
+</head>
+
+
+
+{% extends "layout.html" %}
+
+
+{% block content %}
+
+<div class="container my-5">
+
+<form action="" method="POST" enctype="multipart/form-data">
+		{{ update_course_form.hidden_tag() }}
+		
+	  <legend class="border-bottom my-3">Update Course</legend>
+		
+		<div class="mb-3">
+			{{ update_course_form.category.label(class="form-control-label") }}
+
+			{% if update_course_form.category.errors %}
+				{{ update_course_form.category(class="form-control is-invalid") }}
+				<div class="invalid-feedback">
+					{% for error in update_course_form.category.errors %}
+						<span class="error">{{ error }}</span>
+					{% endfor %}
+				</div>
+			{% else %}
+				{{ update_course_form.category(class="form-select") }}
+			{%endif%}
+		</div>
+
+		<div class="mb-3">
+			{{ update_course_form.title.label(class='form-control-label') }}
+			{% if update_course_form.title.errors %}
+			{{ update_course_form.title(class='form-control is-invalid') }}
+			<div class="invalid-feedback">
+
+				{% for error in update_course_form.title.errors %}
+				<span class="error">{{error}}</span>
+				{% endfor %}
+
+			</div>
+			{% else %}
+			{{ update_course_form.title(class='form-control') }}
+
+			{% endif %}
+		</div>
+
+
+		<div class="mb-3">
+			{{ update_course_form.description.label(class='form-control-label') }}
+			{% if update_course_form.description.errors %}
+			{{ update_course_form.description(class='form-control is-invalid' )}}
+			<div class="invalid-feedback">
+
+				{% for error in update_course_form.description.errors %}
+				<span class="error">{{error}}</span>
+				{% endfor %}
+
+			</div>
+			{% else %}
+			{{ update_course_form.description(class='form-control') }}
+
+			{% endif %}
+		</div>
+
+
+		<div class="mb-3">
+			{{ update_course_form.price.label(class='form-control-label') }}
+			{% if update_course_form.price.errors %}
+			{{ update_course_form.price(class='form-control is-invalid' )}}
+			<div class="invalid-feedback">
+
+				{% for error in update_course_form.price.errors %}
+				<span class="error">{{error}}</span>
+				{% endfor %}
+
+			</div>
+
+			{% else %}
+			{{ update_course_form.price(class='form-control') }}
+
+			{% endif %}
+		</div>
+
+
+
+		<div class="form-group mb-3">
+			{{ update_course_form.icon_image.label}}
+			{{ update_course_form.icon_image(class='form-control-file')}}
+			{% if update_course_form.icon_image.errors %}
+
+			{% for error in update_course_form.icon_image.errors %}
+			<span class="text-danger">{{ error }}</span>
+			{% endfor %}
+			
+			{% endif %}
+	</div>
+
+
+
+		<div class="form-group">
+			<div class="col-12">
+				<button class="btn-submit" type="submit">Update</button>
+			</div>
+		</div>
+
+</form>
+
+</div>
+
+	{{ ckeditor.load() }}
+	{{ ckeditor.config(name="content") }}
+
+
+
+
+
+
+{% endblock content %}

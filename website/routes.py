@@ -1,10 +1,12 @@
 import secrets
+from unicodedata import category
 from PIL import Image
 import os
+from os import abort
 from website.models import User, Lesson, Course, Category, Unit, LessonComment, JoinedCourse
 from flask import render_template, url_for, flash, redirect, request,Blueprint
 from flask import jsonify
-from website.forms import RegistrationForm, LoginForm, UpdateProfileForm
+from website.forms import RegistrationForm, LoginForm, UpdateProfileForm, UpdateCourseForm
 from website.forms import NewLessonForm, NewCourseForm, NewUnitForm, NewCategoryForm,NewLessonCommentForm
 from website import app, bcrypt, db
 from flask_login import (
@@ -16,9 +18,12 @@ from flask_login import (
 )
 from flask import get_flashed_messages
 from sqlalchemy import func
+from sqlalchemy.orm.exc import StaleDataError
 
 from googleapiclient.discovery import build
 from urllib.parse import urlparse, parse_qs
+
+
 
 
 routes=Blueprint("routes",__name__)
@@ -37,6 +42,15 @@ def save_picture( form_picture, path, output_size=None ):
 		i.thumbnail(output_size)
 	i.save(picture_path)
 	return picture_name
+
+
+def delete_picture(picture_name, path):
+    picture_path = os.path.join(app.root_path, path, picture_name)
+    try:
+        os.remove(picture_path)
+    except:
+        pass
+
 
 def CourseCountInCategory(category_id):
    courses=Course.query.filter_by(category_id=category_id).all()
@@ -143,7 +157,7 @@ def register():
   if form.validate_on_submit():
     hashed_password=bcrypt.generate_password_hash(form.password.data).decode("utf-8")
     user=User(fname=form.fname.data, lname=form.lname.data, email=form.email.data,
-              password=hashed_password, is_instructor=False)
+              password=hashed_password, is_instructor=False, is_admin=False)
     db.session.add(user)
     db.session.commit()
     flash(message="Account created successfully",category="success")
@@ -208,15 +222,25 @@ def faq():
 
 
 
+@app.route("/courses")
+def courses():
+   page=request.args.get('page', 1, type=int)
+   courses=Course.query.paginate(page= page,per_page= 6)
+   return render_template("courses.html", title="Courses", courses = courses)
 
 
-@app.route("/dashboard", methods=['GET']) #GET for review POST for update
+
+
+@app.route("/dashboard",methods=["GET", "POST"]) #GET for review POST for update
 @login_required
 def dashboard():
+  default_category=Category.query.first()
   flash_messages = get_flashed_messages()
-
-  return render_template("dashboard.html", title="dashboard",
-                         flash_messages=flash_messages, active_tab="profile")
+  return render_template("dashboard.html",
+                          title="dashboard",
+                          default_category=default_category.title,
+                          flash_messages=flash_messages,
+                           active_tab="profile")
 
 
 
@@ -283,9 +307,6 @@ def get_units():
     })
 
   return jsonify(unit_data)
-
-
-
 
 
 
@@ -372,8 +393,6 @@ def new_unit():
 
 
 
-
-
 @app.route("/dashboard/new_course", methods=["GET","POST"])
 @login_required
 def new_course():
@@ -443,8 +462,78 @@ def new_category():
     )
 
 
+@app.route("/dashboard/your_courses", methods=["GET", "POST"])
+@login_required
+def your_courses(): 
+   courses=Course.query.all()
+   flash_messages = get_flashed_messages()
+
+   return render_template(
+      "your_courses.html", 
+      title="Courses", 
+      active_tab="your_courses",
+      courses=courses,
+      flash_messages = flash_messages
+      
+    )
 
 
+
+@app.route("/delete_course/<string:course_title>", methods=["GET","POST"])
+@login_required
+def delete_course(course_title):
+   course=Course.query.filter_by(title=course_title).first_or_404()
+   delete_picture(course.icon, path="static/images/course_pics")
+   
+   if course.author != current_user:
+      abort(403)
+
+   db.session.delete(course)
+   db.session.commit()
+  
+   flash("Your Course has been deleted!", "success")
+   return redirect(url_for("your_courses"))
+
+
+@app.route("/update_course/<string:course_title>", methods=["GET", "POST"])
+@login_required
+def update_course(course_title):
+  course=Course.query.filter_by(title=course_title).first_or_404()
+
+  if course.author != current_user:
+      abort(403)
+
+  update_course_form = UpdateCourseForm()
+  if update_course_form.validate_on_submit():
+    course.category = update_course_form.category.data
+    course.title = update_course_form.title.data
+    course.description = update_course_form.description.data
+    course.price = update_course_form.price.data
+
+    if update_course_form.icon_image.data:
+        delete_picture(course.icon, path="static/images/course_pics")
+        icon_file=save_picture(update_course_form.icon_image.data,
+                               path="static/images/course_pics")
+        course.icon=icon_file
+
+    db.session.commit()
+    flash("Your Course has been updated!", "success")
+    return redirect(url_for("your_courses"))
+  
+  elif request.method == 'GET':
+     update_course_form.category.data = course.category
+     update_course_form.title.data = course.title
+     update_course_form.description.data =  course.description
+     update_course_form.price.data = course.price
+
+  return render_template(
+     "update_course.html",
+     course = course,
+     update_course_form = update_course_form 
+
+  )
+
+  
 
 
 @app.route("/category/<string:category_title>")
@@ -575,6 +664,10 @@ def my_learning():
           my_courses = my_courses,
         flash_messages=flash_messages
     )
+
+
+
+
 
 
 

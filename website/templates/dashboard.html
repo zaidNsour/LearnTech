@@ -15,6 +15,7 @@
 
 {%extends "layout.html"%}
 
+
 {% block content%}
 
 
@@ -72,6 +73,16 @@
 				</button>
 			</a>
 
+			
+
+			<a class="link" href="/dashboard/your_courses" class="link">	
+				<button class="{{'nav-link active' if active_tab == 'your_courses' else 'nav-link'}}"  
+				id="nav-yourCourses-tab" data-bs-toggle="tab" data-bs-target="#nav-yourCourses"
+					type="button" role="tab" aria-controls="nav-yourCourses" 
+					aria-selected="true">Your Courses
+				</button>
+			</a>
+
 		</div>
 	</nav>
 	
@@ -95,8 +106,15 @@
 
 		<!-- ******** new_Category ********-->
 		{% block new_category %}  {% endblock new_category %}	
+
+
+			<!-- ******** your_categories ********-->
+		{% block your_courses %}  {% endblock your_courses %}	
+		
 	</div>
 
 </div>
+
+
 
 {% endblock content %}

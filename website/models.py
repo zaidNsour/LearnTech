@@ -51,9 +51,10 @@ class Course(db.Model):
   description=db.Column(db.String(150),nullable=False)
   icon=db.Column(db.String(20),nullable=False, default="default_icon.png")
   price=db.Column(db.Integer , nullable=False)
-  units=db.relationship("Unit", backref="course", lazy=True)
-  lessons=db.relationship("Lesson", backref="course", lazy=True)
-  enrolled_users = db.relationship('User', secondary="joined_course", backref='enrolled_courses')
+  units = db.relationship("Unit", backref="course", lazy=True, cascade="all, delete")
+  lessons = db.relationship("Lesson", backref="course", lazy=True, cascade="all, delete")
+  enrolled_users = db.relationship('User', secondary="joined_course", backref='enrolled_courses', cascade='all, delete')
+
 
   def __repr__(self):
     return f"Course({self.title}, {self.price})"
@@ -73,9 +74,6 @@ class JoinedCourse(db.Model):
 
     def __repr__(self):
         return f"JoinedCourse(user_id={self.user_id}, course_id={self.course_id})"
-
-  
-
 
 
 

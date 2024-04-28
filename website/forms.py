@@ -29,14 +29,11 @@ class RegistrationForm(FlaskForm):
   confirm_password=PasswordField("Confirm Password", validators=[DataRequired(), EqualTo("password")] )
   submit=SubmitField("Sign Up")
 
-
-
   def validate_email(self, email):
     user=User.query.filter_by(email= email.data).first()
     if user:
       raise ValidationError("Email is already exist")
     
-  
 
 
 class LoginForm(FlaskForm):
@@ -104,6 +101,22 @@ class NewCourseForm(FlaskForm):
         if not icon_image.data:
             raise ValidationError("Please upload an icon for the course")
         
+
+  
+class UpdateCourseForm(NewCourseForm):
+  icon_image = FileField(
+      "Upload Course icon",validators=[FileAllowed(["jpg", "png"]) ]
+    )
+  
+  def validate_title(self, title):
+    return None 
+  def validate_icon_image(self, icon_image):
+    return None   
+  
+  submit=SubmitField('Update')
+
+
+ 
 
 
 class NewUnitForm(FlaskForm):
