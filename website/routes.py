@@ -1,5 +1,5 @@
 import secrets
-from unicodedata import category
+from flask_mail import Message
 from PIL import Image
 import os
 from os import abort
@@ -7,8 +7,10 @@ from website.models import User, Lesson, Course, Category, Unit, LessonComment, 
 from flask import render_template, url_for, flash, redirect, request,Blueprint
 from flask import jsonify
 from website.forms import RegistrationForm, LoginForm, UpdateProfileForm, UpdateCourseForm
-from website.forms import NewLessonForm, NewCourseForm, NewUnitForm, NewCategoryForm,NewLessonCommentForm
-from website import app, bcrypt, db
+from website.forms import NewLessonForm, NewCourseForm, NewUnitForm
+from website.forms import NewCategoryForm,NewLessonCommentForm
+from website.forms import RequestResetPasswordForm, ResetPasswordForm
+from website import app, bcrypt, db #,mail
 from flask_login import (
     login_required,
     login_user,
@@ -56,6 +58,12 @@ def CourseCountInCategory(category_id):
    courses=Course.query.filter_by(category_id=category_id).all()
    return len(courses)
 
+def lessonCountInCourse(course_id):
+    count = 0
+    course = Course.query.get(course_id)
+    if course:
+        count = sum(len(unit.lessons) for unit in course.units)
+    return count
 
 def getMaxNumberInLesson(course_id):
   return db.session.query(func.max(Lesson.number)).filter_by(course_id=course_id).scalar() or 0 
@@ -130,13 +138,28 @@ def get_previous_next_lesson(lesson):
     return previous_lesson, next_lesson
   else:
      return None , None
+  
+  
+#use _external because redirect from email to this route 
+def send_reset_email(user):
+   token= user.get_reset_token()
+   msg=Message('Password reset request', sender= 'aaa@gmail.com',
+               recipients= [user.email],
+               body=f''' To reset your password, visit the following link:
+               
+               {url_for('reset_password', token=token, _external=True)}  
+                if you did not make this request, please ignore this email'''
+              )
+   mail.send(msg)
+   
+   
 
 #----------------------methods----------------------------
 
 
 @app.route("/", methods=["GET", "POST"] )
 def home():
-  courses=Course.query.all()
+  courses=Course.query.limit(6).all()
   categories=Category.query.all()
   flash_messages = get_flashed_messages()
   return render_template("home.html",  
@@ -533,7 +556,6 @@ def update_course(course_title):
 
   )
 
-  
 
 
 @app.route("/category/<string:category_title>")
@@ -551,6 +573,7 @@ def category_list(category_title):
         categories=categories,
         courses_count=courses_count
       )
+
 
 
 @app.route("/<string:course_title>",  methods=['GET', 'POST'])
@@ -649,9 +672,6 @@ def enroll_user(course_title):
         flash_messages=flash_messages
       )
 
-    
-
-
 
 @app.route("/my_learning", methods=['GET'])
 @login_required
@@ -664,6 +684,61 @@ def my_learning():
           my_courses = my_courses,
         flash_messages=flash_messages
     )
+
+
+@app.route("/author_info/<int:author_id>", methods=['GET'])
+def author_info(author_id):
+  #page=request.args.get('page', 1, type=int)
+  author=User.query.filter_by(id=author_id).first_or_404()
+  courses=Course.query.filter_by(author= author).all() #lessonCountInCourse()
+  lessons_count={}
+  for course in courses:
+     lessons_count[course.id]= lessonCountInCourse(course.id)
+  return render_template("author.html",
+                          courses= courses,
+                          author= author,
+                          lessons_count= lessons_count
+                        ) 
+
+
+@app.route("/reset_password", methods=['GET','POST'])
+def reset_request():
+   if current_user.is_authenticated:
+      return redirect(url_for('home'))
+   form = RequestResetPasswordForm()
+   if form.validate_on_submit():
+      user=User.query.filter_by(email= form.email.data).first()
+      if user:
+         send_reset_email(user)
+         flash('If this account exist, you will recieve an email with isntruction', 'info')
+         return redirect(url_for('login'))
+   return render_template('reset_request.html', title= 'Reset Password' ,form= form)
+
+
+@app.route("/reset_password/<string:token>", methods=['POST'])
+def reset_password(token):
+   if current_user.is_authanticated:
+      return redirect(url_for('home'))
+   
+   user= User.verify_reset_token(token)
+   if not user:
+      flash('The token is invalid or expired', 'warning')
+      return redirect(url_for('reset_request'))
+   
+   form= ResetPasswordForm()
+   if form.validate_on_submit():
+    hashed_password=bcrypt.generate_password_hash(form.password.data).decode("utf-8")
+    user.password= hashed_password
+    db.session.commit()
+    
+    flash(message="Password updated successfully",category="success")
+    return redirect( url_for("login") )    
+      
+   return render_template('reset_password.html', title='Reset Password', form= form)
+
+
+
+   
 
 
 

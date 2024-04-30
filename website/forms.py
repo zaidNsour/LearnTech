@@ -172,6 +172,26 @@ class NewLessonCommentForm(FlaskForm):
                         validators=[DataRequired()])
   submit = SubmitField('Submit')
 
+
+
+class RequestResetPasswordForm(FlaskForm):
+   email = StringField(validators=[DataRequired(), Email()])
+   submit = SubmitField('Reset Password')
+
+class ResetPasswordForm(FlaskForm):
+  password=PasswordField(
+      "password",
+      validators=[ 
+        DataRequired(),
+        Regexp(
+          "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]{8,32}$"
+          )
+       ]
+    )
+  confirm_password=PasswordField("Confirm Password", validators=[DataRequired(), EqualTo("password")] )
+  submit=SubmitField("Reset password")
+   
+
   
 
 

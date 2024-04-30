@@ -1,9 +1,10 @@
 from datetime import datetime
-from website import db, loginManager
+from website import db, loginManager, app
 from flask_login import UserMixin
 from sqlalchemy import func
 from sqlalchemy import UniqueConstraint
-from sqlalchemy.orm import validates
+from itsdangerous import URLSafeTimedSerializer as serializer
+
 
 @loginManager.user_loader
 def load_user(user_id):
@@ -26,8 +27,21 @@ class User(db.Model, UserMixin):
 
   joining_course=db.relationship("Course", secondary="joined_course",
                                  backref="students", lazy=True)
+  
 
-
+  def get_reset_token(self):
+    s= serializer(app.config['SECRET_KEY'], salt = 'pw_reset')
+    return s.dumps({'user_id':self.id})
+  
+  @staticmethod
+  def varify_reset_token(token, age= 3600):
+    s = serializer(app.config['SECRET_KEY'], salt = 'pw_reset')
+    try:
+      user_id= s.loads(token, max_age = age)['user_id']
+    except:
+      return None
+    return User.query.get(user_id)
+  
   def __repr__(self):
     return f"User({self.fname}, {self.lname}, {self.email},{self.img_file} )"
   
