@@ -1,5 +1,5 @@
 import secrets
-from flask_mail import Message
+#from flask_mail import Message
 from PIL import Image
 import os
 from os import abort
@@ -10,7 +10,7 @@ from website.forms import RegistrationForm, LoginForm, UpdateProfileForm, Update
 from website.forms import NewLessonForm, NewCourseForm, NewUnitForm
 from website.forms import NewCategoryForm,NewLessonCommentForm
 from website.forms import RequestResetPasswordForm, ResetPasswordForm
-from website import app, bcrypt, db, mail
+from website import app, bcrypt, db #,mail
 from flask_login import (
     login_required,
     login_user,
