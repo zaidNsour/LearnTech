@@ -10,7 +10,7 @@ from website.forms import RegistrationForm, LoginForm, UpdateProfileForm, Update
 from website.forms import NewLessonForm, NewCourseForm, NewUnitForm
 from website.forms import NewCategoryForm,NewLessonCommentForm
 from website.forms import RequestResetPasswordForm, ResetPasswordForm
-from website import app, bcrypt, db #,mail
+from website import app, bcrypt, db, mail
 from flask_login import (
     login_required,
     login_user,
@@ -143,10 +143,10 @@ def get_previous_next_lesson(lesson):
 #use _external because redirect from email to this route 
 def send_reset_email(user):
    token= user.get_reset_token()
+   #change email
    msg=Message('Password reset request', sender= 'aaa@gmail.com',
                recipients= [user.email],
                body=f''' To reset your password, visit the following link:
-               
                {url_for('reset_password', token=token, _external=True)}  
                 if you did not make this request, please ignore this email'''
               )
@@ -715,7 +715,7 @@ def reset_request():
    return render_template('reset_request.html', title= 'Reset Password' ,form= form)
 
 
-@app.route("/reset_password/<string:token>", methods=['POST'])
+@app.route("/reset_password/<string:token>", methods=['GET','POST'])
 def reset_password(token):
    if current_user.is_authanticated:
       return redirect(url_for('home'))
@@ -731,7 +731,7 @@ def reset_password(token):
     user.password= hashed_password
     db.session.commit()
     
-    flash(message="Password updated successfully",category="success")
+    flash(message="your Password has been updated successfully",category="success")
     return redirect( url_for("login") )    
       
    return render_template('reset_password.html', title='Reset Password', form= form)
