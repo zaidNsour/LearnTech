@@ -523,6 +523,9 @@ def delete_course(course_title):
 def update_course(course_title):
   course=Course.query.filter_by(title=course_title).first_or_404()
 
+
+  # modify this to check if the user he want update this course is 
+  # admin instead of author of the course
   if course.author != current_user:
       abort(403)
 
