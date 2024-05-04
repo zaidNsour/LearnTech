@@ -3,7 +3,7 @@ from website import db, loginManager, app
 from flask_login import UserMixin
 from sqlalchemy import func
 from sqlalchemy import UniqueConstraint
-from itsdangerous import URLSafeTimedSerializer as serializer
+from itsdangerous import URLSafeTimedSerializer as Serializer
 
 
 @loginManager.user_loader
@@ -30,16 +30,17 @@ class User(db.Model, UserMixin):
   
 
   def get_reset_token(self):
-    s= serializer(app.config['SECRET_KEY'], salt = 'pw_reset')
-    return s.dumps({'user_id':self.id})
-  
+      s = Serializer(app.config['SECRET_KEY'], salt='pw-reset')
+      return s.dumps({'user_id': self.id})
+    
   @staticmethod
-  def varify_reset_token(token, age= 3600):
-    s = serializer(app.config['SECRET_KEY'], salt = 'pw_reset')
+  def verify_reset_token(token, age=3600):
+    s = Serializer(app.config['SECRET_KEY'], salt='pw-reset')
     try:
-      user_id= s.loads(token, max_age = age)['user_id']
+      user_id = s.loads(token, max_age=age)['user_id']
     except:
       return None
+    
     return User.query.get(user_id)
   
   def __repr__(self):

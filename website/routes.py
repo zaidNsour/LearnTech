@@ -1,5 +1,5 @@
 import secrets
-#from flask_mail import Message
+from flask_mail import Message
 from PIL import Image
 import os
 from os import abort
@@ -10,7 +10,7 @@ from website.forms import RegistrationForm, LoginForm, UpdateProfileForm, Update
 from website.forms import NewLessonForm, NewCourseForm, NewUnitForm
 from website.forms import NewCategoryForm,NewLessonCommentForm
 from website.forms import RequestResetPasswordForm, ResetPasswordForm
-from website import app, bcrypt, db #,mail
+from website import app, bcrypt, db, mail
 from flask_login import (
     login_required,
     login_user,
@@ -141,10 +141,10 @@ def get_previous_next_lesson(lesson):
   
   
 #use _external because redirect from email to this route 
-def send_reset_email(user):
+def send_reset_email(user):    
    token= user.get_reset_token()
    #change email
-   msg=Message('Password reset request', sender= 'aaa@gmail.com',
+   msg=Message('Password reset request', sender= 'zaidnsour1223@gmail.com',
                recipients= [user.email],
                body=f''' To reset your password, visit the following link:
                {url_for('reset_password', token=token, _external=True)}  
@@ -506,11 +506,11 @@ def your_courses():
 @login_required
 def delete_course(course_title):
    course=Course.query.filter_by(title=course_title).first_or_404()
-   delete_picture(course.icon, path="static/images/course_pics")
+   
    
    if course.author != current_user:
       abort(403)
-
+   delete_picture(course.icon, path="static/images/course_pics")
    db.session.delete(course)
    db.session.commit()
   
@@ -651,26 +651,22 @@ def course_content(course_title, lesson_title):
 
 
 
-  
-
-
-@app.route("/<string:course_title>/enroll_user", methods=['POST'])
+@app.route("/enroll_user/<string:course_title>", methods=['GET', 'POST'])
 @login_required
 def enroll_user(course_title):
-  if request.method == 'POST':
-    course = Course.query.filter_by(title=course_title).first_or_404()
-
-    new_enrollment = JoinedCourse(user_id=current_user.id,course_id=course.id)
-    db.session.add(new_enrollment)
-    db.session.commit()
-
-    flash_messages = get_flashed_messages()
   
-    return render_template(
-        "enroll_done.html",
-        title="Enroll done",
-        flash_messages=flash_messages
-      )
+  course = Course.query.filter_by(title=course_title).first_or_404()
+  new_enrollment = JoinedCourse(user_id=current_user.id,course_id=course.id)
+  db.session.add(new_enrollment)
+  db.session.commit()
+
+  flash_messages = get_flashed_messages()
+  
+  return render_template(
+    "enroll_done.html",
+    title="Enroll done",
+    flash_messages=flash_messages
+    )
 
 
 @app.route("/my_learning", methods=['GET'])
@@ -688,7 +684,6 @@ def my_learning():
 
 @app.route("/author_info/<int:author_id>", methods=['GET'])
 def author_info(author_id):
-  #page=request.args.get('page', 1, type=int)
   author=User.query.filter_by(id=author_id).first_or_404()
   courses=Course.query.filter_by(author= author).all() #lessonCountInCourse()
   lessons_count={}
@@ -715,9 +710,9 @@ def reset_request():
    return render_template('reset_request.html', title= 'Reset Password' ,form= form)
 
 
-@app.route("/reset_password/<string:token>", methods=['GET','POST'])
+@app.route("/reset_password/<token>", methods=['GET','POST'])
 def reset_password(token):
-   if current_user.is_authanticated:
+   if current_user.is_authenticated:
       return redirect(url_for('home'))
    
    user= User.verify_reset_token(token)
@@ -727,59 +722,11 @@ def reset_password(token):
    
    form= ResetPasswordForm()
    if form.validate_on_submit():
-    hashed_password=bcrypt.generate_password_hash(form.password.data).decode("utf-8")
-    user.password= hashed_password
-    db.session.commit()
+      hashed_password=bcrypt.generate_password_hash(form.password.data).decode("utf-8")
+      user.password= hashed_password
+      db.session.commit()
     
-    flash(message="your Password has been updated successfully",category="success")
-    return redirect( url_for("login") )    
+      flash(message="your Password has been updated successfully",category="success")
+      return redirect( url_for("login") )    
       
-   return render_template('reset_password.html', title='Reset Password', form= form)
-
-
-
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
+   return render_template('reset_password.html', title='Reset Password', form = form)

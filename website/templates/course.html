@@ -4,7 +4,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  
+
 
   <!--main style-->
   <link rel="stylesheet" type="text/css" href="../static/styles/form.css">
@@ -34,7 +34,7 @@
         <h1 class="me-xl-14 text-white">
           {{course.title}}
         </h1>
-        <p  style="color:transparent">-------------------------</p>
+        <p style="color:transparent">-------------------------</p>
 
         <a href="#"
           class="badge badge-lg badge-rounded-circle badge-secondary font-size-base badge-float badge-float-inside top-0 text-white">
@@ -47,8 +47,8 @@
       <div class="d-md-flex align-items-center mb-5 course-single-white">
         <div class="border rounded-circle d-inline-block mb-4 mb-md-0 me-md-6 me-lg-4 me-xl-6 bg-white">
           <div class="p-2">
-            <img src="{{ url_for('static', filename='images/user_pics/'+course.author.img_file) }}"
-             alt="..." class="rounded-circle" width="68" height="68">
+            <img src="{{ url_for('static', filename='images/user_pics/'+course.author.img_file) }}" alt="..."
+              class="rounded-circle" width="68" height="68">
           </div>
         </div>
 
@@ -103,8 +103,8 @@
           <p class="mb-6 line-height-md">
             {{course.description | safe}}
           </p>
-          
-        
+
+
 
           <a href="https://www.youtube.com/watch?v=9I-Y6VQ6tyI" class="d-block sk-thumbnail rounded mb-8" data-fancybox>
             <div
@@ -1446,7 +1446,7 @@
         <div class="pt-5 pb-4 px-5 px-lg-3 px-xl-5">
           <div class="d-flex align-items-center mb-2">
             <ins class="h2 mb-0">{{course.price}} JD</ins>
-            <del class="ms-3">{{2*course.price + 10}} JD</del> 
+            <del class="ms-3">{{2*course.price + 10}} JD</del>
             <!--don't forget modify the discount -->
             <div class="badge badge-lg badge-purple text-white ms-auto fw-normal">91% Off</div>
           </div>
@@ -1477,43 +1477,41 @@
             <span class="ms-2">2 days left at this price!</span>
           </div>
 
+
+
+
+
+
+          {% if current_user in course.students %}
+            {% if course.lessons|length > 0 %}
+            <a
+            style="background-color: #744f98; color:black;" 
+            href="{{ url_for('course_content',
+						course_title=course.title,
+						lesson_title=course.lessons[0].title) }}" class="btn  btn-block mb-6"
+            >
+             ENROLLED
+            </a>
+            {% else %}
+          <!-- Handle case when there are no lessons available -->
+            <a 
+            style="background-color: #744f98; color:black;" 
+            href="{{ url_for('course_content',
+						course_title=course.title,
+						lesson_title='null') }}" class="btn btn-orange btn-block mb-6"
+            >
+            ENROLLED                    
+            </a>
+
+            {% endif %}
+
+          {% else %}
+         <a 
+         style="background-color: #15c8cc; color:black;" 
+         href="{{ url_for('enroll_user', course_title=course.title) }}" 
+         class="btn btn-orange btn-block mb-6">ENROLL</a>
           
-
-
-          
-
-        <button class="btn btn-primary btn-block mb-3" type="button" name="button">BUY NOW</button>
-        <a class="btn btn-orange btn-block mb-6" href="#" onclick="enrollUser('{{ course.title }}');">
-          ENROLL
-        </a>
-      
-      <script>
-          function enrollUser(courseTitle) {
-              var form = document.createElement('form');
-              form.method = 'POST';
-              form.action = courseTitle+'/enroll_user';  // Update this URL to match your Flask route
-
-              /*
-      
-              var courseTitleField = document.createElement('input');
-              courseTitleField.type = 'hidden';
-              courseTitleField.name = 'course_title';
-              courseTitleField.value = courseTitle;
-      
-              form.appendChild(courseTitleField);
-
-              */
-      
-              document.body.appendChild(form);
-              form.submit();
-          }
-      </script>
-
-       
-        
-
-
-
+          {%endif%}
           <ul class="list-group list-group-flush">
 
             <li class="list-group-item d-flex align-items-center py-3">
@@ -1681,7 +1679,8 @@
 
             <li class="media mb-6 d-flex">
               <a href="course-single-v5.html" class="w-100p d-block me-5">
-                <img src="../static/assets/img/photos/photo-14.jpg" alt="..." class="avatar-img rounded-lg h-90p w-100p">
+                <img src="../static/assets/img/photos/photo-14.jpg" alt="..."
+                  class="avatar-img rounded-lg h-90p w-100p">
               </a>
               <div class="media-body flex-grow-1">
                 <a href="course-single-v5.html" class="d-block">
@@ -1694,7 +1693,8 @@
 
             <li class="media mb-6 d-flex">
               <a href="course-single-v5.html" class="w-100p d-block me-5">
-                <img src="../static/assets/img/photos/photo-16.jpg" alt="..." class="avatar-img rounded-lg h-90p w-100p">
+                <img src="../static/assets/img/photos/photo-16.jpg" alt="..."
+                  class="avatar-img rounded-lg h-90p w-100p">
               </a>
               <div class="media-body flex-grow-1">
                 <a href="course-single-v5.html" class="d-block">
@@ -1722,9 +1722,9 @@
   <div class="mx-n4 mb-12"
     data-flickity='{"pageDots": true, "prevNextButtons": false, "cellAlign": "left", "wrapAround": true, "imagesLoaded": true}'>
 
-    {% for related_course in  related_courses %}
+    {% for related_course in related_courses %}
 
-      {% if related_course.id !=course.id %}
+    {% if related_course.id !=course.id %}
 
     <div class="col-md-6 col-lg-4 col-xl-3 pb-4 pb-md-5" style="padding-right:15px;padding-left:15px;">
       <!-- Card -->
@@ -1732,12 +1732,11 @@
         <!-- Image -->
         <div class="card-zoom position-relative">
           <a href="{{url_for('course', course_title=related_course.title)}}"
-           class="card-img sk-thumbnail img-ratio-3 d-block">
-            <img class="rounded shadow-light-lg" 
-            src="../static/images/course_pics/{{ related_course.icon }}" alt="...">
+            class="card-img sk-thumbnail img-ratio-3 d-block">
+            <img class="rounded shadow-light-lg" src="../static/images/course_pics/{{ related_course.icon }}" alt="...">
           </a>
 
-          
+
 
         </div>
 
@@ -1745,8 +1744,8 @@
         <div class="card-footer px-2 pb-2 mb-1 pt-4 position-relative">
           <!-- Preheading -->
           <a href="course-single-v5.html"><span class="mb-1 d-inline-block text-gray-800">
-            {{related_course.category.title}}
-          </span></a>
+              {{related_course.category.title}}
+            </span></a>
 
           <!-- Heading -->
           <div class="position-relative">
@@ -1786,15 +1785,15 @@
         </div>
       </div>
     </div>
-      {% endif %}
+    {% endif %}
     {% endfor %}
 
   </div>
-  
+
 
 </div>
 
-  
+
 
 
 {% endblock content %}

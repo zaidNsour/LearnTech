@@ -9,7 +9,6 @@ from website.models import User, Course, Category, Unit, Lesson, LessonComment
 from flask_login import current_user
 from flask_ckeditor import CKEditorField
 from flask import request
-from functools import partial
 
 
 
