@@ -1486,7 +1486,7 @@
             {% if course.lessons|length > 0 %}
             <a
             style="background-color: #744f98; color:black;" 
-            href="{{ url_for('course_content',
+            href="{{ url_for('lessons_bp.course_content',
 						course_title=course.title,
 						lesson_title=course.lessons[0].title) }}" class="btn  btn-block mb-6"
             >
@@ -1496,7 +1496,7 @@
           <!-- Handle case when there are no lessons available -->
             <a 
             style="background-color: #744f98; color:black;" 
-            href="{{ url_for('course_content',
+            href="{{ url_for('lessons_bp.course_content',
 						course_title=course.title,
 						lesson_title='null') }}" class="btn btn-orange btn-block mb-6"
             >
@@ -1508,7 +1508,7 @@
           {% else %}
          <a 
          style="background-color: #15c8cc; color:black;" 
-         href="{{ url_for('enroll_user', course_title=course.title) }}" 
+         href="{{ url_for('users_bp.enroll_user', course_title=course.title) }}" 
          class="btn btn-orange btn-block mb-6">ENROLL</a>
           
           {%endif%}
@@ -1731,7 +1731,7 @@
       <div class="card border shadow-dark-hover p-2 sk-fade">
         <!-- Image -->
         <div class="card-zoom position-relative">
-          <a href="{{url_for('course', course_title=related_course.title)}}"
+          <a href="{{url_for('courses_bp.course', course_title=related_course.title)}}"
             class="card-img sk-thumbnail img-ratio-3 d-block">
             <img class="rounded shadow-light-lg" src="../static/images/course_pics/{{ related_course.icon }}" alt="...">
           </a>

@@ -175,7 +175,7 @@
         <div class="card border shadow p-2 lift sk-fade">
           <!-- Image -->
           <div class="card-zoom position-relative">
-            <a href="{{ url_for('course', course_title=course.title) }}" class="card-img sk-thumbnail d-block">
+            <a href="{{ url_for('courses_bp.course', course_title=course.title) }}" class="card-img sk-thumbnail d-block">
               <img class="rounded shadow-light-lg" src="../static/images/course_pics/{{ course.icon }}" alt="...">
             </a>
 
@@ -207,7 +207,7 @@
 
             <!-- Course name -->
             <div class="position-relative">
-              <a href="{{ url_for('course', course_title=course.title) }}" class="d-block stretched-link">
+              <a href="{{ url_for('courses_bp.course', course_title=course.title) }}" class="d-block stretched-link">
                 <h4 class="line-clamp-2 h-md-48 h-lg-58 me-md-6 me-lg-10 me-xl-4 mb-2">
                   {{course.title}}
                 </h4>
@@ -271,7 +271,7 @@
 
 
     <div class="text-center">
-      <a href="{{ url_for('courses') }}" class="d-inline-flex align-items-center fw-medium">
+      <a href="{{ url_for('courses_bp.courses') }}" class="d-inline-flex align-items-center fw-medium">
         Browse All
         <div class="ms-2 d-flex">
           <!-- Icon -->
@@ -305,7 +305,7 @@
 
       <div class="col-6 col-lg-4 col-xl-3 pt-2 pb-4 px-md-4" data-aos="fade-up" data-aos-delay="50">
         <!-- Card -->
-        <a href="{{ url_for( 'category_list', category_title=category.title, page=1) }}"
+        <a href="{{ url_for( 'categories_bp.category_list', category_title=category.title, page=1) }}"
          class="card icon-category card-border-hover icon-category border shadow-dark-hover p-md-5 p-3 text-center lift">
           <div class="position-relative" style="color: #f0e7f3;">
             <div class="position-absolute bottom-0 right-0 left-0" style="color: #B94EE4;">

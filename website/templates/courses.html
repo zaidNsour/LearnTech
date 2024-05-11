@@ -51,7 +51,7 @@
 			<div class="card border shadow p-2 lift sk-fade">
 				<!-- Image -->
 				<div class="card-zoom position-relative">
-					<a href="{{ url_for('course', course_title=course.title) }}" class="card-img sk-thumbnail d-block">
+					<a href="{{ url_for('courses_bp.course', course_title=course.title) }}" class="card-img sk-thumbnail d-block">
 						<img class="rounded shadow-light-lg" src="../static/images/course_pics/{{ course.icon }}" alt="...">
 					</a>
 
@@ -149,11 +149,11 @@
 				{% if page_num %}
 				{% if courses.page == page_num %}
 				<li class="page-item active">
-						<a href="{{url_for('courses', page=page_num)}}" class="page-link">{{page_num}}</a>
+						<a href="{{url_for('courses_bp.courses', page=page_num)}}" class="page-link">{{page_num}}</a>
 				</li>
 				{%else%}
 				<li class="page-item">
-						<a href="{{url_for('courses', page=page_num)}}" class="page-link">{{page_num}}</a>
+						<a href="{{url_for('courses_bp.courses', page=page_num)}}" class="page-link">{{page_num}}</a>
 				</li>
 				{%endif%}
 				{% else %}

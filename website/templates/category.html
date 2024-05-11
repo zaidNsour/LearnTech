@@ -51,7 +51,7 @@
 		<div class="mb-4 mb-xl-0 ms-xl-6">
 			<select id="categorySelect" class="form-select form-select-sm text-dark shadow-none dropdown-menu-end">
 				{% for ctg in categories %}
-				<option value="{{ url_for('category_list', category_title=ctg.title) }}" {% if ctg.title==category.title %}
+				<option value="{{ url_for('categories_bp.category_list', category_title=ctg.title) }}" {% if ctg.title==category.title %}
 					selected {% endif %}>
 					{{ ctg.title }}
 				</option>
@@ -82,7 +82,7 @@
 			<div class="card border shadow p-2 lift sk-fade">
 				<!-- Image -->
 				<div class="card-zoom position-relative">
-					<a href="{{ url_for('course', course_title=course.title) }}" class="card-img sk-thumbnail d-block">
+					<a href="{{ url_for('courses_bp.course', course_title=course.title) }}" class="card-img sk-thumbnail d-block">
 						<img class="rounded shadow-light-lg" src="../static/images/course_pics/{{ course.icon }}" alt="...">
 					</a>
 

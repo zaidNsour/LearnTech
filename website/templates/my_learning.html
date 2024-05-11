@@ -51,7 +51,7 @@
 				<!-- Image -->
 				<div class="card-zoom position-relative">
 					{% if course.lessons|length > 0 %}
-        		<a href="{{ url_for('course_content',
+        		<a href="{{ url_for('lessons_bp.course_content',
 															   course_title=course.title,
 																 lesson_title=course.lessons[0].title) }}"
 																 class="card-img sk-thumbnail d-block">
@@ -59,7 +59,7 @@
         		</a>
     			{% else %}
        		 <!-- Handle case when there are no lessons available -->
-						<a href="{{ url_for('course_content',
+						<a href="{{ url_for('lessons_bp.course_content',
 															   course_title=course.title,
 																 lesson_title='null') }}"
 																 class="card-img sk-thumbnail d-block">

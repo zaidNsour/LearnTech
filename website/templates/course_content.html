@@ -36,7 +36,7 @@
       </div>
 
       <!-- Back to Course -->
-      <a href="{{ url_for('my_learning') }}"
+      <a href="{{ url_for('users_bp.my_learning') }}"
         class="btn btn-sm  ms-md-6 px-6 mb-3 mb-md-0 flex-shrink-0" style="background-color:#15c8cc; color:white">
         Back to Learning
       </a>
@@ -125,7 +125,7 @@
         <div class="">What is it like to Course?</div>
 
         <form method="POST"
-          action="{{ url_for('course_content', course_title=course.title, lesson_title=current_lesson.title) }}">
+          action="{{ url_for('lessons_bp.course_content', course_title=course.title, lesson_title=current_lesson.title) }}">
 
           {{ form.hidden_tag() }}
 
@@ -155,7 +155,7 @@
       <div class="d-md-flex align-items-center justify-content-between">
 
         {% if previous_lesson %}
-        <a href="{{ url_for('course_content', course_title=course.title, lesson_title=previous_lesson.title) }}"
+        <a href="{{ url_for('lessons_bp.course_content', course_title=course.title, lesson_title=previous_lesson.title) }}"
           class="btn btn-blue d-flex align-items-center mb-5 mb-md-0 btn-block mw-md-280p justify-content-center"
           style="background-color:#744f98">
           <i class="fas fa-arrow-left font-size-xs"></i>
@@ -165,7 +165,7 @@
 
         {% if next_lesson %}
 
-        <a href="{{ url_for('course_content', course_title=course.title, lesson_title=next_lesson.title) }}"
+        <a href="{{ url_for('lessons_bp.course_content', course_title=course.title, lesson_title=next_lesson.title) }}"
           class="btn btn-blue d-flex align-items-center mb-5 mb-md-0 btn-block mw-md-280p justify-content-center"
           style="background-color:#744f98">
           <span class="me-3">Next</span>
@@ -250,7 +250,7 @@
                   <div class="badge btn-orange text-black-70 me-5 font-size-sm fw-normal py-2"
                     style="background-color:#744f98">
                     30 min</div>
-                  <a href=" {{url_for('course_content', course_title=course.title, lesson_title=lesson.title)}} "
+                  <a href=" {{url_for('lessons_bp.course_content', course_title=course.title, lesson_title=lesson.title)}} "
                     class="text-secondary">
                     <!-- Icon -->
                     <svg width="14" height="16" viewBox="0 0 14 16" xmlns="http://www.w3.org/2000/svg">
