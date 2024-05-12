@@ -173,14 +173,24 @@
         <!-- Card -->
         
         <div class="card border shadow p-2 lift sk-fade">
+
+          
+
           <!-- Image -->
           <div class="card-zoom position-relative">
+
+           
+            
             <a href="{{ url_for('courses_bp.course', course_title=course.title) }}" class="card-img sk-thumbnail d-block">
               <img class="rounded shadow-light-lg" src="../static/images/course_pics/{{ course.icon }}" alt="...">
             </a>
 
-            <span class="badge sk-fade-bottom badge-lg badge-orange badge-pill badge-float bottom-0 left-0 mb-4 ms-4">
-              <span class="text-white text-uppercase fw-bold font-size-xs">BEST SELLER</span>
+             
+
+            <span class="badge sk-fade-bottom badge-lg sec-color badge-pill badge-float bottom-0 left-0 mb-4 ms-4">
+              <span class="text-white text-uppercase fw-bold font-size-xs">
+                {{course.author.fname+" "+course.author.lname}}
+              </span>
             </span>
           </div>
 
@@ -189,11 +199,18 @@
 
 
             <!-- Instructor image -->
-            <a href="instructors-single.html" class="d-block">
-              <div
-                class="avatar sk-fade-right avatar-xl badge-float position-absolute top-0 right-0 mt-n6 me-5 rounded-circle shadow border border-white border-w-lg">
+            <a href="{{ url_for('users_bp.author_info', author_id= course.author.id) }}"
+             class="d-block">
+              <div class="avatar sk-fade-right avatar-xl badge-float position-absolute top-0 right-0 mt-n6 me-5 rounded-circle shadow border border-white border-w-lg">
+               
+
                 <img src="{{ url_for('static', filename='images/user_pics/'+course.author.img_file) }} " alt="..."
                   class="avatar-img rounded-circle">
+
+                <!-- Overlay Layer -->
+                <div class="overlay2"><span>view <br> profile</span></div>
+                
+                
               </div>
             </a>
 
@@ -392,7 +409,7 @@
             </div>
 
             <div class="avatar avatar-custom mb-5">
-              <img src="../static/assets/img/avatars/avatar-2.jpg" alt="..." class="avatar-img rounded-circle">
+              <img src="../static/assets/img/avatars/avatar-1.jpg" alt="..." class="avatar-img rounded-circle">
             </div>
             <div class="media-body">
               <h5 class="mb-0">Alison Dawn</h5>
@@ -423,7 +440,7 @@
             </div>
 
             <div class="avatar avatar-custom mb-5">
-              <img src="../static/assets/img/avatars/avatar-3.jpg" alt="..." class="avatar-img rounded-circle">
+              <img src="../static/assets/img/avatars/avatar-1.jpg" alt="..." class="avatar-img rounded-circle">
             </div>
             <div class="media-body">
               <h5 class="mb-0">Daniel Parker</h5>
@@ -454,7 +471,7 @@
             </div>
 
             <div class="avatar avatar-custom mb-5">
-              <img src="../static/assets/img/avatars/avatar-4.jpg" alt="..." class="avatar-img rounded-circle">
+              <img src="../static/assets/img/avatars/avatar-1.jpg" alt="..." class="avatar-img rounded-circle">
             </div>
             <div class="media-body">
               <h5 class="mb-0">Albert Cole</h5>
@@ -477,7 +494,7 @@
 
 <!-- VIDEO
   ================================================== -->
-<div class="center-y mt-n14 mt-md-n15">
+
   <div class="container">
     <a href="https://www.youtube.com/watch?v=9I-Y6VQ6tyI" class="py-12 py-md-14 bg-cover rounded text-center d-block"
       style="background-image: url(../static/assets/img/covers/cover-2.jpg);" data-aos="fade-up" data-fancybox>
@@ -494,7 +511,7 @@
       </div>
     </a>
   </div> <!-- / .container -->
-</div>
+
 
 <!-- COUNTUP
   ================================================== -->
@@ -531,17 +548,7 @@
 
 <!-- Start Discount -->
 <div class="discount" id="discount">
-  <div class="image">
-    <div class="content">
-      <h2>We Have A Discount</h2>
-      <p>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Excepturi asperiores consectetur, recusandae
-        ratione provident necessitatibus, cumque delectus commodi fuga praesentium beatae. Totam vel similique
-        laborum dicta aperiam odit doloribus corporis.
-      </p>
-      <img src="../static/images/discount.png" alt="" />
-    </div>
-  </div>
+  
   <div class="form">
     <div class="content">
       <h2>Request A Discount</h2>
@@ -554,6 +561,7 @@
       </form>
     </div>
   </div>
+  
 </div>
 <!-- End Discount -->
 

@@ -7,7 +7,7 @@
   
 
   <!--main style-->
-  <link rel="stylesheet" type="text/css" href="../static/styles/form.css">
+  <link rel="stylesheet" type="text/css" href="../static/styles/main.css">
 </head>
 
 
@@ -68,8 +68,14 @@
     
     			{% endif %}
 
-    <span class="badge sk-fade-bottom badge-lg badge-orange badge-pill badge-float bottom-0 left-0 mb-4 ms-4">
-        <span class="text-white text-uppercase fw-bold font-size-xs">BEST SELLER</span>
+    <span class="badge sk-fade-bottom badge-lg sec-color
+		 badge-pill badge-float bottom-0 left-0 mb-4 ms-4 " 
+		>
+        <span class="text-white text-uppercase fw-bold font-size-xs"
+				
+				>
+					{{course.author.fname+" "+course.author.lname}}
+				</span>
     </span>
 				</div>
 

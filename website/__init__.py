@@ -7,6 +7,8 @@ from flask_migrate import Migrate
 from flask_ckeditor import CKEditor
 from flask_mail import Mail
 from website.config import Config
+from flask_admin import Admin
+
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -16,12 +18,16 @@ login_manager.login_message_category = "info"
 migrate = Migrate(db)
 ckeditor = CKEditor()
 mail = Mail()
+admin=Admin()
 
 
 
 def create_app(config_calss= Config):
     app = Flask(__name__)
     app.config.from_object(config_calss)
+
+    from website.admins.routes import MyAdminIndexView
+
     db.init_app(app)
     bcrypt.init_app(app)
     login_manager.init_app(app)
@@ -30,6 +36,7 @@ def create_app(config_calss= Config):
     migrate.init_app(app, db)
     ckeditor.init_app(app)
     mail.init_app(app)
+    admin.init_app(app, index_view= MyAdminIndexView())
 
     from website.main.routes import main
     from website.categories.routes import categories_bp
@@ -37,6 +44,8 @@ def create_app(config_calss= Config):
     from website.units.routes import units_bp
     from website.lessons.routes import lessons_bp
     from website.users.routes import users_bp
+    from website.errors.handlers import errors
+    from website.admins.routes import admins_bp
 
     app.register_blueprint(main)
     app.register_blueprint(categories_bp)
@@ -44,7 +53,8 @@ def create_app(config_calss= Config):
     app.register_blueprint(units_bp)
     app.register_blueprint(lessons_bp)
     app.register_blueprint(users_bp)
-   
+    app.register_blueprint(errors)
+    app.register_blueprint(admins_bp)
 
     return app
 
