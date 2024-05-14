@@ -10,6 +10,9 @@ from website.config import Config
 from flask_admin import Admin
 
 
+
+
+
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
@@ -24,9 +27,19 @@ admin=Admin()
 
 def create_app(config_calss= Config):
     app = Flask(__name__)
+
+    from website.main.forms import SearchForm 
+
+    @app.context_processor
+    def inject_search_form():
+        form = SearchForm()
+        return dict(form = form)
+
+
     app.config.from_object(config_calss)
 
     from website.admins.routes import MyAdminIndexView
+    
 
     db.init_app(app)
     bcrypt.init_app(app)
