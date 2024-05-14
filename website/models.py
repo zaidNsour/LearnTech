@@ -24,6 +24,7 @@ class User(db.Model, UserMixin):
   is_admin=db.Column(db.Boolean, nullable=True)
   courses=db.relationship("Course", backref="author", lazy=True)
   lesson_comments=db.relationship("LessonComment", backref="user", lazy=True)
+  course_comments=db.relationship("CourseComment", backref="user", lazy=True)
 
   joining_course=db.relationship("Course", secondary="joined_course",
                                  backref="students", lazy=True)
@@ -89,6 +90,15 @@ class JoinedCourse(db.Model):
 
     def __repr__(self):
         return f"JoinedCourse(user_id={self.user_id}, course_id={self.course_id})"
+    
+
+class CourseComment(db.Model):
+  id=db.Column(db.Integer, primary_key=True)
+  course_id=db.Column(db.Integer, db.ForeignKey("course.id"))
+  user_id=db.Column(db.Integer, db.ForeignKey("user.id"))
+  title=db.Column(db.String(50),nullable=False)
+  details=db.Column(db.String(150),nullable=False)
+  rating=db.Column(db.Integer,nullable=False)
 
 
 

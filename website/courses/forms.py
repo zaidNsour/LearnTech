@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms import FileField
+from wtforms import TextAreaField, RadioField
 from wtforms_sqlalchemy.fields import QuerySelectField
 from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import DataRequired, Length
@@ -44,3 +45,20 @@ class UpdateCourseForm(NewCourseForm):
     return None   
   
   submit=SubmitField('Update')
+
+
+class CourseCommentForm(FlaskForm):
+  title = StringField('Title', validators=[DataRequired(), Length(max=100)])
+  details = TextAreaField('Details', validators=[DataRequired(), Length(max=150)])
+  rating = RadioField('Rating', choices=[('5', 'Awesome - 5 stars'),
+                                           
+                                           ('4', 'Pretty good - 4 stars'),
+                                          
+                                           ('3', 'Meh - 3 stars'),
+                                          
+                                           ('2', 'Kinda bad - 2 stars'),
+                                         
+                                           ('1', 'bad - 1 star'),
+                                        ],
+                        validators=[DataRequired()])
+  submit = SubmitField('Submit')

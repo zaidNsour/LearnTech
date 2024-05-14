@@ -1231,22 +1231,32 @@
             5, ARKit 3, Sketch 5, Illustrator, Photoshop, Cinema 4D, HTML, CSS, JavaScript, etc.</p>
         </div>
 
+        <!-- Reviews -->
+
         <div class="tab-pane fade" id="pills-reviews" role="tabpanel" aria-labelledby="pills-reviews-tab">
           <h3 class="mb-6">Student feedback</h3>
+
           <div class="row align-items-center mb-8">
             <div class="col-md-auto mb-5 mb-md-0">
               <div class="border rounded shadow d-flex align-items-center justify-content-center px-9 py-8">
                 <div class="m-2 text-center">
-                  <h1 class="display-2 mb-0 fw-medium mb-n1">4.93</h1>
+                  <h1 class="display-2 mb-0 fw-medium mb-n1">
+                    {{avg_review}}
+                  </h1>
                   <h5 class="mb-0">Course rating</h5>
+
                   <div class="star-rating">
-                    <div class="rating" style="width:100%;"></div>
+                    <div class="rating star{{ avg_review_floor }}"></div>
                   </div>
+
                 </div>
               </div>
             </div>
 
             <div class="col-md">
+
+              {% for i in range(4,-1,-1) %}
+
               <div class="d-md-flex align-items-center my-3 my-md-4">
                 <div class="bg-gray-200 position-relative rounded-pill flex-grow-1 me-md-5 mb-2 mb-md-0 mw-md-260p"
                   style="height: 10px;">
@@ -1255,164 +1265,106 @@
 
                 <div class="d-flex align-items-center">
                   <div class="star-rating star-rating-lg secondary me-4">
-                    <div class="rating" style="width:90%;"></div>
+                    <div class="rating star{{i+1}}" ></div>
                   </div>
-                  <span>4132</span>
+                  <span>{{ reviews_count[i] }}</span>
                 </div>
               </div>
 
-              <div class="d-md-flex align-items-center my-3 my-md-4">
-                <div class="bg-gray-200 position-relative rounded-pill flex-grow-1 me-md-5 mb-2 mb-md-0 mw-md-260p"
-                  style="height: 10px;">
-                  <div class="bg-teal rounded-pill position-absolute top-0 left-0 bottom-0" style="width: 60%;"></div>
-                </div>
+              {% endfor %}
 
-                <div class="d-flex align-items-center">
-                  <div class="star-rating star-rating-lg secondary me-4">
-                    <div class="rating" style="width:60%;"></div>
-                  </div>
-                  <span>150</span>
-                </div>
-              </div>
 
-              <div class="d-md-flex align-items-center my-3 my-md-4">
-                <div class="bg-gray-200 position-relative rounded-pill flex-grow-1 me-md-5 mb-2 mb-md-0 mw-md-260p"
-                  style="height: 10px;">
-                  <div class="bg-teal rounded-pill position-absolute top-0 left-0 bottom-0" style="width: 50%;"></div>
-                </div>
 
-                <div class="d-flex align-items-center">
-                  <div class="star-rating star-rating-lg secondary me-4">
-                    <div class="rating" style="width:50%;"></div>
-                  </div>
-                  <span>50</span>
-                </div>
-              </div>
 
-              <div class="d-md-flex align-items-center my-3 my-md-4">
-                <div class="bg-gray-200 position-relative rounded-pill flex-grow-1 me-md-5 mb-2 mb-md-0 mw-md-260p"
-                  style="height: 10px;">
-                  <div class="bg-teal rounded-pill position-absolute top-0 left-0 bottom-0" style="width: 35%;"></div>
-                </div>
 
-                <div class="d-flex align-items-center">
-                  <div class="star-rating star-rating-lg secondary me-4">
-                    <div class="rating" style="width:35%;"></div>
-                  </div>
-                  <span>32</span>
-                </div>
-              </div>
 
-              <div class="d-md-flex align-items-center my-3 my-md-4">
-                <div class="bg-gray-200 position-relative rounded-pill flex-grow-1 me-md-5 mb-2 mb-md-0 mw-md-260p"
-                  style="height: 10px;">
-                  <div class="bg-teal rounded-pill position-absolute top-0 left-0 bottom-0" style="width: 15%;"></div>
-                </div>
 
-                <div class="d-flex align-items-center">
-                  <div class="star-rating star-rating-lg secondary me-4">
-                    <div class="rating" style="width:15%;"></div>
-                  </div>
-                  <span>1</span>
-                </div>
-              </div>
+              
+
+              
+              
+
+              
+
             </div>
+
+
+
           </div>
 
-          <ul class="list-unstyled pt-2">
-            <li class="media d-flex">
-              <div class="avatar avatar-xxl me-3 me-md-6 flex-shrink-0">
-                <img src="../static/assets/img/avatars/avatar-1.jpg" alt="..." class="avatar-img rounded-circle">
+
+
+
+          <!--start Comments-->
+
+      <ul class="list-unstyled pt-2">
+
+        {% for comment in comments%}
+
+        <li class="media d-flex">
+          <div class="avatar avatar-xxl me-3 me-md-6 flex-shrink-0">
+            <img src="../static/images/user_pics/{{comment.user.img_file}}" alt="..." class="avatar-img rounded-circle">
+          </div>
+
+          <div class="media-body flex-grow-1">
+
+            <div class="d-md-flex align-items-center mb-5">
+              <div class="me-auto mb-4 mb-md-0">
+
+                <h5 class="text-black mb-0">{{comment.user.fname+" "+comment.user.lname}}</h5>
+                <p class="font-size-sm font-italic">{{comment.title}}</p>
               </div>
-              <div class="media-body flex-grow-1">
-                <div class="d-md-flex align-items-center mb-5">
-                  <div class="me-auto mb-4 mb-md-0">
-                    <h5 class="mb-0">Oscar Cafeo</h5>
-                    <p class="font-size-sm font-italic">Beautiful courses</p>
-                  </div>
-                  <div class="star-rating">
-                    <div class="rating" style="width:100%;"></div>
-                  </div>
-                </div>
-                <p class="mb-6 line-height-md">This course was well organized and covered a lot more details than any
-                  other Figma courses. I really enjoy it. One suggestion is that it can be much better if we could
-                  complete the prototype together. Since we created 24 frames, I really want to test it on Figma mirror
-                  to see all the connections. Could you please let me take a look at the complete prototype?</p>
+
+              <div class="star-rating">
+                
+                <div class="rating star{{comment.rating}}"></div>
               </div>
-            </li>
-            <li class="media d-flex">
-              <div class="avatar avatar-xxl me-3 me-md-6 flex-shrink-0">
-                <img src="../static/assets/img/avatars/avatar-2.jpg" alt="..." class="avatar-img rounded-circle">
-              </div>
-              <div class="media-body flex-grow-1">
-                <div class="d-md-flex align-items-center mb-5">
-                  <div class="me-auto mb-4 mb-md-0">
-                    <h5 class="mb-0">Alex Morgan</h5>
-                    <p class="font-size-sm font-italic">Beautiful courses</p>
-                  </div>
-                  <div class="star-rating">
-                    <div class="rating" style="width:100%;"></div>
-                  </div>
-                </div>
-                <p class="mb-6 line-height-md">This course was well organized and covered a lot more details than any
-                  other Figma courses. I really enjoy it. One suggestion is that it can be much better if we could
-                  complete the prototype together. Since we created 24 frames, I really want to test it on Figma mirror
-                  to see all the connections. Could you please let me take a look at the complete prototype?</p>
-              </div>
-            </li>
-          </ul>
+            </div>
+
+            <p class="mb-6 line-height-md">
+              {{comment.details}}
+            </p>
+          </div>
+        </li>
+
+        {% endfor %}
+
+      </ul>
+
+      <!--end Comments-->
+
 
           <div class="border shadow rounded p-6 p-md-9">
             <h3 class="mb-2">Add Reviews & Rate</h3>
             <div class="">What is it like to Course?</div>
-            <form>
-              <div class="clearfix">
-                <fieldset class="slect-rating mb-3">
-                  <input type="radio" id="star5" name="rating" value="5" />
-                  <label class="full" for="star5" title="Awesome - 5 stars"></label>
 
-                  <input type="radio" id="star4half" name="rating" value="4 and a half" />
-                  <label class="half" for="star4half" title="Pretty good - 4.5 stars"></label>
+            <form method="POST"
+            action="{{ url_for('courses_bp.course', course_title=course.title) }}">
+  
+            {{ form.hidden_tag() }}
+  
+            <div class="clearfix">
+              <fieldset class="slect-rating mb-3">
+                {% for choice in form.rating %}
+                <input type="radio" id="{{ choice.id }}" name="{{ form.rating.name }}" value="{{ choice.data }}">
+                <label class="full" for="{{ choice.id }}" title="{{ choice.label.text }}"></label>
+                {% endfor %}
+              </fieldset>
+            </div>
+  
+            <div class="form-group mb-6">
+              {{ form.title.label(class="text-black") }}
+              {{ form.title(class="form-control placeholder-1 border-0") }}
+            </div>
+  
+            <div class="form-group mb-6">
+              {{ form.details.label(class="text-black") }}
+              {{ form.details(class="form-control placeholder-1 border-0") }}
+            </div>
+  
+            <button type="submit" class="btn-submit2">SUBMIT REVIEW</button>
+          </form>
 
-                  <input type="radio" id="star4" name="rating" value="4" />
-                  <label class="full" for="star4" title="Pretty good - 4 stars"></label>
-
-                  <input type="radio" id="star3half" name="rating" value="3 and a half" />
-                  <label class="half" for="star3half" title="Meh - 3.5 stars"></label>
-
-                  <input type="radio" id="star3" name="rating" value="3" />
-                  <label class="full" for="star3" title="Meh - 3 stars"></label>
-
-                  <input type="radio" id="star2half" name="rating" value="2 and a half" />
-                  <label class="half" for="star2half" title="Kinda bad - 2.5 stars"></label>
-
-                  <input type="radio" id="star2" name="rating" value="2" />
-                  <label class="full" for="star2" title="Kinda bad - 2 stars"></label>
-
-                  <input type="radio" id="star1half" name="rating" value="1 and a half" />
-                  <label class="half" for="star1half" title="Meh - 1.5 stars"></label>
-
-                  <input type="radio" id="star1" name="rating" value="1" />
-                  <label class="full" for="star1" title="Sucks big time - 1 star"></label>
-
-                  <input type="radio" id="starhalf" name="rating" value="half" />
-                  <label class="half" for="starhalf" title="Sucks big time - 0.5 stars"></label>
-                </fieldset>
-              </div>
-
-              <div class="form-group mb-6">
-                <label for="exampleInputTitle1">Review Title</label>
-                <input type="text" class="form-control placeholder-1" id="exampleInputTitle1" placeholder="Courses">
-              </div>
-
-              <div class="form-group mb-6">
-                <label for="exampleFormControlTextarea1">Review Content</label>
-                <textarea class="form-control placeholder-1" id="exampleFormControlTextarea1" rows="6"
-                  placeholder="Content"></textarea>
-              </div>
-
-              <button type="submit" class="btn btn-primary btn-block mw-md-300p">SUBMIT REVIEW</button>
-            </form>
           </div>
         </div>
       </div>

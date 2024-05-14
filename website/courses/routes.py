@@ -1,7 +1,7 @@
 from os import abort
-from website.models import Lesson, Course, Category
+from website.models import Lesson, Course, Category, CourseComment
 from flask import render_template, url_for, flash, redirect, request
-from website.courses.forms import NewCourseForm, UpdateCourseForm
+from website.courses.forms import NewCourseForm, UpdateCourseForm, CourseCommentForm
 from website import db
 from flask_login import (
     login_required,
@@ -9,10 +9,12 @@ from flask_login import (
     login_required,
 )
 from flask import get_flashed_messages
+import math
 
 
 ### methods ###
 from website.helper import delete_picture, save_picture
+from website.courses.helper import getAverageReviewFromComments
 
 
 from flask import Blueprint
@@ -25,13 +27,44 @@ def course(course_title):
     related_courses=Course.query.filter_by(category=course.category).all()
     #lesson thats user arrive to it 
     current_lesson=Lesson.query.filter_by(course_id= course.id).first()
+    comments=CourseComment.query.filter_by(course_id=course.id).all()
+    reviews_count=[0] * 5
+
+    for comment in  comments:
+       reviews_count[ comment.rating - 1 ] += 1
+
+    avg_review= getAverageReviewFromComments(comments)
+    avg_review_floor=math.floor(avg_review)  
+
+
+    form = CourseCommentForm()
+    if request.method == 'POST' and form.validate_on_submit():
+      new_comment = CourseComment(
+      course_id=course.id,
+      user=current_user,
+      title=form.title.data,
+      details=form.details.data,
+      rating=form.rating.data
+      ) 
+      db.session.add(new_comment)
+      db.session.commit() 
+        # Redirect to the same page to avoid form resubmission
+      return redirect( url_for('courses_bp.course', course_title= course_title) )
+    
+    flash_messages = get_flashed_messages()
    
     return render_template(
-        "course.html",
-        title=course.title,
-        course=course,
-        related_courses=related_courses,
-        current_lesson=current_lesson
+      "course.html",
+      title= course.title,
+      course= course,
+      related_courses= related_courses,
+      current_lesson= current_lesson,
+      comments= comments, 
+      form= form,
+      reviews_count=  reviews_count,
+      flash_messages= flash_messages,
+      avg_review=  avg_review,
+      avg_review_floor= avg_review_floor
     )
 
 
