@@ -8,8 +8,8 @@ from flask_ckeditor import CKEditor
 from flask_mail import Mail
 from website.config import Config
 from flask_admin import Admin
-
-
+import warnings
+warnings.filterwarnings("ignore")
 
 
 
@@ -21,8 +21,7 @@ login_manager.login_message_category = "info"
 migrate = Migrate(db)
 ckeditor = CKEditor()
 mail = Mail()
-admin=Admin()
-
+admin = Admin( name='My Admin Panel', template_mode='bootstrap3')
 
 
 def create_app(config_calss= Config):

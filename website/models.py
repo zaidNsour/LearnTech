@@ -4,6 +4,7 @@ from website import db, login_manager
 from flask_login import UserMixin
 from sqlalchemy import UniqueConstraint
 from itsdangerous import URLSafeTimedSerializer as Serializer
+from sqlalchemy.ext.hybrid import hybrid_property
 
 
 @login_manager.user_loader
@@ -22,13 +23,14 @@ class User(db.Model, UserMixin):
   bio=db.Column(db.Text, nullable=True)
   is_instructor=db.Column(db.Boolean, nullable=True)
   is_admin=db.Column(db.Boolean, nullable=True)
+
   courses=db.relationship("Course", backref="author", lazy=True)
   lesson_comments=db.relationship("LessonComment", backref="user", lazy=True)
   course_comments=db.relationship("CourseComment", backref="user", lazy=True)
-
   joining_course=db.relationship("Course", secondary="joined_course",
-                                 backref="students", lazy=True)
-  
+                                 backref="students", lazy=True
+                                )
+
 
   def get_reset_token(self):
       s = Serializer(current_app.config['SECRET_KEY'], salt='pw-reset')
@@ -45,7 +47,7 @@ class User(db.Model, UserMixin):
     return User.query.get(user_id)
   
   def __repr__(self):
-    return f"User({self.fname}, {self.lname}, {self.email},{self.img_file} )"
+    return f"{self.fname} {self.lname}" 
   
 
 
@@ -63,13 +65,18 @@ class Course(db.Model):
   id=db.Column(db.Integer, primary_key=True)
   user_id=db.Column(db.Integer, db.ForeignKey("user.id"))
   category_id=db.Column(db.Integer, db.ForeignKey("category.id"))
+
   title=db.Column(db.String(50),unique=True, nullable=False)
   description=db.Column(db.String(150),nullable=False)
   icon=db.Column(db.String(20),nullable=False, default="default_icon.png")
   price=db.Column(db.Integer , nullable=False)
+
   units = db.relationship("Unit", backref="course", lazy=True, cascade="all, delete")
   lessons = db.relationship("Lesson", backref="course", lazy=True, cascade="all, delete")
-  enrolled_users = db.relationship('User', secondary="joined_course", backref='enrolled_courses', cascade='all, delete')
+  enrolled_users = db.relationship('User', secondary="joined_course",
+                                  backref='enrolled_courses',
+                                    cascade='all, delete', 
+                                  )
 
 
   def __repr__(self):
@@ -79,14 +86,13 @@ class Course(db.Model):
 
 class JoinedCourse(db.Model):
     __tablename__ = 'joined_course'
-
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), primary_key=True)
     enroll_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
     course_progress = db.Column(db.Integer, nullable=True)
-
     user = db.relationship('User', backref='enrollments')
     course = db.relationship('Course', backref='enrollments')
+    
 
     def __repr__(self):
         return f"JoinedCourse(user_id={self.user_id}, course_id={self.course_id})"
