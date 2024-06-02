@@ -1,10 +1,11 @@
+import sys
 from website.models import Course, Category
-from flask import render_template, request
+from flask import flash, redirect, render_template, request, url_for
 from flask import get_flashed_messages
-from website.main.forms import SearchForm
+from website.main.forms import SearchForm, contactForm
 
 ### Methods ###
-from website.main.helper import rank_courses
+from website.main.helper import send_contact_us_email
 
 
 from flask import Blueprint
@@ -31,10 +32,31 @@ def about():
 
 
 
-@main.route("/contact")
+@main.route("/contact", methods=["GET","POST"])
 def contact():
-  return render_template("contact.html", title="Contact With Us")
+  form= contactForm()
+  if form.validate_on_submit():
+    name= form.name.data
+    email= form.email.data
+    message= form.message.data
+    
+    print(f'\n\n\n Form data: {name}, {email}, {message}', file=sys.stderr) ###
+    try:
+      send_contact_us_email(name, email, message)
+      flash('The request was successfully submitted!', 'success')
+    except Exception as e:
+      flash(f'An error occurred: {str(e)}', 'danger')
+      print(f"\n\n\nError sending email: {e}", file=sys.stderr) ###
 
+
+    return redirect(url_for('main.contact'))
+  
+  flash_messages = get_flashed_messages()
+
+  print(f"\n\n\nForm not submitted or validation failed", file=sys.stderr) ###
+
+  return render_template("contact.html", title="Contact With Us", form= form,
+                         flash_messages= flash_messages)
 
 
 @main.route("/faq")
