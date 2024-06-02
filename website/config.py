@@ -1,5 +1,7 @@
 import os
 
+
+
 class Config:
   DB_NAME="database.db"
   SECRET_KEY="aaa123456789"
