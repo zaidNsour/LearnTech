@@ -16,13 +16,14 @@ from flask_ckeditor import CKEditorField
 
 ###methods###
 from website.helper import choice_query_category
-from website.helper import choice_query_course
+from website.admins.helper import choice_query_instructor
 
 
 ############################## Course ################################
 
 class NewCourseForm(FlaskForm):
   category = QuerySelectField("Category", query_factory=choice_query_category, get_label="title")
+  instructor = QuerySelectField("Instructor", query_factory=choice_query_instructor, get_label="email")
   title=StringField('Title', validators=[DataRequired(),Length(max= 100)] )
   description=CKEditorField("Description", validators=[DataRequired()], render_kw={"rows" : "30"} )
   price=StringField('Price',validators=[DataRequired(),Length(max= 10),Regexp('^\d+$') ] )

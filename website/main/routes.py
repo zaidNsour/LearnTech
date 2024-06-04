@@ -5,7 +5,7 @@ from flask import get_flashed_messages
 from website.main.forms import SearchForm, contactForm
 
 ### Methods ###
-from website.main.helper import send_contact_us_email
+from website.main.helper import send_contact_email
 
 
 from flask import Blueprint
@@ -42,7 +42,7 @@ def contact():
     
     print(f'\n\n\n Form data: {name}, {email}, {message}', file=sys.stderr) ###
     try:
-      send_contact_us_email(name, email, message)
+      send_contact_email(name, email, message)
       flash('The request was successfully submitted!', 'success')
     except Exception as e:
       flash(f'An error occurred: {str(e)}', 'danger')
@@ -62,10 +62,6 @@ def contact():
 @main.route("/faq")
 def faq():
   return render_template("faq.html", title="FAQ")
-
-
-
-
 
 
 #pass stuff to navbar
@@ -95,11 +91,3 @@ def search():
   # If the form is not submitted or fails validation, render the search template with the form
   return render_template("search.html", title="Search", form=form)
   
-  
-
-  
-
-
-
-
-
