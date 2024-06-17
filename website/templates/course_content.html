@@ -28,11 +28,7 @@
 
       <!-- Lesson Title -->
       <div class="mx-auto mb-5 mb-md-0">
-        {% if there_lesson %}
         <h3 class="mb-0 line-clamp-2 text-white"> {{current_lesson.title}} </h3>
-        {% else %}
-        <h3 class="mb-0 line-clamp-2 text-white"> No Lesson </h3>
-        {% endif %}
       </div>
 
       <!-- Back to Course -->
@@ -173,6 +169,8 @@
         </a>
         {%endif%}
       </div>
+
+      
     </div>
 
 

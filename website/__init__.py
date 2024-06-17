@@ -41,6 +41,7 @@ def create_app(config_calss= Config):
     
 
     db.init_app(app)
+    
     bcrypt.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = 'users_bp.login'

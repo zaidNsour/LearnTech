@@ -6,5 +6,6 @@ def getAverageReviewFromComments(comments):
       sum += comment.rating
 
     return sum / len(comments)
+  
   else:
     return 0

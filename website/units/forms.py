@@ -10,7 +10,6 @@ from website.models import  Unit
 from website.helper import choice_query_course
 
 
-
 class NewUnitForm(FlaskForm):
   course = QuerySelectField("Course", query_factory=choice_query_course, get_label="title")
   title=StringField('Title', validators=[DataRequired(),Length(max= 100)] )

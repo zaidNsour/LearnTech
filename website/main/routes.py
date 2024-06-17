@@ -1,6 +1,6 @@
 import sys
 from website.models import Course, Category
-from flask import flash, redirect, render_template, request, url_for
+from flask import flash, redirect, render_template, request, session, url_for
 from flask import get_flashed_messages
 from website.main.forms import SearchForm, contactForm
 
@@ -24,8 +24,6 @@ def home():
                          flash_messages= flash_messages
                          )
 
-
-
 @main.route("/about")
 def about():
   return render_template("about.html", title="About Us")
@@ -48,7 +46,6 @@ def contact():
       flash(f'An error occurred: {str(e)}', 'danger')
       print(f"\n\n\nError sending email: {e}", file=sys.stderr) ###
 
-
     return redirect(url_for('main.contact'))
   
   flash_messages = get_flashed_messages()
@@ -63,31 +60,41 @@ def contact():
 def faq():
   return render_template("faq.html", title="FAQ")
 
-
+'''
 #pass stuff to navbar
 @main.context_processor
 def app():
   form =SearchForm()
   return dict(form = form)
 
+'''
+
 
 
 @main.route("/search", methods=['POST', 'GET'])
 def search():
   form =SearchForm()
-  page=request.args.get('page', 1, type=int)
+  query= None
+  page=request.args.get('page', 1, type=int) 
+
+
   if form.validate_on_submit():
     query= form.query.data
-    courses=Course.query.filter(Course.title.like('%'+ query +'%') )
-    #courses= courses.order_by( Course.title ).all()
-    paginated_courses = courses.paginate(page= page,per_page= 8)
+    session['query'] = query
 
-    return render_template("search.html",
+  query = session.get('query')
+
+  if query:
+    courses=Course.query.filter(Course.title.like('%'+ query +'%') )
+    paginated_courses = courses.paginate(page= page, per_page= 6)
+  else:
+    paginated_courses = None
+
+  return render_template("search.html",
                             title="Search Results",
-                            form=form, query=query,
+                            form=form,
+                            query=query,
                             paginated_courses= paginated_courses
                             )
   
-  # If the form is not submitted or fails validation, render the search template with the form
-  return render_template("search.html", title="Search", form=form)
   

@@ -49,12 +49,11 @@ def category_list(category_title):
     category = Category.query.filter_by(title=category_title).first_or_404()
     category_courses=Course.query.filter_by(category_id=category.id)
     categories=Category.query.all()
-    courses_count=CourseCountInCategory(category.id)
     return render_template(
         "category.html",
         title=category.title,
         category=category,
         category_courses=category_courses,
         categories=categories,
-        courses_count=courses_count
+        courses_count=CourseCountInCategory(category.id)
       )

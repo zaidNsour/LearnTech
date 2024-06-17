@@ -46,7 +46,6 @@ class UserAdmin(MyModelView):
         'password2': PasswordField('Password')
                       }
   
-  
   form_columns = (
     'fname',
     'lname',
@@ -56,13 +55,11 @@ class UserAdmin(MyModelView):
     'is_instructor',
     'is_admin',   
     )
-
   
   column_searchable_list = ['fname', 'lname']
   page_size = 20
 
-  def create_form(self, obj=None):
-    
+  def create_form(self, obj=None): 
     return NewUserForm()
   
   def delete_model(self, model):
@@ -84,7 +81,6 @@ class UserAdmin(MyModelView):
 
       if form.password2.data != '':
               model.password = bcrypt.generate_password_hash(form.password2.data).decode("utf-8")
-
 
       '''
       else:

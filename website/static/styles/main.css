@@ -72,13 +72,11 @@ a{
   align-items: center;
   justify-content: center;
   flex-basis: 50%;
-  padding-bottom: 50px;
-
+  padding: 50px;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-
 }
 
 @media (max-width: 991px) {
@@ -186,13 +184,10 @@ padding:15px auto;
   font-size:12px;
   color:white;
   text-align: center;
-
-
 }
 
 .overlay2:hover span{
   display:block;
-
 }
 
 

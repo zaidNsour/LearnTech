@@ -12,8 +12,6 @@ from flask_ckeditor import CKEditorField
 
 
 
-
-
 ###methods###
 from website.helper import choice_query_category
 from website.admins.helper import choice_query_instructor
@@ -61,7 +59,7 @@ class NewUserForm(FlaskForm):
       validators=[ 
         DataRequired(),
         Regexp(
-          "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]{8,32}$"
+          "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_-])[A-Za-z\d@$!%*?&_-]{8,32}$"
           )
        ]
     )
@@ -82,38 +80,7 @@ class  UpdateUserForm(FlaskForm):
   password = PasswordField("password",validators=[Optional()] )
   bio=TextAreaField("Bio", validators=[Optional()])
   img_file = FileField("Update Profile Picture", validators=[ FileAllowed(["jpg", "png"]) ,Optional()]  )
-
-
-
   is_instructor = BooleanField("Is Instructor")
   is_admin = BooleanField("Is Admin")
 
-
-  '''
-  def validate_email(self, email):
-    user=User.query.filter_by(email= email.data).first()
-    
-    if user:
-      raise ValidationError("Email is already exist")
-  
-  '''
-
-
 ############################# joined course #################################
-
-'''
-
-class NewLessonForm(FlaskForm):
-    course = QuerySelectField("Course", query_factory= choice_query_course, get_label="title")
-    user = QuerySelectField("Student",query_factory= choice_query_user, get_label="email")
-    course_progress = StringField('Title', validators=[DataRequired(), Length(max=100)])
-   
-
-    
-    def validate_title(self, title):
-        if self.course.data is not None:
-            existing_lesson = Lesson.query.filter_by(course_id=self.course.data.id, title=title.data).first()
-            if existing_lesson:
-                raise ValidationError('A lesson with this title already exists for the selected course.')
-
-'''           

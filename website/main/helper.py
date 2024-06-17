@@ -1,11 +1,6 @@
 from flask_mail import Message
 import os
-from flask import flash, url_for
-
-import smtplib
-from email.message import EmailMessage
 from website import mail
-
 
 
 def send_contact_email(name, email, message):    
@@ -19,8 +14,7 @@ def send_contact_email(name, email, message):
                 Email: {email}
                 Message:
     
-                    {message}
-                
+                    {message}    
                 '''
               )
    mail.send(msg)

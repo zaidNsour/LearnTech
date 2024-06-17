@@ -15,7 +15,6 @@ from website.helper import get_youtube_thumbnail_from_url
 from website.lessons.helper import choice_query_test, getMaxNumberInLesson, get_previous_next_lesson
 
 
-
 from flask import Blueprint
 lessons_bp=Blueprint("lessons_bp",__name__)
 
@@ -23,10 +22,8 @@ lessons_bp=Blueprint("lessons_bp",__name__)
 @lessons_bp.route("/dashboard/new_lesson", methods=["GET","POST"])
 @login_required
 def new_lesson():
-
   new_lesson_form=NewLessonForm()
   new_lesson_form.unit.query_factory = lambda: choice_query_test(new_lesson_form)
-
 
   if new_lesson_form.validate_on_submit():
      course=new_lesson_form.course.data
@@ -62,42 +59,39 @@ def new_lesson():
 def course_content(course_title, lesson_title):
     
     course = Course.query.filter_by(title=course_title).first_or_404()
-    units=Unit.query.filter_by(course=course).all()
-    current_lesson=Lesson.query.filter_by(title=lesson_title, course=course).first()
-    there_lesson=False
-    lesson_thumbnail = None
-    unit_lessons = {} # Dictionary to store lessons for each unit
-    previous_lesson, next_lesson=None, None
-    comments = []
-   
 
+    # modify this to matched the progress of students not first lesson
+    current_lesson=Lesson.query.filter_by(title=lesson_title, course=course).first()
+  
     if current_lesson:
       previous_lesson, next_lesson = get_previous_next_lesson(current_lesson)
       lesson_thumbnail= get_youtube_thumbnail_from_url(current_lesson.video_url)
       comments=LessonComment.query.filter_by(lesson_id=current_lesson.id).all()
-      there_lesson=True   
+      units=Unit.query.filter_by(course=course).all()
+      unit_lessons = {} # Dictionary to store lessons for each unit
+
       for unit in units:
         # Fetch lessons for the current unit
         lessons = Lesson.query.filter_by(unit=unit).all()
         unit_lessons[unit.id] = lessons  # Store lessons for the unit
 
-    form = NewLessonCommentForm()
-    if request.method == 'POST' and form.validate_on_submit():
-      new_comment = LessonComment(
-      lesson=current_lesson,
-      user=current_user,
-      title=form.title.data,
-      details=form.details.data,
-      rating=form.rating.data
-      ) 
-      db.session.add(new_comment)
-      db.session.commit() 
+      form = NewLessonCommentForm()
+      if request.method == 'POST' and form.validate_on_submit():
+        new_comment = LessonComment(
+        lesson=current_lesson,
+        user=current_user,
+        title=form.title.data,
+        details=form.details.data,
+        rating=form.rating.data
+        ) 
+        db.session.add(new_comment)
+        db.session.commit() 
         # Redirect to the same page to avoid form resubmission
-      return redirect(url_for('lessons_bp.course_content', course_title=course_title, lesson_title=lesson_title))
+        return redirect(url_for('lessons_bp.course_content', course_title=course_title, lesson_title=lesson_title))
 
+      flash_messages = get_flashed_messages()
 
-    flash_messages = get_flashed_messages()
-    return render_template(
+      return render_template(
         "course_content.html",
         title=course.title,
         course=course,
@@ -105,11 +99,13 @@ def course_content(course_title, lesson_title):
         current_lesson=current_lesson,
         unit_lessons=unit_lessons, 
         lesson_thumbnail=lesson_thumbnail,
-        there_lesson=there_lesson,
         flash_messages=flash_messages,
         previous_lesson=previous_lesson,
         next_lesson= next_lesson,  
         comments=comments, 
         form=form  # Pass the form instance to the template  
-    )
+        )
+    else:
+
+      return render_template("coming-soon.html")
     

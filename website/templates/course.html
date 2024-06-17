@@ -1274,25 +1274,8 @@
               {% endfor %}
 
 
-
-
-
-
-
-              
-
-              
-              
-
-              
-
             </div>
-
-
-
           </div>
-
-
 
 
           <!--start Comments-->
@@ -1374,10 +1357,6 @@
     <div class="col-lg-4">
 
 
-
-
-
-
       <!-- SIDEBAR FILTER
             ================================================== -->
       <div class="d-block d-block rounded border p-2 shadow mb-6 bg-white">
@@ -1398,9 +1377,9 @@
         <div class="pt-5 pb-4 px-5 px-lg-3 px-xl-5">
           <div class="d-flex align-items-center mb-2">
             <ins class="h2 mb-0">{{course.price}} JD</ins>
-            <del class="ms-3">{{2*course.price + 10}} JD</del>
+            <del class="ms-3">{{2*course.price}} JD</del>
             <!--don't forget modify the discount -->
-            <div class="badge badge-lg badge-purple text-white ms-auto fw-normal">91% Off</div>
+            <div class="badge badge-lg badge-purple text-white ms-auto fw-normal">50% Off</div>
           </div>
 
           <div class="d-flex align-items-center text-alizarin mb-6">
@@ -1431,10 +1410,7 @@
 
 
 
-
-
-
-          {% if current_user in course.students %}
+          {% if is_joined %}
             {% if course.lessons|length > 0 %}
             <a
             style="background-color: #744f98; color:black;" 
@@ -1464,6 +1440,7 @@
          class="btn btn-orange btn-block mb-6">ENROLL</a>
           
           {%endif%}
+          
           <ul class="list-group list-group-flush">
 
             <li class="list-group-item d-flex align-items-center py-3">

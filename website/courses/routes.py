@@ -37,6 +37,14 @@ def course(course_title):
     avg_review_floor=math.floor(avg_review)  
 
 
+    is_joined = False
+
+    for joined in current_user.joined_courses:
+       if course.id == joined.course_id:
+          is_joined = True
+          break
+
+
     form = CourseCommentForm()
     if request.method == 'POST' and form.validate_on_submit():
       new_comment = CourseComment(
@@ -62,9 +70,10 @@ def course(course_title):
       comments= comments, 
       form= form,
       reviews_count=  reviews_count,
-      flash_messages= flash_messages,
       avg_review=  avg_review,
-      avg_review_floor= avg_review_floor
+      avg_review_floor= avg_review_floor,
+      flash_messages= flash_messages,
+      is_joined = is_joined
     )
 
 
@@ -72,7 +81,7 @@ def course(course_title):
 @courses_bp.route("/courses")
 def courses():
    page=request.args.get('page', 1, type=int)
-   courses=Course.query.paginate(page= page,per_page= 6)
+   courses=Course.query.paginate(page= page, per_page= 6)
    return render_template("courses.html", title="Courses", courses = courses)
 
 
