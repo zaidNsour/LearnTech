@@ -17,7 +17,7 @@ class RegistrationForm(FlaskForm):
       validators=[ 
         DataRequired(),
         Regexp(
-          "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]{8,32}$"
+          "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_-])[A-Za-z\d@$!%*?&_-]{8,32}$"
           )
        ]
     )
