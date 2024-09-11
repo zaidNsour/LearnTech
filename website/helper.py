@@ -40,8 +40,7 @@ def lessonCountInCourse(course_id):
         count = sum(len(unit.lessons) for unit in course.units)
     return count
 
-
-API_KEY = 'AIzaSyBHA-rIMchSMmjrnNRZoODQf9GD5KGTyDQ'
+API_KEY = os.environ.get('API_KEY')
 
 # Initialize the YouTube Data API client
 youtube = build('youtube', 'v3', developerKey=API_KEY)
