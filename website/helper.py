@@ -40,10 +40,10 @@ def lessonCountInCourse(course_id):
         count = sum(len(unit.lessons) for unit in course.units)
     return count
 
-API_KEY = os.environ.get('API_KEY')
+GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
 
 # Initialize the YouTube Data API client
-youtube = build('youtube', 'v3', developerKey=API_KEY)
+youtube = build('youtube', 'v3', developerKey=GOOGLE_API_KEY)
 
 # Function to fetch the thumbnail URL of a YouTube video
 def get_youtube_thumbnail(video_id):
