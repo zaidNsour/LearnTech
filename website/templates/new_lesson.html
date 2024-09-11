@@ -1,115 +1,121 @@
-{% extends "dashboard.html" %}
+<head>
+
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-{%block new_lesson%}
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 
-<div class="{{'tab-pane show active fade p-3' if active_tab=='new_lesson' else 'tab-pane fade p-3'}}" id="nav-newLesson"
-	role="tabpanel" aria-labelledby="nav-newLesson-tab">
-	<form action="/dashboard/new_lesson" method="POST">
-		{{ new_lesson_form.hidden_tag()}}
-		<legend class="border-bottom my-3">New Lesson</legend>
+ <!-- Main Style -->
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/form.css') }}">
 
-		<div class="mb-3">
-			{{ new_lesson_form.course.label(class="form-control-label") }}
 
-			{% if new_lesson_form.course.errors %}
-				{{ new_lesson_form.course(class="form-control is-invalid") }}
+</head>
+
+
+{% extends "layout.html" %}
+
+
+{% block content %}
+
+
+<div class="container my-5">
+
+	<form action="" method="POST" enctype="multipart/form-data">
+			{{ form.hidden_tag() }}
+			
+			<legend class="border-bottom my-3">Add Lesson</legend>
+
+
+
+			<div class="mb-3">
+				{{ form.unit.label(class="form-control-label") }}
+			
+				{% if form.unit.errors %}
+					{{ form.unit(class="form-control is-invalid") }}
+					<div class="invalid-feedback">
+						{% for error in form.unit.errors %}
+							<span class="error">{{ error }}</span>
+						{% endfor %}
+					</div>
+				{% else %}
+				{{ form.unit(class="form-select", id="unitSelect") }}
+				{%endif%}
+			</div>
+			
+			<script src="{{ url_for('static', filename='new_lesson.js') }}"></script>
+			
+			
+			<div class="mb-3">
+				{{ form.title.label(class='form-control-label') }}
+				{% if form.title.errors %}
+				{{ form.title(class='form-control is-invalid') }}
 				<div class="invalid-feedback">
-					{% for error in new_lesson_form.course.errors %}
-						<span class="error">{{ error }}</span>
+	
+					{% for error in form.title.errors %}
+					<span class="error">{{error}}</span>
 					{% endfor %}
+	
 				</div>
-			{% else %}
-			{{ new_lesson_form.course(class="form-select", id="courseSelect") }}
-			{%endif%}
-		</div>
-
-
-		<div class="mb-3">
-			{{ new_lesson_form.unit.label(class="form-control-label") }}
-
-			{% if new_lesson_form.unit.errors %}
-				{{ new_lesson_form.unit(class="form-control is-invalid") }}
+				{% else %}
+				{{ form.title(class='form-control') }}
+	
+				{% endif %}
+			</div>
+	
+	
+			<div class="mb-3">
+				{{ form.details.label(class='form-control-label') }}
+				{% if form.details.errors %}
+				{{ form.details(class='form-control is-invalid' )}}
 				<div class="invalid-feedback">
-					{% for error in new_lesson_form.unit.errors %}
-						<span class="error">{{ error }}</span>
+	
+					{% for error in form.details.errors %}
+					<span class="error">{{error}}</span>
 					{% endfor %}
+	
 				</div>
-			{% else %}
-			{{ new_lesson_form.unit(class="form-select", id="unitSelect") }}
-			{%endif%}
-		</div>
-
-		<script src="{{ url_for('static', filename='new_lesson.js') }}"></script>
-
-
-		<div class="mb-3">
-			{{ new_lesson_form.title.label(class='form-control-label') }}
-
-			{% if new_lesson_form.title.errors %}
-			{{ new_lesson_form.title(class='form-control is-invalid') }}
-			<div class="invalid-feedback">
-				{% for error in new_lesson_form.title.errors %}
-				<span class="error">{{error}}</span>
-				{% endfor %}
+				{% else %}
+				{{ form.details(class='form-control') }}
+	
+				{% endif %}
 			</div>
-
-			{% else %}
-			{{ new_lesson_form.title(class='form-control') }}
-
-			{% endif %}
-
-		</div>
-
-
-		<div class="mb-3">
-			{{ new_lesson_form.details.label(class='form-control-label') }}
-			{% if new_lesson_form.details.errors %}
-			{{ new_lesson_form.details(class='form-control is-invalid' )}}
-			<div class="invalid-feedback">
-				{% for error in new_lesson_form.details.errors %}
-				<span class="error">{{error}}</span>
-				{% endfor %}
+	
+	
+			<div class="mb-3">
+				{{ form.video_url.label(class='form-control-label') }}
+				{% if form.video_url.errors %}
+				{{ form.video_url(class='form-control is-invalid' )}}
+				<div class="invalid-feedback">
+	
+					{% for error in form.video_url.errors %}
+					<span class="error">{{error}}</span>
+					{% endfor %}
+	
+				</div>
+	
+				{% else %}
+				{{ form.video_url(class='form-control') }}
+	
+				{% endif %}
 			</div>
-
-			{% else %}
-			{{ new_lesson_form.details(class='form-control') }}
-
-			{% endif %}
-
-		</div>
-
-		<div class="mb-3">
-
-			{{ new_lesson_form.video_url.label(class='form-control-label') }}
-			{% if new_lesson_form.video_url.errors %}
-			{{ new_lesson_form.video_url(class='form-control is-invalid') }}
-			<div class="invalid-feedback">
-				{% for error in new_lesson_form.video_url.errors %}
-				<span class="error">{{error}}</span>
-				{% endfor %}
+	
+	
+			<div class="form-group">
+				<div class="col-12">
+					<button class="btn-submit" type="submit">Create</button>
+				</div>
 			</div>
-
-			{% else %}
-			{{ new_lesson_form.video_url(class='form-control') }}
-
-			{% endif %}
-
-		</div>
-
-
-		<div class="form-group">
-			<div class="col-12">
-				<button class="btn-submit" type="submit">Post</button>
-			</div>
-		</div>
+	
 	</form>
+	
+	</div>
+	
+		{{ ckeditor.load() }}
+		{{ ckeditor.config(name="content") }}
+	
 
-
-	{{ ckeditor.load() }}
-	{{ ckeditor.config(name="content") }}
-
-</div>
-
-
-{%endblock new_lesson%}
+{%endblock content%}

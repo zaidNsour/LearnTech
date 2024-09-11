@@ -1,5 +1,5 @@
 from os import abort
-from website.models import Lesson, Course, Category, CourseComment
+from website.models import Lesson, Course, Category, CourseComment, Unit
 from flask import render_template, url_for, flash, redirect, request
 from website.courses.forms import NewCourseForm, UpdateCourseForm, CourseCommentForm
 from website import db
@@ -196,3 +196,25 @@ def update_course(course_title):
      update_course_form = update_course_form 
 
   )
+
+
+@courses_bp.route("/edit-course/<string:course_title>", methods=["GET", "POST"])
+@login_required
+def edit_course(course_title): 
+   course=Course.query.filter_by(title=course_title).first_or_404()
+   units=Unit.query.filter_by(course=course).order_by(Unit.number).all()
+
+   unit_lessons = {} # Dictionary to store lessons for each unit
+
+   for unit in units:
+      # Fetch lessons for the current unit
+      lessons = Lesson.query.filter_by(unit=unit).all()
+      unit_lessons[unit.id] = lessons  # Store lessons for the unit
+
+   
+   return render_template( "edit-course.html", 
+                          title = course.title,
+                          course = course,
+                          units = units,
+                          unit_lessons = unit_lessons
+                          )

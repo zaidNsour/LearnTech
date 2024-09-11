@@ -26,7 +26,7 @@
           <!-- Image -->
           <div class="card-zoom position-relative">
 
-            <a href="{{ url_for('courses_bp.course', course_title=course.title) }}" class="card-img sk-thumbnail d-block">
+            <a href="#" class="card-img sk-thumbnail d-block">
               <img class="rounded shadow-light-lg" src="../static/images/course_pics/{{ course.icon }}" alt="...">
             </a>
 
@@ -55,15 +55,20 @@
                   <ul class="nav mx-n3">
 
                     <li class="nav-item px-3">
-                      <a href="{{url_for('courses_bp.update_course', course_title = course.title)}}"
+                      <a href="{{url_for('courses_bp.edit_course', course_title=course.title)}}"
                         class="btn btn-info btn-sm m-1">Update</a>
                     </li>
 
+                    <!--
                     <li class="nav-item px-3">
                       <a href="" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" 
                       data-bs-target="#deleteModal{{course.id}}">
                         Delete </a>
                     </li>
+                    
+                    -->
+
+                    
                   </ul>
 
 
@@ -78,8 +83,6 @@
 
               </div>
             </div>
-
-
 
 
 

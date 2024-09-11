@@ -1,5 +1,5 @@
 from website import admin, db, bcrypt
-from website.models import User, Category, Course, JoinedCourse
+from website.models import Unit, User, Category, Course, JoinedCourse
 from website.admins.forms import NewCourseForm, UpdateCourseForm, NewUserForm
 from wtforms import PasswordField
 from flask import Blueprint, flash
@@ -8,9 +8,7 @@ from flask_admin import AdminIndexView
 from flask_admin.form.upload import FileUploadField
 from flask_login import current_user
 
-
 #for logging use: print('\n\n\n msg', file=sys.stderr)
-
 
 ### methods ###
 from website.helper import delete_picture, save_picture
@@ -213,6 +211,11 @@ class JoinedCourseAdmin(MyModelView):
   column_searchable_list = ['course.title']
   form_excluded_columns = ('enroll_date')
 
+############################# unit #################################
+
+
+ 
+
  
 
 admin.add_view( UserAdmin(User, db.session) )
@@ -220,4 +223,5 @@ admin.add_view( CategoryAdmin(Category, db.session) )
 admin.add_view( CourseAdmin(Course, db.session) )
 admin.add_view( JoinedCourseAdmin( JoinedCourse, db.session) )
 
+admin.add_view( MyModelView( Unit, db.session) )
 

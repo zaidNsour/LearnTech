@@ -41,39 +41,6 @@
 				</button>
 			</a>
 
-			<a class="link" href="/dashboard/new_lesson" class="link">	
-				<button class="{{'nav-link active' if active_tab == 'new_lesson' else 'nav-link'}}"  
-				id="nav-newLesson-tab" data-bs-toggle="tab" data-bs-target="#nav-newLesson"
-					type="button" role="tab" aria-controls="nav-newLesson"
-				  aria-selected="true">New Lesson
-				</button>
-			</a>
-
-			<a class="link" href="/dashboard/new_unit" class="link">	
-				<button class="{{'nav-link active' if active_tab == 'new_unit' else 'nav-link'}}"  
-				id="nav-newUnit-tab" data-bs-toggle="tab" data-bs-target="#nav-newUnit"
-					type="button" role="tab" aria-controls="nav-newUnit"
-				  aria-selected="true">New Unit
-				</button>
-			</a>
-
-			<a class="link" href="/dashboard/new_course" class="link">	
-				<button class="{{'nav-link active' if active_tab == 'new_coure' else 'nav-link'}}"  
-				id="nav-newCourse-tab" data-bs-toggle="tab" data-bs-target="#nav-newCourse"
-					type="button" role="tab" aria-controls="nav-newCoures" 
-					aria-selected="true">New Course
-				</button>
-			</a>
-
-			<a class="link" href="/dashboard/new_category" class="link">	
-				<button class="{{'nav-link active' if active_tab == 'new_category' else 'nav-link'}}"  
-				id="nav-newCategory-tab" data-bs-toggle="tab" data-bs-target="#nav-newCategory"
-					type="button" role="tab" aria-controls="nav-newCategory" 
-					aria-selected="true">New Category
-				</button>
-			</a>
-
-			
 
 			<a class="link" href="/dashboard/your_courses" class="link">	
 				<button class="{{'nav-link active' if active_tab == 'your_courses' else 'nav-link'}}"  
@@ -91,21 +58,6 @@
 
 		<!-- ******** Profile ********-->
 		{% block profile %}  {% endblock profile %}
-
-			<!-- ******** new_lesson ********-->
-		{% block new_lesson %}  {% endblock new_lesson %}
-
-
-			<!-- ******** new_unit ********-->
-		{% block new_unit %}  {% endblock new_unit %}
-
-
-			<!-- ******** new_Course ********-->
-		{% block new_course %}  {% endblock new_course %}	
-		
-
-		<!-- ******** new_Category ********-->
-		{% block new_category %}  {% endblock new_category %}	
 
 
 			<!-- ******** your_categories ********-->

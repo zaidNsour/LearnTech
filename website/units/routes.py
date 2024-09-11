@@ -1,7 +1,7 @@
-from website.models import  Unit
+from website.models import  Course, Lesson, Unit
 from flask import render_template, url_for, flash, redirect, request,Blueprint
 from flask import jsonify
-from website.units.forms import NewUnitForm
+from website.units.forms import NewUnitForm, UpdateUnitForm
 from website import  db
 from flask_login import login_required
 from flask import get_flashed_messages
@@ -38,28 +38,102 @@ def get_units():
   return jsonify(unit_data)
 
 
-@units_bp.route("/dashboard/new_unit", methods=["GET","POST"])
+@units_bp.route("/new_unit/<string:course_title>", methods=["GET","POST"])
 @login_required
-def new_unit():
-  new_unit_form=NewUnitForm()
-  course=new_unit_form.course.data
-  if new_unit_form.validate_on_submit():
-     unit=Unit(title= new_unit_form.title.data,
-               course=course,
+def new_unit(course_title):
+
+  course = Course.query.filter_by(title = course_title).first_or_404()
+  form=NewUnitForm()
+  form.course.data = course
+
+  if form.validate_on_submit(): 
+     unit=Unit(title= form.title.data,
+               course = course,
                number=getMaxNumberInUnit(course.id) + 1
                   )
      db.session.add(unit)
      db.session.commit()
 
      flash("Unit has been created!", "success")
-     return redirect(url_for("units_bp.new_unit"))
-  
-  flash_messages = get_flashed_messages()
+     return redirect( url_for("courses_bp.edit_course", course_title = course.title)) 
   
   return render_template(
         "new_unit.html",
-        title="New Unit",
-        new_unit_form=new_unit_form,
-        active_tab="new_unit",
-        flash_messages=flash_messages
+        title = "New Unit",
+        form = form,
+        flash_messages = get_flashed_messages()
     )
+
+
+@units_bp.route("/update_unit/<string:course_title>/<string:unit_title>", methods=["GET", "POST"])
+@login_required
+def update_unit(course_title, unit_title):
+
+  course=Course.query.filter_by(title=course_title).first()
+  unit = Unit.query.filter_by(course = course, title = unit_title).first_or_404()
+  form = UpdateUnitForm()
+  form.course.data = course
+
+  if form.validate_on_submit():
+    unit.title = form.title.data
+    db.session.commit()
+    flash("The Unit has been updated!", "success")
+    return redirect( url_for("courses_bp.edit_course", course_title = course.title)) 
+  
+  elif request.method == 'GET':
+     form.title.data = unit.title
+   
+  return render_template(
+     "update_unit.html",
+     title = "Update Unit",
+     course = course,
+     unit = unit,
+     form = form 
+
+  )
+
+
+
+@units_bp.route("/delete_unit/<string:course_title>/<string:unit_title>", methods=["GET","POST"])
+@login_required
+def delete_unit(course_title, unit_title):
+   course = Course.query.filter_by(title = course_title).first()
+   unit=Unit.query.filter_by(course = course, title=unit_title).first_or_404()
+   
+   try:
+        db.session.delete(unit)
+        db.session.commit()
+        Lesson.renumber_lessons(course)
+        Unit.renumber_units(course)
+        flash("The Unit has been deleted!", "success")
+
+   except Exception as e:
+        db.session.rollback()
+        flash("An error occurred while deleting the Unit.", "error")
+        print(f"Error deleting Unit: {e}")
+  
+   return redirect( url_for("courses_bp.edit_course", course_title = course.title)) 
+
+
+
+
+@units_bp.route('/reorder_units', methods=['POST'])
+def reorder_units():
+    data = request.get_json()
+    unit_order = data['order']
+    course_id = data['course_id']
+    course = Course.query.filter_by(id = course_id).first()
+    
+   
+    # Recalculate the number of units and update their order in the database
+    for index, unit_id in enumerate(unit_order):
+        unit = Unit.query.get(unit_id)
+        if unit:
+            unit.number = index + 1
+            db.session.commit()
+            
+    Lesson.renumber_lessons(course)
+    return jsonify({'status': 'success'})
+
+
+    

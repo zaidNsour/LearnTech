@@ -1,0 +1,231 @@
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Main style -->
+  <link rel="stylesheet" type="text/css" href="../static/styles/form.css">
+
+
+  <style>
+    .hide-lessons {
+      display: none;
+      padding:0;
+      margin:0;
+    }
+  </style>
+
+</head>
+
+
+{% extends "layout.html" %}
+
+{% block content %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}" role="alert">
+  {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<!-- Units container -->
+<div id="unit-list" class="container curriculum-container"  data-course-id="{{ course.id }}" >
+
+  {% for unit in units %}
+  <!-- Unit -->
+  <div class="unit border rounded shadow mb-4 overflow-hidden " data-unit-id="{{ unit.id }}">
+    <!-- Unit title -->
+    <div class="unit-header border-top px-3 py-4 d-flex align-items-center" id="curriculumheading{{unit.id}}">
+      <h5 class="d-flex align-items-center me-auto mb-0">
+        <button class="unit-button d-flex align-items-center p-3 text-dark fw-medium collapse-accordion-toggle"
+          type="button" data-bs-toggle="collapse" data-bs-target="#Curriculumcollapse{{unit.id}}" aria-expanded="true"
+          aria-controls="Curriculumcollapse{{unit.id}}">
+          <span class="icon-container me-3 text-dark d-flex">
+            <!-- Icon -->
+            <svg width="15" height="2" viewBox="0 0 15 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="15" height="2" fill="currentColor" />
+            </svg>
+            <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 7H15V9H0V7Z" fill="currentColor" />
+              <path d="M6 16L6 0L8 0L8 16H6Z" fill="currentColor" />
+            </svg>
+          </span>
+          {{unit.title}}
+        </button>
+      </h5>
+
+      <!-- Unit buttons -->
+      <ul class="action-buttons nav ms-auto">
+
+
+
+
+
+        <li class="nav-item px-2 re-order-list">
+          <a href="#">
+            <div class="re-order">
+              <span class="icon-container me-3 text-dark d-flex">
+                <svg width="15" height="2" viewBox="0 0 15 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="15" height="2" fill="currentColor" />
+                </svg>
+              </span>
+            </div>
+          </a>
+        </li>
+
+
+
+        <li class="nav-item px-2">
+          <a href="{{ url_for('units_bp.update_unit', course_title=course.title, unit_title=unit.title) }}"
+            class="btn btn-info btn-sm">Update</a>
+        </li>
+        <li class="nav-item px-2">
+          <a href="#" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+            data-bs-target="#deleteModal{{unit.id}}">Delete</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Lessons list -->
+    <div id="Curriculumcollapse{{unit.id}}" class="collapse show lesson-list"
+      aria-labelledby="curriculumheading{{unit.id}}" data-parent="#accordionCurriculum">
+      {% for lesson in unit_lessons[unit.id] %}
+      <!-- Lesson -->
+      <div class="lesson border-top px-3 py-4 d-flex align-items-center">
+        <div class="lesson-title me-auto">
+          <span>&nbsp&nbsp&nbsp&nbsp</span>{{lesson.number}}. {{lesson.title}}
+        </div>
+        <div class="lesson-actions d-flex align-items-center">
+          <ul class="action-buttons nav ms-auto">
+            <li class="nav-item px-2">
+              <a href="{{ url_for('lessons_bp.update_lesson', course_title=course.title, lesson_title=lesson.title) }}"
+                class="btn btn-info btn-sm">Update</a>
+            </li>
+            <li class="nav-item px-2">
+              <a href="#" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                data-bs-target="#deleteModal{{lesson.id}}">Delete</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Delete Modal Lesson -->
+      <div class="modal fade" id="deleteModal{{lesson.id}}" tabindex="-1" aria-labelledby="deleteModalLabel"
+        aria-hidden="true" data-bs-backdrop="false">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deleteModalLabel">Delete Lesson?</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Are you sure you want to delete {{lesson.title}} Lesson. This cannot be undone!
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <form
+                action="{{ url_for('lessons_bp.delete_lesson', course_title=course.title, lesson_title=lesson.title) }}"
+                method="POST">
+                <input type="submit" class="btn btn-danger" value="Delete">
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% endfor %}
+
+    </div>
+
+    <!-- Delete Modal Unit -->
+    <div class="modal fade" id="deleteModal{{unit.id}}" tabindex="-1" aria-labelledby="deleteModalLabel"
+      aria-hidden="true" data-bs-backdrop="false">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Delete Unit?</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to delete {{unit.title}} Unit. This cannot be undone!
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <form action="{{ url_for('units_bp.delete_unit', course_title=course.title, unit_title=unit.title) }}"
+              method="POST">
+              <input type="submit" class="btn btn-danger" value="Delete">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  {% endfor %}
+
+</div>
+
+
+<!-- buttons -->
+<ul class="action-buttons nav ms-auto ul-buttons">
+  <li class="nav-item px-2">
+    <a href="{{ url_for('units_bp.new_unit', course_title=course.title) }}" class="btn-a">Add Unit</a>
+  </li>
+  <li class="nav-item px-2">
+    <a href="{{ url_for('lessons_bp.new_lesson', course_title=course.title) }}" class="btn-a">Add Lesson</a>
+  </li>
+</ul>
+
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Include jQuery UI -->
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+<!-- Include jQuery UI CSS -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+
+<script>
+
+  $("#unit-list").sortable({
+    handle: '.re-order',
+
+
+    start: function (event, ui) { 
+      $(".lesson-list").addClass('hide-lessons'); 
+    },
+
+    stop: function (event, ui) { 
+      $(".lesson-list").removeClass('hide-lessons'); 
+    },
+    
+    update: function (event, ui) {
+      var unitOrder = $(this).sortable('toArray', { attribute: 'data-unit-id' });
+      var courseId = $(this).data('course-id');
+
+      $.ajax({
+        url: "{{ url_for('units_bp.reorder_units') }}",
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ order: unitOrder, course_id : courseId }),       
+        success: function (response) {
+          console.log("Reordering successful");
+        },
+        error: function (xhr, status, error) {
+          console.error('Error reordering units:', error);
+        }
+      });
+    }
+  });
+
+</script>
+
+
+{% endblock content %}

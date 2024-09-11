@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import HiddenField, StringField, SubmitField
 from wtforms_sqlalchemy.fields import QuerySelectField
 from wtforms.validators import DataRequired, Length
 from wtforms.validators import  ValidationError
@@ -11,7 +11,7 @@ from website.helper import choice_query_course
 
 
 class NewUnitForm(FlaskForm):
-  course = QuerySelectField("Course", query_factory=choice_query_course, get_label="title")
+  course = HiddenField("Course")
   title=StringField('Title', validators=[DataRequired(),Length(max= 100)] )
   submit=SubmitField('Add')
 
@@ -21,7 +21,6 @@ class NewUnitForm(FlaskForm):
       if existing_unit:
         raise ValidationError('A unit with this title already exists for the selected course.')
     
-  def validate_course(self, course):
-     if not course.data:
-        raise ValidationError("Please select course")
-    
+
+class UpdateUnitForm(NewUnitForm):
+    submit = SubmitField('Update')

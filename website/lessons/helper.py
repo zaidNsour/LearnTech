@@ -1,6 +1,15 @@
-from website.models import  Lesson, Unit
+from website.models import  Lesson, Unit, Course
 from website import db
 from sqlalchemy import func
+
+
+def choice_query_unit(course_title):
+  course = Course.query.filter_by(title = course_title).first()
+  if course:
+    return Unit.query.filter_by(course_id=course.id).all()
+  else:
+    return []  
+
 
 
 def choice_query_test(form):

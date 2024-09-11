@@ -10,6 +10,15 @@
 }
 
 
+
+.container{
+  padding-left:15px;
+  padding-right:15px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+
 .navbar{
   background-color: black;
 }
@@ -113,3 +122,117 @@ span.error{
 /*Stars*/
 
 
+/* edit-course */
+.curriculum-container {
+  min-height: 400px; /* Set your desired minimum height here */
+  position:relative;
+  margin-top: 40px;
+}
+
+.unit {
+  border-color: #dee2e6;
+}
+
+.unit-header {
+  background-color: #f8f9fa;
+}
+
+.unit-button {
+  background-color: #ffffff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.unit-button:hover {
+  background-color: #e9ecef;
+}
+
+.icon-container {
+  display: flex;
+  align-items: center;
+}
+
+.action-buttons .btn {
+  transition: background-color 0.3s ease;
+}
+
+.action-buttons .btn:hover {
+  opacity: 0.8;
+}
+
+.lesson {
+  border-color: #dee2e6;
+}
+
+.lesson-title {
+  font-weight: 500;
+}
+
+.lesson-actions {
+  display: flex;
+  align-items: center;
+}
+
+
+.btn-a {
+  background-color: var(--secondary-color);
+  border-radius: 3px;
+  border: 2px solid black;
+  width: 120px;
+  height: 50px;
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+}
+
+
+.ul-buttons{
+  padding:30px;
+}
+
+.re-order-list{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.re-order{
+  position: relative;
+  width:40px;
+  height: 5px;
+  background-color: black;
+  border-radius: 10px;
+}
+.re-order::before{
+  content: "";
+  position: absolute;
+  top:-10px;
+  width:40px;
+  height: 5px;
+  background-color: black;
+  border-radius: 10px;
+}
+.re-order::after{
+  content: "";
+  position: absolute;
+  bottom:-10px;
+  width:40px;
+  height: 5px;
+  background-color: black;
+  border-radius: 10px;
+}
+
+
+
+
+
+
+
+
+/* edit-course */

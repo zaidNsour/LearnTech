@@ -101,10 +101,19 @@ class Unit(db.Model):
     course = db.relationship('Course', backref=db.backref('units', lazy=True))
     title = db.Column(db.String(50), nullable=False)
     number = db.Column(db.Integer, nullable=False)
+    
+    lessons = db.relationship('Lesson', backref='unit', cascade="all, delete-orphan")
 
     __table_args__ = (
         db.UniqueConstraint('course_id', 'title', name='unique_unit_per_course_title'),
     )
+
+    @staticmethod
+    def renumber_units(course):
+        units = Unit.query.filter_by(course = course ).order_by(Unit.number).all()
+        for idx, unit in enumerate(units):
+            unit.number = idx + 1
+        db.session.commit()
 
     def __repr__(self):
         return f"Unit({self.title})"
@@ -114,7 +123,7 @@ class Lesson(db.Model):
     course_id = db.Column(db.Integer, db.ForeignKey("course.id"), nullable=False)
     course = db.relationship('Course', backref=db.backref('lessons', lazy=True))
     unit_id = db.Column(db.Integer, db.ForeignKey("unit.id"), nullable=False)
-    unit = db.relationship('Unit', backref=db.backref('lessons', lazy=True))
+   
     title = db.Column(db.String(50), nullable=False)
     number = db.Column(db.Integer, nullable=False)
     course_order = db.Column(db.Integer, nullable=True)
@@ -124,8 +133,26 @@ class Lesson(db.Model):
 
     comments = db.relationship("LessonComment", backref="lesson", lazy=True, cascade='all, delete-orphan')
 
-    def __repr__(self):
-        return f"Lesson({self.title}, {self.date})"
+
+    @staticmethod
+    def renumber_lessons(course):
+        lessons = Lesson.query.filter_by(course=course).join(Unit).order_by(Unit.number, Lesson.number).all()
+        for idx, lesson in enumerate(lessons):
+            lesson.number = idx + 1
+        db.session.commit()
+
+
+    '''
+     @staticmethod
+    def renumber_lessons(course):
+        lessons = Lesson.query.filter_by(course = course ).order_by(Lesson.number ).all()
+        for idx, lesson in enumerate(lessons):
+            lesson.number = idx + 1
+        db.session.commit()
+    
+    '''
+
+   
 
 class LessonComment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
