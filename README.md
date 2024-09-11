@@ -28,7 +28,7 @@ You can access the live version of LearnTech at [https://learntech-7f3h.onrender
 - **Managing Data**: Access admin dashboards for managing the data in the site, including instructors, courses and more.
 
 
-### Prerequisites
+## Prerequisites
 To run this project, you will need:
 - Python 3.12.5
 - Flask
