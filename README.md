@@ -40,7 +40,7 @@ To run this project locally, follow these steps:
 Step 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/LearnTech.git
+git clone https://github.com/zaidNsour/LearnTech.git
 ```
 
 Step 2. Navigate into the project directory:
