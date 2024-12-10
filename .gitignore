@@ -1,0 +1,8 @@
+__pycache__
+.venv
+
+
+# Editors configeration
+.idx
+.vscode
+.idea

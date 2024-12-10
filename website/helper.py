@@ -5,9 +5,6 @@ import os
 from website.models import Course, Category
 from flask import current_app
 from flask_login import current_user
-from googleapiclient.discovery import build
-from urllib.parse import urlparse, parse_qs
-
 
 
 
@@ -40,58 +37,11 @@ def lessonCountInCourse(course_id):
         count = sum(len(unit.lessons) for unit in course.units)
     return count
 
-API_KEY = os.environ.get('API_KEY')
 
-# Initialize the YouTube Data API client
-youtube = build('youtube', 'v3', developerKey= API_KEY)
-
-# Function to fetch the thumbnail URL of a YouTube video
-def get_youtube_thumbnail(video_id):
-    response = youtube.videos().list(
-        part='snippet',
-        id=video_id
-    ).execute()
-    items = response.get('items', [])
-    if items:
-        return items[0]['snippet']['thumbnails']['default']['url']
-    else:
-        return None
-    
-def get_high_resolution_thumbnail(video_id):
-    response = youtube.videos().list(
-        part='snippet',
-        id=video_id
-    ).execute()
-    items = response.get('items', [])
-    if items:
-        return items[0]['snippet']['thumbnails'].get('maxres', {}).get('url')
-    else:
-        return None
-
-
-def get_video_id_from_url(video_url):
-    parsed_url = urlparse(video_url)
-    if parsed_url.hostname == 'www.youtube.com' or parsed_url.hostname == 'youtube.com':
-        if 'v' in parse_qs(parsed_url.query):
-            return parse_qs(parsed_url.query)['v'][0]
-    elif parsed_url.hostname == 'youtu.be':
-        return parsed_url.path[1:]
-    return None
-
-# Function to fetch the thumbnail URL of a YouTube video
-def get_youtube_thumbnail_from_url(video_url):
-    video_id = get_video_id_from_url(video_url)
-    if video_id:
-        return get_high_resolution_thumbnail(video_id)
-    else:
-        return None
-   
 
 def choice_query_category():
   return Category.query 
 
-
 def choice_query_course():
   return Course.query.filter_by(author = current_user) 
-
 

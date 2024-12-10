@@ -11,7 +11,7 @@ from flask_login import (
 from flask import get_flashed_messages
 
 ###methods###
-from website.helper import get_youtube_thumbnail_from_url
+#rom website.helper import get_youtube_thumbnail_from_url
 from website.lessons.helper import choice_query_unit, get_previous_next_lesson
 
 
@@ -31,7 +31,7 @@ def course_content(course_title, lesson_title):
   
     if current_lesson:
       previous_lesson, next_lesson = get_previous_next_lesson(current_lesson)
-      lesson_thumbnail= get_youtube_thumbnail_from_url(current_lesson.video_url)
+      #lesson_thumbnail= get_youtube_thumbnail_from_url(current_lesson.video_url)
       comments=LessonComment.query.filter_by(lesson_id=current_lesson.id).all()
       units=Unit.query.filter_by(course=course).all()
       unit_lessons = {} # Dictionary to store lessons for each unit
@@ -64,7 +64,7 @@ def course_content(course_title, lesson_title):
         units=units,
         current_lesson=current_lesson,
         unit_lessons=unit_lessons, 
-        lesson_thumbnail=lesson_thumbnail,
+        #lesson_thumbnail=lesson_thumbnail,
         flash_messages=flash_messages,
         previous_lesson=previous_lesson,
         next_lesson= next_lesson,  

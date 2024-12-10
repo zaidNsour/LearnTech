@@ -10,6 +10,7 @@ from website.config import Config
 from flask_admin import Admin
 import warnings
 warnings.filterwarnings("ignore")
+# remove ignore warning
 
 
 
@@ -29,6 +30,8 @@ def create_app(config_calss= Config):
 
     from website.main.forms import SearchForm 
 
+
+    # search maybe will be modify
     @app.context_processor
     def inject_search_form():
         form = SearchForm()
@@ -38,14 +41,10 @@ def create_app(config_calss= Config):
     app.config.from_object(config_calss)
 
     from website.admins.routes import MyAdminIndexView
-    
 
     db.init_app(app)
-    
     bcrypt.init_app(app)
     login_manager.init_app(app)
-    login_manager.login_view = 'users_bp.login'
-    login_manager.login_message_category = 'info'
     migrate.init_app(app, db)
     ckeditor.init_app(app)
     mail.init_app(app)

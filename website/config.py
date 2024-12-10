@@ -10,4 +10,4 @@ class Config:
   MAIL_USE_TLS= True
   MAIL_USERNAME= os.environ.get('EMAIL_USER')
   MAIL_PASSWORD= os.environ.get('EMAIL_PASS')
-  #for security concern the Email_USER and EMAIL_PASS is stored as Environment variables 
+
