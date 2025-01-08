@@ -33,9 +33,9 @@ class UserAdmin(MyModelView):
   #column_list = ('fname', 'lname', 'email', 'is_instructor', 'is_admin')
   #column_list = ('fname', 'lname', 'email', 'is_instructor')
 
-  column_list = ('fname', 'lname', 'email', 'is_instructor', 'is_admin',)
-  column_labels = dict(fname = 'First Name', lname = 'Last Name')
-  form_excluded_columns = ('is_super_admin','password')
+  column_list = ('username', 'email', 'is_instructor', 'is_admin',)
+  column_labels = {"username" : "User Name"}
+  form_excluded_columns = ('password')
 
   form_extra_fields = {
         'file_path': FileUploadField('Profile image',
@@ -45,8 +45,7 @@ class UserAdmin(MyModelView):
                       }
   
   form_columns = (
-    'fname',
-    'lname',
+    'username',
     'email',
     'file_path',
     'password2',
@@ -54,7 +53,7 @@ class UserAdmin(MyModelView):
     'is_admin',   
     )
   
-  column_searchable_list = ['fname', 'lname']
+  column_searchable_list = ['username']
   page_size = 20
 
   def create_form(self, obj=None): 
@@ -62,7 +61,7 @@ class UserAdmin(MyModelView):
   
   def delete_model(self, model):
     try:
-      if current_user.is_super_admin:
+      if current_user.is_admin:
         self.session.delete(model)
         self.session.commit()
         flash('Course was successfully deleted.', 'success')
@@ -205,8 +204,8 @@ class CategoryAdmin(MyModelView):
 ############################# Joined course #################################
 
 class JoinedCourseAdmin(MyModelView):
-  column_list = ('course.title','user.fname','user.lname' ,'user.email', 'enroll_date','course_progress' )
-  column_labels = {"course.title":'Course Title','user.fname':'First Name','user.lname':'Last Name',
+  column_list = ('course.title','user.username', 'user.email', 'enroll_date','course_progress' )
+  column_labels = {"course.title":'Course Title','user.username':'User Name',
                    'user.email':'Email' ,'enroll_date':'Enroll Date'}
   column_searchable_list = ['course.title']
   form_excluded_columns = ('enroll_date')

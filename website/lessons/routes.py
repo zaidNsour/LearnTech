@@ -16,7 +16,7 @@ from website.lessons.helper import choice_query_unit, get_previous_next_lesson
 
 
 from flask import Blueprint
-lessons_bp=Blueprint("lessons_bp",__name__)
+lessons_bp=Blueprint("lessons_bp",__name__, url_prefix='/lessons')
 
 
 
@@ -24,41 +24,40 @@ lessons_bp=Blueprint("lessons_bp",__name__)
 @login_required
 def course_content(course_title, lesson_title):
     
-    course = Course.query.filter_by(title=course_title).first_or_404()
+    course = Course.query.filter_by(title= course_title).first_or_404()
 
     # modify this to matched the progress of students not first lesson
-    current_lesson=Lesson.query.filter_by(title=lesson_title, course=course).first()
+    current_lesson= Lesson.query.filter_by(title= lesson_title, course= course).first()
   
     if current_lesson:
       previous_lesson, next_lesson = get_previous_next_lesson(current_lesson)
       #lesson_thumbnail= get_youtube_thumbnail_from_url(current_lesson.video_url)
-      comments=LessonComment.query.filter_by(lesson_id=current_lesson.id).all()
-      units=Unit.query.filter_by(course=course).all()
+      comments= LessonComment.query.filter_by(lesson_id=current_lesson.id).all()
+      units= Unit.query.filter_by(course= course).all()
       unit_lessons = {} # Dictionary to store lessons for each unit
 
       for unit in units:
         # Fetch lessons for the current unit
-        lessons = Lesson.query.filter_by(unit=unit).all()
+        lessons = Lesson.query.filter_by(unit= unit).all()
         unit_lessons[unit.id] = lessons  # Store lessons for the unit
 
       form = NewLessonCommentForm()
-      if request.method == 'POST' and form.validate_on_submit():
-        new_comment = LessonComment(
-        lesson=current_lesson,
-        user=current_user,
-        title=form.title.data,
-        details=form.details.data,
-        rating=form.rating.data
+      if  form.validate_on_submit():
+        new_comment= LessonComment(
+        lesson= current_lesson,
+        user= current_user,
+        content= form.details.data,
         ) 
         db.session.add(new_comment)
         db.session.commit() 
         # Redirect to the same page to avoid form resubmission
-        return redirect(url_for('lessons_bp.course_content', course_title=course_title, lesson_title=lesson_title))
+        return redirect(url_for('lessons_bp.course_content',
+                                 course_title= course_title, lesson_title= lesson_title))
 
       flash_messages = get_flashed_messages()
 
       return render_template(
-        "course_content.html",
+        "lessons/course_content.html",
         title=course.title,
         course=course,
         units=units,
@@ -69,11 +68,10 @@ def course_content(course_title, lesson_title):
         previous_lesson=previous_lesson,
         next_lesson= next_lesson,  
         comments=comments, 
-        form=form  # Pass the form instance to the template  
+        form=form  
         )
     else:
-
-      return render_template("coming-soon.html")
+      return render_template("main/coming-soon.html")
     
 
 
@@ -118,12 +116,12 @@ def new_lesson(course_title):
     Lesson.renumber_lessons(lesson.course)
 
     flash("Your lesson has been created!", "success")
-    return redirect( url_for("courses_bp.edit_course", course_title = course.title))
+    return redirect( url_for("courses_bp.edit_course_content", course_title = course.title))
   
   flash_messages = get_flashed_messages()
   
   return render_template(
-        "new_lesson.html",
+        "lessons/new_lesson.html",
         title="New Lesson",
         form = form,
         flash_messages=flash_messages,
@@ -134,7 +132,7 @@ def new_lesson(course_title):
 @login_required
 def update_lesson(course_title, lesson_title):
 
-  course=Course.query.filter_by(title=course_title).first()
+  course= Course.query.filter_by(title=course_title).first()
   lesson = Lesson.query.filter_by(course_id = course.id, title = lesson_title).first_or_404()
 
   form = UpdateLessonForm()
@@ -146,14 +144,14 @@ def update_lesson(course_title, lesson_title):
 
     db.session.commit()
     flash("The Lesson has been updated!", "success")
-    return redirect( url_for("courses_bp.edit_course", course_title = course.title)) 
+    return redirect( url_for("courses_bp.edit_course_content", course_title = course.title)) 
   
   elif request.method == 'GET':
      form.title.data = lesson.title
      form.details.data = lesson.details
      form.video_url.data = lesson.video_url
   return render_template(
-     "update_lesson.html",
+     "lessons/update_lesson.html",
      course = course,
      lesson = lesson,
      form = form 
@@ -179,5 +177,8 @@ def delete_lesson(course_title, lesson_title):
         print(f"Error deleting lesson: {e}")
   
 
-   return redirect( url_for("courses_bp.edit_course", course_title = course.title)) 
+   return redirect( url_for("courses_bp.edit_course_content", course_title = course.title)) 
     
+
+
+

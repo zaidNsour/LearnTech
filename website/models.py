@@ -2,7 +2,6 @@ from flask import current_app
 from datetime import datetime
 from website import db, login_manager
 from flask_login import UserMixin
-from sqlalchemy import UniqueConstraint
 from itsdangerous import URLSafeTimedSerializer as Serializer
 
 
@@ -20,8 +19,8 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable= False)
     bio = db.Column(db.Text, nullable= True)
 
-    is_instructor = db.Column(db.Boolean, nullable= True, default= False)
-    is_admin = db.Column(db.Boolean, nullable=True, default=False)
+    is_instructor = db.Column(db.Boolean, nullable= False, default= True)
+    is_admin = db.Column(db.Boolean, nullable= False, default= True)
 
     courses = db.relationship("Course", backref="author", lazy=True, cascade='all, delete-orphan')
     lesson_comments = db.relationship("LessonComment", backref="user", lazy=True, cascade='all, delete-orphan')
@@ -42,7 +41,7 @@ class User(db.Model, UserMixin):
         return User.query.get(user_id)
 
     def __repr__(self):
-        return f"{self.fname} {self.lname}"
+      return f"User({self.username}, {self.email})"
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -63,10 +62,13 @@ class Course(db.Model):
     icon = db.Column(db.String(20), nullable=False, default="default_icon.png")
     price = db.Column(db.Integer, nullable=False)
 
+    units = db.relationship('Unit', backref='course', cascade="all, delete-orphan")
+    lessons = db.relationship('Lesson', backref='course', cascade="all, delete-orphan")
     joined_users = db.relationship("JoinedCourse", back_populates="course", cascade='all, delete-orphan')
 
     def __repr__(self):
         return f"Course({self.title}, {self.price})"
+
 
 
 class JoinedCourse(db.Model):
@@ -90,13 +92,11 @@ class CourseComment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     course_id = db.Column(db.Integer, db.ForeignKey("course.id"), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    title = db.Column(db.String(50), nullable=False)
-    details = db.Column(db.String(150), nullable=False)
+    content = db.Column(db.String(150), nullable=False)
 
 class Unit(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     course_id = db.Column(db.Integer, db.ForeignKey("course.id"), nullable=False)
-    course = db.relationship('Course', backref=db.backref('units', lazy=True))
     title = db.Column(db.String(50), nullable=False)
     number = db.Column(db.Integer, nullable=False)
     
@@ -119,17 +119,14 @@ class Unit(db.Model):
 class Lesson(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     course_id = db.Column(db.Integer, db.ForeignKey("course.id"), nullable=False)
-    course = db.relationship('Course', backref=db.backref('lessons', lazy=True))
     unit_id = db.Column(db.Integer, db.ForeignKey("unit.id"), nullable=False)
-   
+    
     title = db.Column(db.String(50), nullable=False)
     number = db.Column(db.Integer, nullable=False)
     video_url = db.Column(db.String(300), nullable= True)
     details = db.Column(db.String(150), nullable= False)
     date = db.Column(db.DateTime, nullable=False, default=datetime.now)
-
     comments = db.relationship("LessonComment", backref="lesson", lazy=True, cascade='all, delete-orphan')
-
 
     @staticmethod
     def renumber_lessons(course):
@@ -138,7 +135,7 @@ class Lesson(db.Model):
             lesson.number = idx + 1
         db.session.commit()
 
-   
+
 
 class LessonComment(db.Model):
     id = db.Column(db.Integer, primary_key=True)

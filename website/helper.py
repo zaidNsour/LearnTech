@@ -3,8 +3,10 @@ import secrets
 from PIL import Image
 import os
 from website.models import Course, Category
-from flask import current_app
+from flask import current_app, redirect, request, flash, url_for
 from flask_login import current_user
+from functools import wraps
+from flask_login import current_user, login_required
 
 
 
@@ -44,4 +46,28 @@ def choice_query_category():
 
 def choice_query_course():
   return Course.query.filter_by(author = current_user) 
+
+
+def admin_required(fn):
+    @wraps(fn)
+    @login_required
+    def wrapper(*args, **kwargs):
+        user = current_user
+        if not user or not user.is_admin:
+            flash("Admin access required.", category="error")
+            return redirect(request.referrer or url_for("main.home")) 
+        return fn(*args, **kwargs)
+    return wrapper
+
+
+def instructor_required(fn):
+    @wraps(fn)
+    @login_required
+    def wrapper(*args, **kwargs):
+        user = current_user
+        if not user or not user.is_instructor:
+            flash("Instructor access required.", category="error")
+            return redirect(request.referrer or url_for("main.home")) 
+        return fn(*args, **kwargs)
+    return wrapper
 

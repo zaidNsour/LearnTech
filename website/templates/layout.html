@@ -6,9 +6,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   {% if title %}
-  <title>Dot Academy- {{title}}</title>
+  <title>LearnTech- {{title}}</title>
   {% else %}
-  <title>Dot Academy</title>
+  <title>LearnTech</title>
   {%endif%}
 
 
@@ -40,9 +40,13 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/theme.min.css') }}">
 
 
+
+
 </head>
 
 <body>
+
+  
 
   <!-- NAVBAR
     ================================================== -->
@@ -200,10 +204,11 @@
             <ul class="dropdown-menu border-xl shadow-none" aria-labelledby="navbarShop">
               <li class="dropdown-item">
   
-  
+                
                 <div class="profile-info">
-                  <img src="../static/images/user_pics/{{current_user.img_file}}" alt="" class="profile-img">
-                  <h3>{{current_user.fname+" "+current_user.lname}}</h3>
+                  <img src="{{ url_for('static', filename='images/user_pics/'+current_user.img_file) }}"
+                   alt="" class="profile-img">
+                  <h3>{{current_user.username}}</h3>
                 </div>
   
   
@@ -215,7 +220,7 @@
                 </a>
               </li>
               <li class="dropdown-item">
-                <a class="dropdown-link" href="{{ url_for('users_bp.profile') }}">
+                <a class="dropdown-link" href="{{ url_for('dashboard_bp.profile') }}">
                   Dashboard
                 </a>
               </li>
@@ -240,7 +245,8 @@
           {% if not current_user.is_authenticated %}
 
           <li class="nav-item dropdown">
-            <a class="nav-link   px-xl-4" id="navbarAbout" href="{{ url_for('users_bp.login') }}" aria-haspopup="true"
+            <a class="nav-link   px-xl-4" id="navbarAbout" href="{{ url_for('users_bp.login') }}"
+             aria-haspopup="true"
               aria-expanded="false">
               Login
             </a>
@@ -248,7 +254,8 @@
           </li>
 
           <li class="nav-item dropdown">
-            <a class="nav-link   px-xl-4" id="navbarAbout" href="{{ url_for('users_bp.register') }}" aria-haspopup="true"
+            <a class="nav-link   px-xl-4" id="navbarAbout" href="{{ url_for('users_bp.register') }}"
+             aria-haspopup="true"
               aria-expanded="false">
               Sign up
             </a>
@@ -340,33 +347,17 @@
     </div>
   </header>
 
-
-  <!-- JAVASCRIPT
-  ================================================== -->
-  <!-- Libs JS -->
-  <script src="../static/assets/libs/jquery/dist/jquery.min.js"></script>
-  <script src="../static/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="../static/assets/libs/%40fancyapps/fancybox/dist/jquery.fancybox.min.js"></script>
-  <script src="../static/assets/libs/aos/dist/aos.js"></script>
-  <script src="../static/assets/libs/choices.js/public/assets/scripts/choices.min.js"></script>
-  <script src="../static/assets/libs/countup.js/dist/countUp.min.js"></script>
-  <script src="../static/assets/libs/dropzone/dist/min/dropzone.min.js"></script>
-  <script src="../static/assets/libs/flickity/dist/flickity.pkgd.min.js"></script>
-  <script src="../static/assets/libs/flickity-fade/flickity-fade.js"></script>
-  <script src="../static/assets/libs/highlightjs/highlight.pack.min.js"></script>
-  <script src="../static/assets/libs/imagesloaded/imagesloaded.pkgd.min.js"></script>
-  <script src="../static/assets/libs/isotope-layout/dist/isotope.pkgd.min.js"></script>
-  <script src="../static/assets/libs/jarallax/dist/jarallax.min.js"></script>
-  <script src="../static/assets/libs/jarallax/dist/jarallax-video.min.js"></script>
-  <script src="../static/assets/libs/jarallax/dist/jarallax-element.min.js"></script>
-  <script src="../static/assets/libs/parallax-js/dist/parallax.min.js"></script>
-  <script src="../static/assets/libs/quill/dist/quill.min.js"></script>
-  <script src="../static/assets/libs/smooth-scroll/dist/smooth-scroll.min.js"></script>
-  <script src="../static/assets/libs/typed.js/lib/typed.min.js"></script>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+         <div class="alert alert-{{category}} text-center">
+          {{message}}
+         </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
 
 
-  <!-- Theme JS -->
-  <script src="../static/assets/js/theme.min.js"></script>
 
 
   {% block content%}
@@ -730,8 +721,6 @@
                 class="form-select form-select-sm custom-select-white-off font-size-sm-alone bg-white-10 text-white-60 border-0 min-width-140 text-left mb-4 mb-md-0"
                 data-choices>
                 <option>English</option>
-                <option>Tamil</option>
-                <option>French</option>
               </select>
             </div>
           </div>
@@ -739,6 +728,37 @@
       </div> <!-- / .row -->
     </div> <!-- / .container -->
   </footer>
+
+
+   <!-- JAVASCRIPT
+  ================================================== -->
+  <!-- Libs JS -->
+
+  <script src="../static/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../static/assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="../static/assets/libs/%40fancyapps/fancybox/dist/jquery.fancybox.min.js"></script>
+  <script src="../static/assets/libs/aos/dist/aos.js"></script>
+  <script src="../static/assets/libs/choices.js/public/assets/scripts/choices.min.js"></script>
+  <script src="../static/assets/libs/countup.js/dist/countUp.min.js"></script>
+  <script src="../static/assets/libs/dropzone/dist/min/dropzone.min.js"></script>
+  <script src="../static/assets/libs/flickity/dist/flickity.pkgd.min.js"></script>
+  <script src="../static/assets/libs/flickity-fade/flickity-fade.js"></script>
+  <script src="../static/assets/libs/highlightjs/highlight.pack.min.js"></script>
+  <script src="../static/assets/libs/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="../static/assets/libs/isotope-layout/dist/isotope.pkgd.min.js"></script>
+  <script src="../static/assets/libs/jarallax/dist/jarallax.min.js"></script>
+  <script src="../static/assets/libs/jarallax/dist/jarallax-video.min.js"></script>
+  <script src="../static/assets/libs/jarallax/dist/jarallax-element.min.js"></script>
+  <script src="../static/assets/libs/parallax-js/dist/parallax.min.js"></script>
+  <script src="../static/assets/libs/quill/dist/quill.min.js"></script>
+  <script src="../static/assets/libs/smooth-scroll/dist/smooth-scroll.min.js"></script>
+  <script src="../static/assets/libs/typed.js/lib/typed.min.js"></script>
+
+  <!-- Theme JS -->
+  <script src="../static/assets/js/theme.min.js"></script>
+
+
+
 
 
 

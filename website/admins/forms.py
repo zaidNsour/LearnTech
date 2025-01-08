@@ -1,12 +1,12 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField
 from wtforms import FileField
-from wtforms import TextAreaField, RadioField
+from wtforms import TextAreaField
 from wtforms_sqlalchemy.fields import QuerySelectField
 from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import DataRequired, Length, Email, Optional
-from wtforms.validators import Regexp, ValidationError, EqualTo
-from website.models import Course, Lesson, Unit
+from wtforms.validators import Regexp, ValidationError
+from website.models import Course
 from website.models import User
 from flask_ckeditor import CKEditorField
 
@@ -51,8 +51,7 @@ class UpdateCourseForm(NewCourseForm):
 ############################## User ################################
 
 class NewUserForm(FlaskForm):
-  fname = StringField("First Name", validators=[DataRequired(), Length(min=2, max=25)])
-  lname = StringField("Last Name", validators=[DataRequired(), Length(min=2, max=25)])
+  username = StringField("User Name", validators=[DataRequired(), Length(min=2, max=50)])
   email = StringField("Email", validators=[DataRequired(), Email()] )
   password2 = PasswordField(
       "password",
@@ -74,8 +73,7 @@ class NewUserForm(FlaskForm):
 
 
 class  UpdateUserForm(FlaskForm):
-  fname = StringField("First Name", validators=[DataRequired(), Length(min=2, max=25)])
-  lname = StringField("Last Name", validators=[DataRequired(), Length(min=2, max=25)])
+  username = StringField("User Name", validators=[DataRequired(), Length(min= 2, max= 50)])
   email=StringField("Email", validators=[DataRequired(), Email()] )
   password = PasswordField("password",validators=[Optional()] )
   bio=TextAreaField("Bio", validators=[Optional()])

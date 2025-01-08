@@ -18,7 +18,7 @@ def home():
   courses=Course.query.limit(6).all()
   categories=Category.query.all()
   flash_messages = get_flashed_messages()
-  return render_template("home.html",  
+  return render_template("main/home.html",  
                          courses= courses,
                          categories= categories,
                          flash_messages= flash_messages
@@ -26,7 +26,7 @@ def home():
 
 @main.route("/about")
 def about():
-  return render_template("about.html", title="About Us")
+  return render_template("main/about.html", title="About Us")
 
 
 
@@ -52,13 +52,13 @@ def contact():
 
   print(f"\n\n\nForm not submitted or validation failed", file=sys.stderr) ###
 
-  return render_template("contact.html", title="Contact With Us", form= form,
+  return render_template("main/contact.html", title="Contact With Us", form= form,
                          flash_messages= flash_messages)
 
 
 @main.route("/faq")
 def faq():
-  return render_template("faq.html", title="FAQ")
+  return render_template("main/faq.html", title="FAQ")
 
 '''
 #pass stuff to navbar
@@ -90,7 +90,7 @@ def search():
   else:
     paginated_courses = None
 
-  return render_template("search.html",
+  return render_template("main/search.html",
                             title="Search Results",
                             form=form,
                             query=query,

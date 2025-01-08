@@ -3,6 +3,6 @@ from website import create_app
 
 app = create_app()
 
-if __name__ == "__main__": #run the web server if we directly run this file  
+if __name__ == "__main__": 
   app.run( debug=True)
   

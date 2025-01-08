@@ -13,7 +13,6 @@ warnings.filterwarnings("ignore")
 # remove ignore warning
 
 
-
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
@@ -37,7 +36,6 @@ def create_app(config_calss= Config):
         form = SearchForm()
         return dict(form = form)
 
-
     app.config.from_object(config_calss)
 
     from website.admins.routes import MyAdminIndexView
@@ -58,6 +56,7 @@ def create_app(config_calss= Config):
     from website.users.routes import users_bp
     from website.errors.handlers import errors
     from website.admins.routes import admins_bp
+    from website.dashboard.routes import dashboard_bp
 
     app.register_blueprint(main)
     app.register_blueprint(categories_bp)
@@ -67,6 +66,11 @@ def create_app(config_calss= Config):
     app.register_blueprint(users_bp)
     app.register_blueprint(errors)
     app.register_blueprint(admins_bp)
+    app.register_blueprint(dashboard_bp)
+
+    with app.app_context():
+    # Create the database if it doesn't exist
+        db.create_all()
 
     return app
 
