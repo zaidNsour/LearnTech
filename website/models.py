@@ -19,8 +19,8 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable= False)
     bio = db.Column(db.Text, nullable= True)
 
-    is_instructor = db.Column(db.Boolean, nullable= False, default= True)
-    is_admin = db.Column(db.Boolean, nullable= False, default= True)
+    is_instructor = db.Column(db.Boolean, nullable= False, default= False)
+    is_admin = db.Column(db.Boolean, nullable= False, default= False)
 
     courses = db.relationship("Course", backref="author", lazy=True, cascade='all, delete-orphan')
     lesson_comments = db.relationship("LessonComment", backref="user", lazy=True, cascade='all, delete-orphan')

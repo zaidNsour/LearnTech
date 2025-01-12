@@ -2,11 +2,13 @@
 :root{
   --main-color:#744f98;
   --secondary-color:#15c8cc;
+  --danger-color: #dc3545;
   --main-transition:0.3s;
   --para-color1:#666;
   --border-color1:#e9e6e6;
   --section-background: #ececec;
   --section-padding:100px; 
+  
 }
 
 
@@ -26,6 +28,12 @@
 span.error{
   
   color:red;
+}
+
+.alert-error{
+  background-color: var(--danger-color);
+  color: white;
+  opacity: 0.4;
 }
 
 .user-img{
@@ -227,12 +235,34 @@ span.error{
   background-color: black;
   border-radius: 10px;
 }
-
-
-
-
-
-
-
-
 /* edit-course */
+
+
+
+/*Course*/
+.comment-container{
+  width: 300px;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow: hidden;
+}
+
+@media(max-width:767px) {
+  .comment-container{
+    width: 250px;
+    
+  }
+  
+}
+.course-sidebar img{
+
+  margin: auto;
+}
+
+.related-course img{
+  width: 60%;
+}
+
+/*course*/
+
+

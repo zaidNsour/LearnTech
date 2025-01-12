@@ -53,8 +53,9 @@ def login():
     if user and bcrypt.check_password_hash(user.password, form.password.data):
       login_user(user, remember=form.remember.data)
       return redirect(url_for('main.home'))
-             
-  flash("Invalid email or password", "error")  
+    else:      
+      flash("Invalid email or password", "error")  
+      
   flash_messages = get_flashed_messages() 
   return render_template("users/login.html", title="Login",
                            form= form, flash_messages= flash_messages)

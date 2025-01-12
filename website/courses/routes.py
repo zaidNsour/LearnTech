@@ -21,10 +21,11 @@ def course(course_title):
     current_lesson= Lesson.query.filter_by(course_id= course.id).first()
     comments= CourseComment.query.filter_by(course_id= course.id).all()
 
-    is_joined = False  
-    if course in current_user.joined_courses:
+    is_joined = False
+    if JoinedCourse.query.filter_by(user_id= current_user.id, course_id= course.id).first():
        is_joined = True
- 
+      
+      
     form = CourseCommentForm()
     if  form.validate_on_submit():
       new_comment = CourseComment(
