@@ -266,3 +266,13 @@ span.error{
 /*course*/
 
 
+/*author*/
+@media(max-width:767px){
+  .author-info{
+    flex-direction: column;
+  }
+  
+}
+/*author*/
+
+

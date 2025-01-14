@@ -452,9 +452,6 @@
             <img class="rounded shadow-light-lg"  alt="..."
                 src="{{ url_for('static', filename='images/course_pics/' + related_course.icon ) }}">
           </a>
-
-
-
         </div>
 
         <!-- Footer -->
@@ -486,17 +483,12 @@
                         </svg>
 
                       </div>
-                      <div class="font-size-sm">5 lessons</div>
+                      <div class="font-size-sm">{{course.lessons|length}} Lessons</div>
                     </div>
                   </li>
                 </ul>
               </div>
 
-              <div class="col-auto px-2 text-right">
-                <div class="star-rating mb-2 mb-lg-0">
-                  <div class="rating" style="width:100%;"></div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
