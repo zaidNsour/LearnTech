@@ -262,6 +262,13 @@ span.error{
 .related-course img{
   width: 60%;
 }
+.delete-comment{
+  transition: 0.3s;
+  cursor: pointer;
+}
+.delete-comment:hover{
+  fill:red;
+}
 
 /*course*/
 

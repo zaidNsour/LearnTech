@@ -65,6 +65,7 @@ class Course(db.Model):
     units = db.relationship('Unit', backref='course', cascade="all, delete-orphan")
     lessons = db.relationship('Lesson', backref='course', cascade="all, delete-orphan")
     joined_users = db.relationship("JoinedCourse", back_populates="course", cascade='all, delete-orphan')
+    comments = db.relationship("CourseComment", backref="course", lazy=True, cascade='all, delete-orphan')
 
     def __repr__(self):
         return f"Course({self.title}, {self.price})"

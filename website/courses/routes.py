@@ -36,7 +36,7 @@ def course(course_title):
 
       db.session.add(new_comment)
       db.session.commit() 
-        # Redirect to the same page to avoid form resubmission
+      flash("Comment has been added!", "success")
       return redirect( url_for('courses_bp.course', course_title= course_title) )
     
     flash_messages = get_flashed_messages()
@@ -145,3 +145,19 @@ def enroll_user(course_id):
     title= "Enroll done",
     flash_messages= flash_messages
     )
+
+
+@courses_bp.route("/delete_comment/<int:comment_id>", methods=["POST"])
+@login_required
+def delete_comment(comment_id): 
+   comment = CourseComment.query.filter_by(id = comment_id, user_id = current_user.id).first()
+   if not comment:
+      flash("Error happened while deleting the comment", "error")
+      return redirect(url_for("courses_bp.courses"))
+   
+   course_title = comment.course.title
+   db.session.delete(comment)
+   db.session.commit()
+   flash("Comment has been deleted!", "success")
+   return redirect(url_for("courses_bp.course", course_title= course_title))
+   
