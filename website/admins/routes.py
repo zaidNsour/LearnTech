@@ -1,5 +1,5 @@
 from website import admin, db, bcrypt
-from website.models import Unit, User, Category, Course, JoinedCourse
+from website.models import QA, Unit, User, Category, Course, JoinedCourse
 from website.admins.forms import NewCourseForm, UpdateCourseForm, NewUserForm
 from wtforms import PasswordField
 from flask import Blueprint, flash
@@ -223,4 +223,6 @@ admin.add_view( CourseAdmin(Course, db.session) )
 admin.add_view( JoinedCourseAdmin( JoinedCourse, db.session) )
 
 admin.add_view( MyModelView( Unit, db.session) )
+admin.add_view( MyModelView( QA, db.session) )
+
 

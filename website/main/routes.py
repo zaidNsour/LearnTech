@@ -1,5 +1,5 @@
 import sys
-from website.models import Course, Category
+from website.models import QA, Course, Category
 from flask import flash, redirect, render_template, request, session, url_for
 from flask import get_flashed_messages
 from website.main.forms import SearchForm, contactForm
@@ -37,8 +37,6 @@ def contact():
     name= form.name.data
     email= form.email.data
     message= form.message.data
-    
-    print(f'\n\n\n Form data: {name}, {email}, {message}', file=sys.stderr) ###
     try:
       send_contact_email(name, email, message)
       flash('The request was successfully submitted!', 'success')
@@ -53,9 +51,10 @@ def contact():
                          flash_messages= flash_messages)
 
 
-@main.route("/faq")
+@main.route("/faq", methods=["GET"])
 def faq():
-  return render_template("main/faq.html", title="FAQ")
+  qas = QA.query.all()
+  return render_template("main/faq.html", title="FAQ", qas = qas)
 
 '''
 #pass stuff to navbar

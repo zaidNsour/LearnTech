@@ -109,79 +109,12 @@
 
           </li>
 
-
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle px-xl-4" id="navbarPages" data-bs-toggle="dropdown" href="#"
-              aria-haspopup="true" aria-expanded="false">
-              Others
+            <a class="nav-link  px-xl-4" id="navbarLandings" href="{{ url_for('main.faq') }}"
+             aria-haspopup="true"aria-expanded="false">
+              FAQ
             </a>
-            <div class="dropdown-menu border-xl shadow-none dropdown-menu-lg" aria-labelledby="navbarPages">
-              <div class="row gx-0">
-                <div class="col-6">
-                  <div class="row gx-0">
-                    <div class="col-12 col-lg-6">
-                      <!-- List -->
-                      <a class="dropdown-item" href="event-list.html">
-                        Event List
-                      </a>
-                      <a class="dropdown-item" href="event-single.html">
-                        Event Single
-                      </a>
-                      <a class="dropdown-item" href="gallery.html">
-                        Gallery
-                      </a>
-                      <a class="dropdown-item mb-5 mb-lg-0" href="pricing.html">
-                        Pricing
-                      </a>
-                    </div>
-                    <div class="col-12 col-lg-6">
-                      <!-- List -->
-                      <a class="dropdown-item" href="about-v1.html">
-                        About v1
-                      </a>
-                      <a class="dropdown-item" href="about-v2.html">
-                        About v2
-                      </a>
-                      <a class="dropdown-item" href="contact-us.html">
-                        Contact us
-                      </a>
-                      <a class="dropdown-item mb-5 mb-lg-0" href="terms-of-service.html">
-                        Terms of Service
-                      </a>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-6">
-                  <div class="row gx-0">
-                    <div class="col-12 col-lg-6">
-                      <!-- List -->
-                      <a class="dropdown-item" href="{{ url_for('main.faq') }}">
-                        FAQ
-                      </a>
-                      <a class="dropdown-item" href="login.html">
-                        Login
-                      </a>
-                      <a class="dropdown-item" href="register.html">
-                        Register
-                      </a>
-                      <a class="dropdown-item mb-5 mb-lg-0" href="become-instructor.html">
-                        Become an Instructor
-                      </a>
-                    </div>
 
-                    <div class="col-12 col-lg-6">
-                      <!-- List -->
-                      <a class="dropdown-item" href="coming-soon.html">
-                        Coming Soon
-                      </a>
-                      <a class="dropdown-item mb-5 mb-lg-0" href="404.html">
-                        404
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> <!-- / .row -->
           </li>
 
           {% if current_user.is_authenticated %}

@@ -144,4 +144,13 @@ class LessonComment(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     title = db.Column(db.String(50), nullable=False)
     details = db.Column(db.String(150), nullable=False)
+
+
+class QA(db.Model):
+   id = db.Column(db.Integer, primary_key=True)
+   question = db.Column(db.String(120), nullable=False)
+   answer = db.Column(db.String(120), nullable=False)
+
+   def to_dict(self):
+    return {"question": self.question,"answer": self.answer}
  
