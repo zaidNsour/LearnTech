@@ -21,12 +21,6 @@
 
 {%block content%}
 
-{% for message in flash_messages %}
-<div class="alert alert-success" role="alert">
-  {{ message }}
-</div>
-{% endfor %}
-
   <!-- PAGE TITLE
     ================================================== -->
     <header class="py-8 py-md-11" style="background-image: none;">
@@ -35,7 +29,7 @@
           <nav aria-label="breadcrumb">
               <ol class="breadcrumb breadcrumb-scroll justify-content-center">
                   <li class="breadcrumb-item">
-                      <a class="text-gray-800" href="#">
+                      <a class="text-gray-800" href="{{ url_for('main.home') }}">
                           Home
                       </a>
                   </li>
@@ -45,8 +39,7 @@
               </ol>
           </nav>
       </div>
-      <!-- Img -->
-      <img class="d-none img-fluid" src="...html" alt="...">
+   
   </header>
 
 
@@ -73,8 +66,7 @@
                           <div class="media-body flex-shrink-1">
                               <h5 class="mb-4">Find Us</h5>
                               <address class="">
-                                  2301 Ravenswood Rd Madison,
-                                  WI 53711
+                                  Amman, Jordan
                               </address>
                           </div>
                       </div>
@@ -113,8 +105,7 @@
                           </div>
                           <div class="media-body flex-shrink-1">
                               <h5 class="mb-4">Working Hours</h5>
-                              <p class="mb-0">Mon-Fri: 8 AM - 5 PM</p>
-                              <p class="mb-0">Sat-Sun: 8 AM - 2 PM</p>
+                              <p class="mb-0">Sun - Fri: 9 AM - 5 PM</p>
                           </div>
                       </div>
                   </div>
@@ -131,8 +122,7 @@
                           </div>
                           <div class="media-body flex-shrink-1">
                               <h5 class="mb-4">Write to Us</h5>
-                              <a href="mailto:info@skola.com" class="text-gray-800">info@skola.com</a>
-                              <a href="mailto:courses@skola.com" class="text-gray-800">courses@skola.com</a>
+                              <a href="mailto:info@skola.com" class="text-gray-800">info@learnTech.com</a>
                           </div>
                       </div>
                   </div>
@@ -172,11 +162,6 @@
                                   <li class="list-inline-item list-social-item">
                                       <a href="#" class="text-secondary font-size-sm w-36 h-36 shadow-dark-hover d-flex align-items-center justify-content-center rounded-circle border-hover">
                                           <i class="fab fa-linkedin-in"></i>
-                                      </a>
-                                  </li>
-                                  <li class="list-inline-item list-social-item">
-                                      <a href="#" class="text-secondary font-size-sm w-36 h-36 shadow-dark-hover d-flex align-items-center justify-content-center rounded-circle border-hover">
-                                          <i class="fab fa-skype"></i>
                                       </a>
                                   </li>
                               </ul>

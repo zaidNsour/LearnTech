@@ -43,14 +43,11 @@ def contact():
       send_contact_email(name, email, message)
       flash('The request was successfully submitted!', 'success')
     except Exception as e:
-      flash(f'An error occurred: {str(e)}', 'danger')
-      print(f"\n\n\nError sending email: {e}", file=sys.stderr) ###
+      flash(f'An error occurred, please try again later.', 'danger')
 
     return redirect(url_for('main.contact'))
   
   flash_messages = get_flashed_messages()
-
-  print(f"\n\n\nForm not submitted or validation failed", file=sys.stderr) ###
 
   return render_template("main/contact.html", title="Contact With Us", form= form,
                          flash_messages= flash_messages)
