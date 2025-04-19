@@ -7,13 +7,13 @@ You can access the live version of LearnTech at [https://learntech-7f3h.onrender
 
 ## Features
 
-- **Account Creation**: Effortlessly create accounts to access platform features.
+- **Account Creation & Management**: create accounts, access your profile, update your information, and upload a profile image with ease.
 
 - **Explore Courses & Topics**: Browse through a diverse catalog of courses on various topics.
 
-- **Search Courses**: Quickly find the courses that suit your learning goals.
+- **Search Courses**: Quickly find the courses.
 
-- **Leave Reviews**: Share your thoughts and reviews on courses to help other learners.
+- **Add and delete Reviews**: Share your thoughts and reviews on courses.
 
 - **View Instructor Profiles**: View detailed profiles of instructors.
 
@@ -58,7 +58,6 @@ Step 4. Set up the following environment variables:
   export SECRET_KEY=your-secret-key
   export EMAIL_USER=your-email@example.com
   export EMAIL_PASS=your-email-password
-  export API_KEY=your-google-api-key  # Google API key created from Google Cloud
 ```
 
 Step 5. Run the app:
@@ -75,7 +74,7 @@ Step 5. Run the app:
 2- Create a new branch: 
 
 ```bash
-git checkout -b feature/new-feature
+git checkout -b new-feature
 ```
 
 3- Make your changes and commit them:
@@ -87,7 +86,7 @@ git commit -m 'Add new feature'
 4- Push to the branch: 
 
 ```bash
-git push origin feature/new-feature
+git push origin new-feature
 ```
 
 5- Submit a pull request.
